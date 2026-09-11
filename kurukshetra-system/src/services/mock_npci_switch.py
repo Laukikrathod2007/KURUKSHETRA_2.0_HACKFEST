@@ -1,19 +1,20 @@
-"""Mock NPCI Switch -- FastAPI service on port 8001.
+"""Mock NPCI Switch -- stands in for NPCI's UPI switch.
 
-Stands in for NPCI's UPI switch. Speaks `ReqValAdd`/`ReqPay`-shaped requests
-(field names mirror NPCI's published UPI API spec closely enough that
+Field names mirror NPCI's published UPI API spec closely enough that
 swapping this for the real switch is a transport/serialization change, not a
-logic change -- see docs/04-infrastructure-and-mocks.md).
+logic change (see docs/04-infrastructure-and-mocks.md). Directory resolution
+here is entirely fictional/seeded -- in production this step is NPCI's own
+Mapper/switch, not something Kurukshetra ever does itself.
 
-Directory resolution here is entirely fictional/seeded -- in production this
-step is NPCI's own Mapper/switch, not something Kurukshetra ever does itself.
+Calls straight into kurukshetra.engine_core in-process: this and the risk
+engine are logically separate systems but deploy as one consolidated backend
+(docs/00-council-verdict.md's "fewest moving parts for a live demo").
 """
 from __future__ import annotations
 
 import uuid
 
-import httpx
-from fastapi import FastAPI
+from fastapi import APIRouter
 from pydantic import BaseModel
 
 from kurukshetra.contracts import (
@@ -25,10 +26,9 @@ from kurukshetra.contracts import (
     TransactionAnalysisRequest,
     TransactionDetails,
 )
+from kurukshetra.engine_core import evaluate
 
-app = FastAPI(title="Mock NPCI Switch")
-
-ENGINE_URL = "http://127.0.0.1:8000"
+router = APIRouter(tags=["mock-npci-switch"])
 
 # Fictional seeded directory: beneficiary_ref -> (resolved_name, mc_code)
 DIRECTORY: dict[str, tuple[str, str]] = {
@@ -57,8 +57,7 @@ class ReqPay(BaseModel):
     declared_purpose: str | None = None
 
 
-@app.post("/ReqValAdd")
-def req_val_add(req: ReqValAdd) -> dict:
+def resolve_and_score_val_add(req: ReqValAdd) -> dict:
     resolved_name, mc_code = DIRECTORY.get(req.beneficiary_ref_hash, ("Unknown Individual", "0000"))
     transaction_id = f"txn_{uuid.uuid4().hex[:10]}"
 
@@ -75,9 +74,7 @@ def req_val_add(req: ReqValAdd) -> dict:
         ),
         provenance=Provenance(arrived_via=req.arrived_via, raw_uri=req.raw_uri),
     )
-    decision = httpx.post(f"{ENGINE_URL}/v1/score-vpa", json=engine_req.model_dump(mode="json"), timeout=5.0)
-    decision.raise_for_status()
-    risk = RiskDecision.model_validate(decision.json())
+    risk: RiskDecision = evaluate(engine_req)
 
     return {
         "transaction_id": transaction_id,
@@ -87,8 +84,7 @@ def req_val_add(req: ReqValAdd) -> dict:
     }
 
 
-@app.post("/ReqPay")
-def req_pay(req: ReqPay) -> dict:
+def score_pay(req: ReqPay) -> dict:
     engine_req = TransactionAnalysisRequest(
         event=EventType.PAYMENT_PREFLIGHT,
         transaction_id=req.transaction_id,
@@ -102,15 +98,15 @@ def req_pay(req: ReqPay) -> dict:
         ),
         transaction=TransactionDetails(amount=req.amount),
     )
-    decision = httpx.post(
-        f"{ENGINE_URL}/v1/score-transaction", json=engine_req.model_dump(mode="json"), timeout=5.0
-    )
-    decision.raise_for_status()
-    risk = RiskDecision.model_validate(decision.json())
-
+    risk: RiskDecision = evaluate(engine_req)
     return {"transaction_id": req.transaction_id, "risk": risk.model_dump(mode="json")}
 
 
-@app.get("/healthz")
-def healthz() -> dict:
-    return {"status": "ok"}
+@router.post("/ReqValAdd")
+def req_val_add(req: ReqValAdd) -> dict:
+    return resolve_and_score_val_add(req)
+
+
+@router.post("/ReqPay")
+def req_pay(req: ReqPay) -> dict:
+    return score_pay(req)
