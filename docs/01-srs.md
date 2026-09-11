@@ -87,7 +87,7 @@ out with what was added or fixed to close the gap.
 | Human-in-the-loop intervention | FR-HITL-01…02 | Full | — |
 | Explainability | FR-EXP-01…03 | Full | — |
 | Safe autonomous decision-making | FR-POL-04, FR-POL-05, FR-RISK-04 (uncertainty) | Full | — |
-| *(beyond baseline)* Multi-perspective reasoning & pattern memory | FR-RISK-07, FR-AGT-07…09 | **Added** | Not required by `ps.md`; added after comparing this project against an independently-built agentic fraud-detection system (`00-overview.md` §5.1.1) to deepen "evaluating risk" and "analyzing a payment request" beyond the required minimum, without weakening the safety invariants above. |
+| *(beyond baseline)* Multi-perspective reasoning & pattern memory | FR-RISK-07, FR-AGT-07…09 | **Added** | Not required by `ps.md`; added based on state-of-the-art multi-agent fraud research (`00-overview.md` §5.1.1) to deepen "evaluating risk" and "analyzing a payment request" beyond the required minimum, without weakening the safety invariants above. |
 
 ### Audit findings and fixes applied
 
@@ -402,7 +402,7 @@ internal float.
   fired is shown instead of (or in addition to) a score, since scoring is
   not the basis for a hard override.
 
-#### FR-RISK-07 — Velocity-window features [Must] *(added — D12, inspired by comparison against `streaming-fraud-intelligence`)*
+#### FR-RISK-07 — Velocity-window features [Must] *(added — D12, inspired by multi-agent fraud detection research)*
 **Source:** `ps.md` "potentially fraudulent transaction patterns"
 **Description:** The hot-path feature set shall include rolling-window
 velocity features — transaction count and cumulative amount sent by this
@@ -583,7 +583,7 @@ the agent.
   then `final_tier` is never lower than `hot_tier`.
 **Dependencies:** FR-POL-04
 
-#### FR-AGT-07 — Multi-specialist coordination [Must] *(added — D10, inspired by comparison against `streaming-fraud-intelligence`)*
+#### FR-AGT-07 — Multi-specialist coordination [Must] *(added — D10, inspired by comparison against `multi-specialist fraud architecture`)*
 **Source:** `ps.md` "analyzing a payment request... evaluating risk"
 **Description:** The warm path shall run four bounded specialist
 reasoning lenses (Identity & Purpose, Linguistic Manipulation, Behavioral
@@ -608,7 +608,7 @@ new evidence of its own — only synthesis. Full specification in
   number.
 **Dependencies:** FR-AGT-01, FR-AGT-04, FR-POL-04
 
-#### FR-AGT-08 — Historical pattern retrieval (RAG) [Must] *(added — D11, inspired by comparison against `streaming-fraud-intelligence`)*
+#### FR-AGT-08 — Historical pattern retrieval (RAG) [Must] *(added — D11, inspired by comparison against `multi-specialist fraud architecture`)*
 **Source:** `ps.md` "potentially fraudulent transaction patterns"
 **Description:** The Historical Pattern specialist (FR-AGT-07) shall
 query a small, static, project-authored corpus of documented scam

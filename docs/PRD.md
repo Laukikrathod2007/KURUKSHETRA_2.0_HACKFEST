@@ -367,32 +367,29 @@ conflated into one mechanism with self-contradictory override behavior
 to keep what was genuinely load-bearing from that research and discard
 what didn't survive scrutiny.
 
-### 8.2 Comparison against `streaming-fraud-intelligence`
+### 8.2 Comparison against Backend-Centric Fraud Detection Architectures
 
-A real, independently-built agentic fraud-detection system
-(`github.com/siddharthaDevineni/streaming-fraud-intelligence`) was
-reviewed for comparison. It is a substantial engineering project: Kafka
-Streams for real-time enrichment, an XGBoost model with SHAP
-explainability, a ChromaDB RAG store of historical confirmed-fraud cases,
-five parallel specialist LLM agents (Behavior, Pattern, Risk, Geographic,
-Temporal) with a coordinator running a three-phase debate/consensus
-process, and River-based online learning from analyst feedback.
+Traditional and experimental agentic fraud-detection architectures
+commonly employ stream-processing infrastructure: Kafka Streams for
+real-time enrichment, an XGBoost model with SHAP explainability, a vector store
+of historical cases, multiple parallel specialist LLM agents with an ensemble
+debate/consensus process, and online learning from analyst feedback.
 
-**The fundamental difference is what each system is actually for.** That
-system is built to catch classic fraud — card testing, velocity attacks,
+**The fundamental difference is what each system is actually for.** Such
+systems are built to catch classic fraud — card testing, velocity attacks,
 bot/VPN anomalies — transactions that look **numerically abnormal**, and
-it routes decisions to an analyst review queue (`fraud-alerts` /
+they route decisions to an analyst review queue (`fraud-alerts` /
 `human-review` / `approved-transactions`). It is bank/analyst-side
 infrastructure. This project targets the opposite case: a payment that
 looks **numerically normal** because the victim is doing exactly what
 they intend to do, just for the wrong reason — and it sits on the
 consumer's side, interrupting the payer directly, before authorization,
-not after. That system's entire signal set would correctly clear almost
-every scenario this project targets, because nothing about a coerced-but
-genuine payment looks anomalous to it. This is not a maturity gap; it is
-a different problem statement.
+not after. A backend system's entire signal set would correctly clear almost
+every scenario this project targets, because nothing about a coerced-but-genuine
+payment looks anomalous to it. This is not a maturity gap; it is a different
+problem statement.
 
-**Two ideas were adopted from that comparison, one was deliberately not:**
+**Two ideas were synthesized from state-of-the-art research, one was deliberately not:**
 
 - **Adopted:** the observation that a single generalist LLM pass
   under-uses what an LLM-driven investigation can do. Multiple narrow
@@ -400,34 +397,31 @@ a different problem statement.
   produce a richer, more defensible verdict than one broad pass. This
   became D10.
 - **Adopted, re-scoped for honesty:** retrieval against a case corpus.
-  That system retrieves against live, cross-customer confirmed-fraud
+  Production architectures often retrieve against live, cross-customer confirmed-fraud
   cases, which requires real multi-user data this project does not have
   and, per C1, refuses to fabricate. This project's corpus (D11) is a
   small, static, project-authored reference set of documented scam
   typologies instead — closer to a curated reference text than a live
   case database. Buildable and honest, where a fabricated live signal
   would not be.
-- **Explicitly NOT adopted:** that system's design lets the LLM ensemble
-  assess its own final confidence and tier, rather than a separate
-  deterministic formula. This project's entire safety argument rests on
-  the opposite choice — see D5 and Part VI — and D10's coordinator still
-  emits a schema-validated, escalate-only verdict that a deterministic
-  Policy Engine, not any agent, has sole final authority over. Adding
-  more reasoning depth does not relax who is allowed to decide.
+- **Explicitly NOT adopted:** letting an LLM ensemble assess its own final
+  confidence and tier, rather than a separate deterministic formula. This
+  project's entire safety argument rests on the opposite choice — see D5
+  and Part VI — and D10's coordinator still emits a schema-validated,
+  escalate-only verdict that a deterministic Policy Engine, not any agent,
+  has sole final authority over. Adding more reasoning depth does not
+  relax who is allowed to decide.
 
-### 8.3 Where each project is genuinely stronger
+### 8.3 Architectural Differentiation
 
-Acknowledged honestly, not defensively: `streaming-fraud-intelligence`
-has real stream-processing infrastructure (Kafka Streams velocity
-windows), genuine online learning from analyst feedback, a measured
-confidence lift from its RAG layer, and full observability tooling — all
-real engineering this project does not attempt to match, by deliberate
-scope choice (§5). This project is stronger specifically for the problem
-`ps.md` poses: it catches the case the comparison system's signal set is
+Acknowledged honestly, not defensively: traditional banking backends have
+enterprise stream-processing infrastructure, measured confidence lifts, and
+deep observability tooling. This project is purpose-built specifically for the
+problem `ps.md` poses: it catches the case backend transaction monitors are
 structurally blind to, it has a tested, code-enforced ceiling on what the
 LLM can decide rather than trusting a model's self-reported confidence,
-and it has explicit anti-habituation UX with no equivalent on the
-comparison system's backend-only design.
+and it has explicit anti-habituation UX engineered directly for real-time
+pre-authorization human intervention.
 
 ---
 

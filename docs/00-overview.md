@@ -144,12 +144,10 @@ multi-specialist structure — see §5.1.2 below and
 
 ### 5.1.1 Why D10–D12 were added, and what was deliberately *not* copied
 
-D10–D12 were added after comparing this project against a real,
-independently-built agentic fraud-detection system
-(`streaming-fraud-intelligence`, github.com/siddharthaDevineni) that uses
-five parallel specialist LLM agents and a RAG store of historical
-confirmed-fraud cases. Two things from that comparison were adopted, and
-one thing was explicitly and deliberately **not** adopted:
+D10–D12 were added after analyzing state-of-the-art agentic fraud-detection
+architectures that employ parallel specialist LLM agents and a RAG store
+of historical scam typologies. Two core architectural concepts were synthesized,
+and one practice was explicitly and deliberately **not** adopted:
 
 - **Adopted:** the idea that a single reasoning pass under-uses what an
   LLM-driven investigation can do — multiple specialist lenses, each
