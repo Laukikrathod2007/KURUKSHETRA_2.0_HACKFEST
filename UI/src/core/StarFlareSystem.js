@@ -22,8 +22,8 @@ export class StarFlareSystem {
     const palette = [
       new THREE.Color('#ffffff'), // Pure soft white
       new THREE.Color('#e2e8f0'), // Muted silver
-      new THREE.Color('#ddd6fe'), // Pale lavender
-      new THREE.Color('#bae6fd'), // Delicate ice blue
+      new THREE.Color('#fed7aa'), // Pale peach-gold (matches globe accent)
+      new THREE.Color('#ffe4e1'), // Faint warm blush white
     ];
 
     for (let i = 0; i < count; i++) {

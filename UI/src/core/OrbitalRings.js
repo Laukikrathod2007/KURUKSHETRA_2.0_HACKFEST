@@ -16,9 +16,9 @@ export class OrbitalRings {
 
   initRings() {
     const ringConfigs = [
-      { rX: 1.48, rY: 1.42, tiltX: 0.52, tiltY: 0.2, tiltZ: -0.45, speed: 0.45, color: '#c4b5fd' },
-      { rX: 1.55, rY: 1.46, tiltX: -0.65, tiltY: 0.35, tiltZ: 0.55, speed: -0.38, color: '#a78bfa' },
-      { rX: 1.62, rY: 1.50, tiltX: 0.15, tiltY: 0.85, tiltZ: 0.25, speed: 0.52, color: '#818cf8' },
+      { rX: 1.48, rY: 1.42, tiltX: 0.52, tiltY: 0.2, tiltZ: -0.45, speed: 0.45, color: '#fed7aa' },
+      { rX: 1.55, rY: 1.46, tiltX: -0.65, tiltY: 0.35, tiltZ: 0.55, speed: -0.38, color: '#fdba74' },
+      { rX: 1.62, rY: 1.50, tiltX: 0.15, tiltY: 0.85, tiltZ: 0.25, speed: 0.52, color: '#fb7185' },
     ];
 
     ringConfigs.forEach((cfg) => {

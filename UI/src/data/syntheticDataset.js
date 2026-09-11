@@ -4,6 +4,16 @@
  * shell corporations, crypto OTC desks, payment aggregators, and high-net-worth individuals.
  */
 
+// Single risk-tiered palette matching the 3D globe's own warm theme
+// (white-hot core -> peach/gold -> rose-coral, with teal reserved for clean/low-risk).
+// Hue no longer varies by role/category - only intensity varies by risk level.
+export const RISK_COLORS = {
+  CRITICAL: '#fb7185', // globe outer-rose, saturated
+  HIGH: '#fdba74',     // warm amber-peach
+  MEDIUM: '#fed7aa',   // globe's own peach-gold accent
+  LOW: '#5eead4',      // globe's cyan-teal pulse color
+};
+
 // Curated Primary Nodes with rich custom AML topologies
 const PRIMARY_ENTITIES = [
   {
@@ -28,7 +38,7 @@ const PRIMARY_ENTITIES = [
       'Rapid transfer of ₹14.8 Crore to Dubai OTC crypto desk',
       'High-velocity structuring across 8 mule accounts within 1 hour',
     ],
-    accent: '#ef4444',
+    accent: RISK_COLORS.CRITICAL,
   },
   {
     id: 'rahul-sharma',
@@ -52,7 +62,7 @@ const PRIMARY_ENTITIES = [
       'Smurfing pattern detected: Multi-account batch splitting',
       'Direct pipeline link to high-risk Crypto Desk',
     ],
-    accent: '#f43f5e',
+    accent: RISK_COLORS.HIGH,
   },
   {
     id: 'vikram-malhotra',
@@ -75,7 +85,7 @@ const PRIMARY_ENTITIES = [
       'Circular funds movement through 6 intermediate holding accounts',
       'Dormant corporate account sudden volume surge (>12,000%)',
     ],
-    accent: '#ef4444',
+    accent: RISK_COLORS.CRITICAL,
   },
   {
     id: 'priya-shah',
@@ -95,7 +105,7 @@ const PRIMARY_ENTITIES = [
     totalInflow: 4200000, // ₹42 Lakhs
     totalOutflow: 3850000,
     activeAlerts: [],
-    accent: '#10b981',
+    accent: RISK_COLORS.LOW,
   },
   {
     id: 'crypto-otc-vault',
@@ -118,7 +128,7 @@ const PRIMARY_ENTITIES = [
       'Mixer-derived USDT liquidations',
       'Cross-border high-frequency INR to crypto conduit',
     ],
-    accent: '#ec4899',
+    accent: RISK_COLORS.CRITICAL,
   },
   {
     id: 'zenith-logistics',
@@ -138,7 +148,7 @@ const PRIMARY_ENTITIES = [
     totalInflow: 142000000, // ₹14.2 Crore
     totalOutflow: 141000000,
     activeAlerts: ['Over-invoicing export remittance pattern'],
-    accent: '#f59e0b',
+    accent: RISK_COLORS.HIGH,
   },
   {
     id: 'merchant-a',
@@ -158,7 +168,7 @@ const PRIMARY_ENTITIES = [
     totalInflow: 640000000, // ₹64 Crore
     totalOutflow: 638000000,
     activeAlerts: ['High chargeback ratio in sub-merchant cohort'],
-    accent: '#f59e0b',
+    accent: RISK_COLORS.MEDIUM,
   },
   {
     id: 'surat-mule-hub',
@@ -178,7 +188,7 @@ const PRIMARY_ENTITIES = [
     totalInflow: 92000000, // ₹9.2 Crore
     totalOutflow: 91900000,
     activeAlerts: ['Zero balance retention with sub-30-second pass-through velocity'],
-    accent: '#ef4444',
+    accent: RISK_COLORS.CRITICAL,
   },
   {
     id: 'aarav-mehta',
@@ -198,7 +208,7 @@ const PRIMARY_ENTITIES = [
     totalInflow: 125000000, // ₹12.5 Crore
     totalOutflow: 95000000,
     activeAlerts: [],
-    accent: '#38bdf8',
+    accent: RISK_COLORS.LOW,
   },
 ];
 
@@ -223,14 +233,14 @@ const LAST_NAMES = [
 ];
 
 const ROLES = [
-  { role: 'User', type: 'Individual', category: 'Retail P2P User', riskLevel: 'LOW', riskBase: 15, accent: '#c084fc' },
-  { role: 'User', type: 'Individual', category: 'Layering Associate', riskLevel: 'HIGH', riskBase: 76, accent: '#f43f5e' },
-  { role: 'Merchant', type: 'Merchant', category: 'Digital Aggregator', riskLevel: 'MEDIUM', riskBase: 44, accent: '#f59e0b' },
-  { role: 'Account', type: 'Account', category: 'Mule Holding Account', riskLevel: 'CRITICAL', riskBase: 92, accent: '#ef4444' },
-  { role: 'Account', type: 'Account', category: 'Escrow Account', riskLevel: 'MEDIUM', riskBase: 50, accent: '#38bdf8' },
-  { role: 'Corporate', type: 'Corporate', category: 'Export Shell Firm', riskLevel: 'HIGH', riskBase: 82, accent: '#fb923c' },
-  { role: 'Gateway', type: 'Gateway', category: 'Crypto P2P Bridge', riskLevel: 'CRITICAL', riskBase: 96, accent: '#ec4899' },
-  { role: 'User', type: 'Individual', category: 'Salaried Professional', riskLevel: 'LOW', riskBase: 10, accent: '#10b981' },
+  { role: 'User', type: 'Individual', category: 'Retail P2P User', riskLevel: 'LOW', riskBase: 15 },
+  { role: 'User', type: 'Individual', category: 'Layering Associate', riskLevel: 'HIGH', riskBase: 76 },
+  { role: 'Merchant', type: 'Merchant', category: 'Digital Aggregator', riskLevel: 'MEDIUM', riskBase: 44 },
+  { role: 'Account', type: 'Account', category: 'Mule Holding Account', riskLevel: 'CRITICAL', riskBase: 92 },
+  { role: 'Account', type: 'Account', category: 'Escrow Account', riskLevel: 'MEDIUM', riskBase: 50 },
+  { role: 'Corporate', type: 'Corporate', category: 'Export Shell Firm', riskLevel: 'HIGH', riskBase: 82 },
+  { role: 'Gateway', type: 'Gateway', category: 'Crypto P2P Bridge', riskLevel: 'CRITICAL', riskBase: 96 },
+  { role: 'User', type: 'Individual', category: 'Salaried Professional', riskLevel: 'LOW', riskBase: 10 },
 ];
 
 const BANKS = [
@@ -310,7 +320,7 @@ function generateSyntheticDatabase() {
         totalInflow: inflow,
         totalOutflow: outflow,
         activeAlerts: alerts,
-        accent: roleObj.accent,
+        accent: RISK_COLORS[riskLevel],
         connections: [],
       };
     }

@@ -112,7 +112,7 @@ export function createParticleUniverseGeometry(options = {}) {
       speeds[pIdx] = 0.8;
 
       hasCustomColors[pIdx] = 1.0;
-      const col = new THREE.Color(entity.accent || '#38bdf8');
+      const col = new THREE.Color(entity.accent || '#fed7aa');
       customColors[pIdx * 3] = col.r;
       customColors[pIdx * 3 + 1] = col.g;
       customColors[pIdx * 3 + 2] = col.b;

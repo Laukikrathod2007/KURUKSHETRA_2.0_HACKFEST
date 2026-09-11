@@ -28,7 +28,7 @@
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: rgba(167, 139, 250, 0.65);
+  background: rgba(253, 186, 116, 0.65);
 }
 
 *::-webkit-scrollbar-button {
@@ -123,7 +123,7 @@
   letter-spacing: 0.34em;
   color: #f8fafc;
   margin: 0;
-  text-shadow: 0 0 12px rgba(167, 139, 250, 0.4);
+  text-shadow: 0 0 12px rgba(253, 186, 116, 0.4);
 }
 
 .kurukshetra-sub {
@@ -152,25 +152,25 @@
   align-items: center;
   gap: 0.75rem;
   background: rgba(12, 12, 22, 0.72);
-  border: 1px solid rgba(139, 92, 246, 0.28);
+  border: 1px solid rgba(251, 113, 133, 0.28);
   border-radius: 9999px;
   padding: 0.42rem 0.65rem 0.42rem 1.1rem;
   backdrop-filter: blur(20px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 18px rgba(139, 92, 246, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 18px rgba(251, 113, 133, 0.12);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   min-width: 330px;
 }
 
 .search-pill:hover,
 .search-pill:focus-within {
-  border-color: rgba(167, 139, 250, 0.65);
-  box-shadow: 0 8px 36px rgba(0, 0, 0, 0.75), 0 0 24px rgba(167, 139, 250, 0.25);
+  border-color: rgba(253, 186, 116, 0.65);
+  box-shadow: 0 8px 36px rgba(0, 0, 0, 0.75), 0 0 24px rgba(253, 186, 116, 0.25);
   background: rgba(16, 16, 28, 0.88);
 }
 
 .search-icon {
   font-size: 0.85rem;
-  color: #a78bfa;
+  color: #fdba74;
   display: flex;
   align-items: center;
 }
@@ -191,8 +191,8 @@
 }
 
 .search-submit-btn {
-  background: rgba(139, 92, 246, 0.2);
-  border: 1px solid rgba(139, 92, 246, 0.4);
+  background: rgba(251, 113, 133, 0.2);
+  border: 1px solid rgba(251, 113, 133, 0.4);
   color: #e2e8f0;
   width: 28px;
   height: 28px;
@@ -206,7 +206,7 @@
 }
 
 .search-submit-btn:hover {
-  background: rgba(139, 92, 246, 0.45);
+  background: rgba(251, 113, 133, 0.45);
   color: #ffffff;
   transform: scale(1.08);
 }
@@ -233,7 +233,7 @@
   border: 1px solid rgba(148, 163, 184, 0.18);
   border-radius: 12px;
   backdrop-filter: blur(24px);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(251, 113, 133, 0.15);
   padding: 0.5rem;
   z-index: 30;
   max-height: 280px;
@@ -301,7 +301,7 @@
   font-size: 0.62rem;
   font-weight: 700;
   font-family: ui-monospace, monospace;
-  color: #38bdf8;
+  color: #fdba74;
 }
 
 .risk-pill {
@@ -421,8 +421,8 @@
 
 .filter-pill.active {
   color: #ffffff;
-  background: rgba(139, 92, 246, 0.35);
-  border: 1px solid rgba(139, 92, 246, 0.5);
+  background: rgba(251, 113, 133, 0.35);
+  border: 1px solid rgba(251, 113, 133, 0.5);
 }
 
 .risk-filter.active {
@@ -473,7 +473,7 @@
   font-weight: 700 !important;
   letter-spacing: 0.06em;
   color: #ffffff !important;
-  text-shadow: 0 0 16px rgba(192, 132, 252, 0.8), 0 2px 8px rgba(0, 0, 0, 0.95);
+  text-shadow: 0 0 16px rgba(253, 186, 116, 0.8), 0 2px 8px rgba(0, 0, 0, 0.95);
 }
 
 .label-dot-indicator {
@@ -498,7 +498,7 @@
 }
 
 .entity-node-label:hover .label-content {
-  border-color: rgba(167, 139, 250, 0.6);
+  border-color: rgba(253, 186, 116, 0.6);
   background: rgba(12, 18, 38, 0.92);
 }
 
@@ -532,7 +532,7 @@
 .txn-amount {
   font-size: 0.65rem;
   font-weight: 600;
-  color: #38bdf8;
+  color: #fdba74;
 }
 
 .txn-flow {
@@ -562,28 +562,26 @@
   border: 1px solid rgba(148, 163, 184, 0.16);
   border-radius: 16px;
   backdrop-filter: blur(28px);
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.85), 0 0 32px rgba(139, 92, 246, 0.18);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.85), 0 0 32px rgba(251, 113, 133, 0.18);
   z-index: 22;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  animation: slideInDossier 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: fadeInDossier 0.6s ease;
   pointer-events: auto;
   transition: width 0.32s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
 }
 
 .entity-dossier-drawer.expanded {
   width: 530px;
-  box-shadow: 0 28px 56px rgba(0, 0, 0, 0.92), 0 0 42px rgba(139, 92, 246, 0.25);
+  box-shadow: 0 28px 56px rgba(0, 0, 0, 0.92), 0 0 42px rgba(251, 113, 133, 0.25);
 }
 
-@keyframes slideInDossier {
+@keyframes fadeInDossier {
   from {
-    transform: translateX(40px);
     opacity: 0;
   }
   to {
-    transform: translateX(0);
     opacity: 1;
   }
 }
@@ -644,8 +642,8 @@
 }
 
 .dossier-expand-btn:hover {
-  background: rgba(139, 92, 246, 0.25);
-  border-color: rgba(139, 92, 246, 0.5);
+  background: rgba(251, 113, 133, 0.25);
+  border-color: rgba(251, 113, 133, 0.5);
   color: #ffffff;
 }
 
@@ -713,8 +711,8 @@
 .entity-dossier-drawer::-webkit-scrollbar-thumb:hover,
 .search-suggestions-dropdown::-webkit-scrollbar-thumb:hover,
 .connections-list::-webkit-scrollbar-thumb:hover {
-  background: rgba(167, 139, 250, 0.65);
-  box-shadow: 0 0 10px rgba(167, 139, 250, 0.45);
+  background: rgba(253, 186, 116, 0.65);
+  box-shadow: 0 0 10px rgba(253, 186, 116, 0.45);
 }
 
 .dossier-body::-webkit-scrollbar-button,
@@ -798,7 +796,7 @@
 /* Direct Relationship Card */
 .direct-txn-card {
   background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  border: 1px solid rgba(253, 186, 116, 0.25);
   border-radius: 10px;
   padding: 0.9rem;
   display: flex;
@@ -810,7 +808,7 @@
   font-size: 0.58rem;
   font-weight: 700;
   letter-spacing: 0.16em;
-  color: #38bdf8;
+  color: #fdba74;
 }
 
 .direct-txn-metric {
@@ -839,8 +837,8 @@
 .tag-flow {
   font-size: 0.54rem;
   font-weight: 700;
-  background: rgba(56, 189, 248, 0.2);
-  color: #7dd3fc;
+  background: rgba(253, 186, 116, 0.2);
+  color: #fed7aa;
   padding: 0.12rem 0.4rem;
   border-radius: 4px;
 }
@@ -872,8 +870,8 @@
 }
 
 .pivot-network-btn {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(59, 130, 246, 0.3));
-  border: 1px solid rgba(139, 92, 246, 0.5);
+  background: linear-gradient(135deg, rgba(251, 113, 133, 0.3), rgba(253, 186, 116, 0.3));
+  border: 1px solid rgba(251, 113, 133, 0.5);
   color: #f1f5f9;
   font-size: 0.72rem;
   font-weight: 600;
@@ -886,8 +884,8 @@
 }
 
 .pivot-network-btn:hover {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.55), rgba(59, 130, 246, 0.55));
-  border-color: rgba(167, 139, 250, 0.8);
+  background: linear-gradient(135deg, rgba(251, 113, 133, 0.55), rgba(253, 186, 116, 0.55));
+  border-color: rgba(253, 186, 116, 0.8);
   transform: translateY(-1px);
 }
 
@@ -1024,7 +1022,7 @@
 }
 
 .connection-row:hover {
-  background: rgba(139, 92, 246, 0.18);
+  background: rgba(251, 113, 133, 0.18);
   transform: translateX(2px);
 }
 
@@ -1110,7 +1108,7 @@
 .dev-hud-toggle:hover {
   background: rgba(25, 25, 40, 0.85);
   color: #f8fafc;
-  border-color: rgba(139, 92, 246, 0.4);
+  border-color: rgba(251, 113, 133, 0.4);
 }
 
 /* Diagnostics HUD Overlay */
@@ -1120,7 +1118,7 @@
   right: 2.8rem;
   z-index: 20;
   background: rgba(10, 10, 18, 0.9);
-  border: 1px solid rgba(139, 92, 246, 0.3);
+  border: 1px solid rgba(251, 113, 133, 0.3);
   border-radius: 8px;
   padding: 0.9rem;
   backdrop-filter: blur(16px);
@@ -1140,7 +1138,7 @@
 .diag-header h3 {
   font-size: 0.65rem;
   letter-spacing: 0.16em;
-  color: #a78bfa;
+  color: #fdba74;
   margin: 0;
 }
 
@@ -1166,7 +1164,7 @@
 }
 
 .diag-row .metric {
-  color: #38bdf8;
+  color: #fdba74;
   font-weight: 600;
 }
 
@@ -1195,7 +1193,7 @@
 }
 
 .spatial-nav-hint .hint-icon {
-  color: #a78bfa;
+  color: #fdba74;
   font-size: 0.7rem;
 }
 

@@ -26,6 +26,10 @@ export default function App() {
     isGraphMode: false,
   });
 
+  // Holds the entity that should become the dossier once the cinematic dive settles,
+  // so the panel doesn't pop in and compete with the camera glide for attention.
+  const pendingEntityRef = useRef(null);
+
   // Initialize Three.js scene
   useEffect(() => {
     if (!containerRef.current) return;
@@ -46,7 +50,14 @@ export default function App() {
       },
       (selectedName) => {
         setSearchQuery(selectedName);
-        setSelectedEntity(getNetworkForEntity(selectedName));
+        pendingEntityRef.current = getNetworkForEntity(selectedName);
+      },
+      () => {
+        // Camera dive has settled (or we were already in graph mode) - reveal the dossier now.
+        if (pendingEntityRef.current) {
+          setSelectedEntity(pendingEntityRef.current);
+          pendingEntityRef.current = null;
+        }
       }
     );
     sceneRef.current = scene;
@@ -70,9 +81,10 @@ export default function App() {
     setShowSuggestions(false);
 
     if (sceneRef.current) {
+      // Dossier reveal is deferred to the scene's onGraphSettled callback so it
+      // appears once the cinematic dive resolves, not before.
+      pendingEntityRef.current = getNetworkForEntity(query);
       sceneRef.current.searchEntity(query);
-      const network = getNetworkForEntity(query);
-      setSelectedEntity(network);
     }
   };
 

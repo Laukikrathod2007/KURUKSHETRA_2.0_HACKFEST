@@ -59,9 +59,9 @@ export class AnimationController {
     this.fUniforms.u_pulseIntensity.value = intensity;
   }
 
-  triggerExpand() {
+  triggerExpand(magnitude = 1.25) {
     this.activeState = 'RADIAL_EXPANSION';
-    this.expandTarget = 1.25;
+    this.expandTarget = magnitude;
     this.expandVelocity = 3.5;
     // Auto rebound back to 0 after apex
     setTimeout(() => {

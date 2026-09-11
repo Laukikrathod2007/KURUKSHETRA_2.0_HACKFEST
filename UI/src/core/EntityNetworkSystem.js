@@ -1,6 +1,12 @@
 import * as THREE from 'three';
 import { getNetworkForEntity } from '../data/syntheticDataset.js';
 
+// Matches CinematicCamera's glide easing so the node constellation unfurls
+// in lockstep with the camera dive instead of drifting independently.
+function easeInOutCubic(t) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
 /**
  * 3D Spatial Constellation Network System
  * Places nodes in true 3D space with rich volumetric depth,
@@ -12,8 +18,10 @@ export class EntityNetworkSystem {
     this.group = new THREE.Group();
     this.scene.add(this.group);
 
-    this.morphProgress = 0; // 0 = Globe, 1 = 3D Graph
+    this.morphProgress = 0; // 0 = Globe, 1 = 3D Graph (eased, what everything renders from)
+    this.morphLinear = 0; // raw linear progress driving the ease curve
     this.targetMorph = 0;
+    this.morphDuration = 1.9; // seconds - matches CinematicCamera's glide duration
     this.currentEntity = null;
 
     this.nodeMeshes = [];
@@ -48,7 +56,7 @@ export class EntityNetworkSystem {
       totalInflow: entityData.totalInflow,
       totalOutflow: entityData.totalOutflow,
       color: '#ffffff',
-      accent: entityData.accent || '#ef4444',
+      accent: entityData.accent || '#fb7185',
       size: 0.088,
       globePos: new THREE.Vector3(0, 0, 1.35),
       graphPos: new THREE.Vector3(0, 0, 0),
@@ -174,7 +182,7 @@ export class EntityNetworkSystem {
       const points = curve.getPoints(50);
       const geo = new THREE.BufferGeometry().setFromPoints(points);
 
-      const edgeColor = targetNode.accent || '#818cf8';
+      const edgeColor = targetNode.accent || '#fed7aa';
       const mat = new THREE.LineBasicMaterial({
         color: new THREE.Color(edgeColor),
         transparent: true,
@@ -220,7 +228,7 @@ export class EntityNetworkSystem {
       const beadGeo = new THREE.BufferGeometry();
       beadGeo.setAttribute('position', new THREE.BufferAttribute(beadPositions, 3));
 
-      const beadColor = conn.accent || '#c084fc';
+      const beadColor = conn.accent || '#fed7aa';
 
       // Refined fiber-optic shader: constant smooth light beads without blinding strobe
       const beadMat = new THREE.ShaderMaterial({
@@ -287,8 +295,16 @@ export class EntityNetworkSystem {
   }
 
   update(dt, elapsed, _camera) {
-    // Smooth cubic easing interpolation for 3D explosion
-    this.morphProgress += (this.targetMorph - this.morphProgress) * (dt * 3.6);
+    // Advance the raw (linear) progress at a fixed rate tied to morphDuration, then apply
+    // the same ease-in-out curve the camera glide uses - so the constellation unfurls over
+    // the full cinematic dive instead of racing to completion via exponential decay.
+    const morphStep = dt / this.morphDuration;
+    if (this.targetMorph > this.morphLinear) {
+      this.morphLinear = Math.min(this.targetMorph, this.morphLinear + morphStep);
+    } else if (this.targetMorph < this.morphLinear) {
+      this.morphLinear = Math.max(this.targetMorph, this.morphLinear - morphStep);
+    }
+    this.morphProgress = easeInOutCubic(THREE.MathUtils.clamp(this.morphLinear, 0, 1));
     const t = this.morphProgress;
 
     // 1. Update Node Positions & Subtle 3D Float
@@ -310,8 +326,8 @@ export class EntityNetworkSystem {
         ringMesh.rotation.z = elapsed * (node.isCenter ? 0.6 : -0.4);
       }
 
-      // Gentle scale transition
-      const morphScale = THREE.MathUtils.smoothstep(t, 0.02, 0.95);
+      // Gentle scale transition, tracking the full glide instead of finishing early
+      const morphScale = THREE.MathUtils.smoothstep(t, 0.0, 1.0);
       mesh.scale.setScalar(Math.max(0.0001, node.size * morphScale));
 
       // Core opacity without harsh strobe
@@ -400,7 +416,7 @@ export class EntityNetworkSystem {
         depthScale,
         depthOpacity,
         visible: isVisible,
-        opacity: THREE.MathUtils.smoothstep(this.morphProgress, 0.15, 0.95) * depthOpacity,
+        opacity: THREE.MathUtils.smoothstep(this.morphProgress, 0.0, 1.0) * depthOpacity,
         connection: node.connection,
         data: node.data,
       });

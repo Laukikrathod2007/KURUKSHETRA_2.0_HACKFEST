@@ -24,12 +24,13 @@ import { EntityNetworkSystem } from './EntityNetworkSystem.js';
  * and cinematic camera choreography.
  */
 export class ParticleUniverseScene {
-  constructor(canvasContainer, onTelemetry, onLabelsUpdate, onEntityHover, onEntitySelect) {
+  constructor(canvasContainer, onTelemetry, onLabelsUpdate, onEntityHover, onEntitySelect, onGraphSettled) {
     this.container = canvasContainer;
     this.onTelemetry = onTelemetry || (() => {});
     this.onLabelsUpdate = onLabelsUpdate || (() => {});
     this.onEntityHover = onEntityHover || (() => {});
     this.onEntitySelect = onEntitySelect || (() => {});
+    this.onGraphSettled = onGraphSettled || (() => {});
 
     this.initScene();
     this.initPostProcessing();
@@ -291,21 +292,24 @@ export class ParticleUniverseScene {
     // 1. Set entity dataset
     this.entityNetwork.setEntity(name);
 
-    // If already in 3D graph mode, smooth transition without full camera replay
+    // If already in 3D graph mode, smooth transition without full camera replay -
+    // UI can update immediately since there's no big camera dive happening.
     if (this.entityNetwork.morphProgress > 0.5) {
-      this.animator.triggerPulse(0.6);
+      this.onGraphSettled();
       return;
     }
 
     // 2. Seamless cinematic hyperspace glide directly into 3D network view
     this.cinematicCamera.startGlideToGraph(
       () => {
-        // Start 3D node constellation unfurling simultaneously on frame 1
+        // Start 3D node constellation unfurling simultaneously on frame 1 -
+        // no separate pulse/glow effect, the camera flyby itself carries the motion.
         this.entityNetwork.morphToGraph();
-        this.animator.triggerPulse(0.8);
       },
       () => {
-        // Glide finished - camera is now in interactive 3D orbit mode
+        // Glide finished - camera is now in interactive 3D orbit mode.
+        // Only now does the dossier UI appear, so it doesn't compete with the dive.
+        this.onGraphSettled();
       }
     );
   }

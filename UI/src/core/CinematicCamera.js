@@ -1,5 +1,11 @@
 import * as THREE from 'three';
 
+// Weighty start, long silky decelerate - reads as a deliberate cinematic dive
+// rather than a linear slide or an abrupt snap.
+function easeInOutCubic(t) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
 /**
  * Cinematic 3D Camera Controller with Smooth Hyperspace Glide,
  * Dynamic Parallax, and Full 360-Degree Interactive 3D Orbit.
@@ -36,10 +42,14 @@ export class CinematicCamera {
 
     // Hyperspace Glide Animation State
     this.glideProgress = 0;
-    this.glideDuration = 1.35; // seconds
+    this.glideDuration = 1.9; // seconds - slow cinematic dive, not a snap
     this.glideFrom = { theta: 0, phi: 0, radius: 5.6 };
     this.glideTo = { theta: 0.38, phi: 1.38, radius: 4.5 };
     this.onGlideComplete = null;
+
+    // Subtle FOV "dolly" pulse to sell speed during the dive
+    this.baseFov = 42;
+    this.currentFovOffset = 0;
 
     this.bindEvents();
   }
@@ -84,6 +94,15 @@ export class CinematicCamera {
       phi: 1.36,
       radius: 4.5,
     };
+
+    // Establishing-shot swing: the camera doesn't dolly straight in - it arcs around
+    // the globe first (extra orbital revolution) before committing to the target,
+    // like a cinematic flyby rather than a zoom.
+    let thetaDelta = this.glideTo.theta - this.glideFrom.theta;
+    thetaDelta = ((thetaDelta + Math.PI) % (Math.PI * 2)) - Math.PI;
+    this.glideSwingTheta = thetaDelta + Math.PI * 2 * 0.65;
+    // Briefly pull back for a wider establishing view before diving in
+    this.glidePeakRadius = Math.max(this.glideFrom.radius, this.glideTo.radius) + 1.4;
 
     if (onStart) onStart();
     this.onGlideComplete = onComplete;
@@ -171,18 +190,28 @@ export class CinematicCamera {
       this.targetRadius = 5.4 + Math.sin(elapsed * 0.3) * 0.4;
 
     } else if (this.mode === 'GLIDE_TO_GRAPH') {
-      // Seamless cinematic glide directly into 3D network view
+      // Cinematic establishing-shot flyby: the globe rotates through an orbital swing
+      // while the camera arcs out to a wide establishing view then dives in and settles
+      // on the target - not a direct dolly-zoom.
       this.glideProgress += dt / this.glideDuration;
       const p = Math.min(this.glideProgress, 1.0);
-      // Smooth cubic ease-out: starts with momentum, decelerates like silk
-      const ease = 1 - Math.pow(1 - p, 3);
+      const ease = easeInOutCubic(p);
 
-      this.theta = THREE.MathUtils.lerp(this.glideFrom.theta, this.glideTo.theta, ease);
+      this.theta = this.glideFrom.theta + this.glideSwingTheta * ease;
       this.phi = THREE.MathUtils.lerp(this.glideFrom.phi, this.glideTo.phi, ease);
-      this.targetRadius = THREE.MathUtils.lerp(this.glideFrom.radius, this.glideTo.radius, ease);
+
+      // Radius arcs out to a wider establishing view mid-glide, then commits to the target -
+      // a single smooth curve (0 -> peak -> settle), not a straight interpolation.
+      const radiusArc = Math.sin(p * Math.PI); // 0 at start/end, 1 at midpoint
+      const radiusBase = THREE.MathUtils.lerp(this.glideFrom.radius, this.glideTo.radius, ease);
+      this.targetRadius = THREE.MathUtils.lerp(radiusBase, this.glidePeakRadius, radiusArc * 0.55);
+
+      // Faint dolly-zoom hint: FOV narrows slightly as we accelerate in, then relaxes back out
+      this.currentFovOffset = -Math.sin(p * Math.PI) * 2.2;
 
       if (p >= 1.0) {
         this.mode = 'INTERACTIVE';
+        this.currentFovOffset = 0;
         if (this.onGlideComplete) {
           this.onGlideComplete();
           this.onGlideComplete = null;
@@ -190,16 +219,19 @@ export class CinematicCamera {
       }
 
     } else if (this.mode === 'GLIDE_TO_GLOBE') {
-      this.glideProgress += dt / 1.2;
+      this.glideProgress += dt / 1.7;
       const p = Math.min(this.glideProgress, 1.0);
-      const ease = 1 - Math.pow(1 - p, 3);
+      const ease = easeInOutCubic(p);
 
       this.theta = THREE.MathUtils.lerp(this.glideFrom.theta, this.glideTo.theta, ease);
       this.phi = THREE.MathUtils.lerp(this.glideFrom.phi, this.glideTo.phi, ease);
       this.targetRadius = THREE.MathUtils.lerp(this.glideFrom.radius, this.glideTo.radius, ease);
 
+      this.currentFovOffset = -Math.sin(p * Math.PI) * 1.6;
+
       if (p >= 1.0) {
         this.mode = 'CINEMATIC_ORBIT';
+        this.currentFovOffset = 0;
       }
 
     } else if (this.mode === 'INTERACTIVE') {
@@ -220,8 +252,14 @@ export class CinematicCamera {
       }
     }
 
-    // Smooth radius interpolation
-    this.radius += (this.targetRadius - this.radius) * (dt * 5.0);
+    // Smooth radius interpolation - skipped during GLIDE_TO_GRAPH since that mode
+    // already authors a fully-shaped radius arc directly (avoids double-smoothing lag
+    // that would desync the radius curve from the theta/phi swing).
+    if (this.mode !== 'GLIDE_TO_GRAPH') {
+      this.radius += (this.targetRadius - this.radius) * (dt * 5.0);
+    } else {
+      this.radius = this.targetRadius;
+    }
 
     // Spherical to Cartesian 3D coordinates
     const x = this.radius * Math.sin(this.phi) * Math.sin(this.theta);
@@ -256,6 +294,13 @@ export class CinematicCamera {
     this.currentTarget.copy(baseTarget).add(lateralShift);
     this.camera.up.copy(camUp);
     this.camera.lookAt(this.currentTarget);
+
+    // Apply the dolly-zoom FOV pulse (only touches the projection matrix when it actually changes)
+    const targetFov = this.baseFov + this.currentFovOffset;
+    if (Math.abs(this.camera.fov - targetFov) > 0.001) {
+      this.camera.fov = targetFov;
+      this.camera.updateProjectionMatrix();
+    }
   }
 
   destroy() {
