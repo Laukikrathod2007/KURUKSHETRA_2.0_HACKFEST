@@ -109,6 +109,38 @@ and verifies the audit record correctly tags it as
 `user_override_after_warning`, distinct from an uncontested ALLOW
 (`04-risk-and-policy.md` §6).
 
+### 2.9 Multi-Specialist Degradation (D10)
+
+A test that forces exactly one of the four specialists to fail while the
+other three succeed, and verifies: (a) the Coordinator still produces a
+valid verdict from the remaining three, (b) `specialists_returned` in the
+audit record correctly lists only the three, (c) the invariant in §2.1
+still holds. A second test forces all four to fail and verifies this
+correctly falls through to full fail-open (§2.5), not a different, unlogged
+failure mode. This is what makes the degradation semantics in
+[`03-agent-and-tools.md`](./03-agent-and-tools.md) §5 a tested behavior,
+not just documented intent.
+
+### 2.10 Historical Pattern Retrieval Relevance (D11)
+
+Reported honestly, at hackathon scale: for each scenario in the suite
+with a note authored to resemble a specific corpus typology (e.g.,
+Scenario 9), does `retrieve_similar_scam_pattern` return that typology
+with a similarity score above the configured floor? And — equally
+important — for scenarios with no intended resemblance to any corpus
+entry (e.g., Scenario 1, the normal payment), does it correctly return
+`null` rather than forcing a spurious match? Both directions are
+reported; only reporting the first would hide a system that "detects"
+everything indiscriminately.
+
+### 2.11 Velocity Feature Correctness (D12)
+
+A test that constructs a known sequence of prior transactions and
+verifies `velocity_txn_count`/`velocity_cumulative_amount` compute the
+expected values for a given rolling window — a straightforward
+correctness test, but necessary given this feature is new and directly
+feeds `hot_score`.
+
 ---
 
 ## 3. Threshold Calibration Method
@@ -141,6 +173,10 @@ otherwise.
 | `test_red_team` | §2.6, the adversarial payload list | D9 |
 | `test_audit_integrity` | §2.7 | D6 |
 | `test_override_logging` | §2.8 | D3 (override handling) |
+| `test_block_is_absolute` | Given `hard_block = true`: verifies `action == BLOCK` regardless of `hot_score`/`hot_confidence`, verifies the agent is never invoked, and verifies no "proceed anyway" control is present in the rendered UI state — distinguishing BLOCK from PAUSE (`01-srs.md` FR-POL-05) | D5, FR-POL-05 |
+| `test_specialist_degradation` | §2.9, partial and total specialist failure | D10, FR-AGT-07 |
+| `test_rag_relevance` | §2.10, both the positive-match and correct-null-match directions | D11, FR-AGT-08 |
+| `test_velocity_features` | §2.11, rolling-window correctness | D12, FR-RISK-07 |
 | `test_latency` | §2.4, local timing distributions | Supports architecture claims in `02-architecture.md` §6, not a standalone product claim |
 
 ---

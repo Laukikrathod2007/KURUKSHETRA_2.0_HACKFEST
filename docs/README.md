@@ -24,7 +24,7 @@ solved. No application code has been written against this spec yet.
    What is measured, how, and the evaluation harness structure.
 8. [`07-demo-script.md`](./07-demo-script.md) — Judge-facing walkthrough.
 9. [`08-data-and-scenarios.md`](./08-data-and-scenarios.md) — Data model
-   and the seven-scenario suite.
+   and the nine-scenario suite.
 
 ### The design filter behind every decision in this spec
 

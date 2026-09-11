@@ -131,17 +131,77 @@ it is not built, diagrammed as built, or depended on by any demo.
 | **D7** | Fail-open demonstration (system degrades gracefully if AI reasoning fails) | Safe autonomous decision-making |
 | **D8** | Uncertainty-aware decisioning (thin evidence ≠ strong evidence) | Safe autonomous decision-making; prevents over-blocking legitimate payments |
 | **D9** | Adversarial / prompt-injection red-team demonstration | Safe autonomous decision-making, proven live rather than asserted |
+| **D10** | Multi-specialist reasoning: the warm-path agent runs a small, fixed set of specialist lenses (identity/purpose, linguistic manipulation, behavioral velocity, historical pattern) and a coordinator synthesizes them into one verdict | "Analyzing a payment request... evaluating risk" — deepens D2 into genuine multi-angle reasoning rather than one pass |
+| **D11** | Historical pattern retrieval (RAG) against a small, project-authored corpus of documented scam typologies | Recipient/pattern verification; explainability (cites the closest known pattern, not just a raw classification) |
+| **D12** | Velocity-window detection: rolling-window features (transaction count/amount over recent time windows) added to the hot path | Transaction-risk analysis; closes a specific gap in the original design — slow-burn, multi-tranche scams (e.g. escalating "task scam" transfers) that a single-transaction view misses |
 
 D1 and D2 are built as **one fused reasoning capability**, not two
 separate bolt-ons: the agent forms a hypothesis about the payment's
 purpose and checks it against the resolved recipient identity as part of
-a single reasoning pass.
+a single reasoning pass. D10 formalizes this fusion into an explicit
+multi-specialist structure — see §5.1.2 below and
+[`03-agent-and-tools.md`](./03-agent-and-tools.md) §2 for the full design.
+
+### 5.1.1 Why D10–D12 were added, and what was deliberately *not* copied
+
+D10–D12 were added after comparing this project against a real,
+independently-built agentic fraud-detection system
+(`streaming-fraud-intelligence`, github.com/siddharthaDevineni) that uses
+five parallel specialist LLM agents and a RAG store of historical
+confirmed-fraud cases. Two things from that comparison were adopted, and
+one thing was explicitly and deliberately **not** adopted:
+
+- **Adopted:** the idea that a single reasoning pass under-uses what an
+  LLM-driven investigation can do — multiple specialist lenses, each
+  looking at a different facet of the evidence, produce a richer,
+  more defensible verdict than one generalist pass. This is D10.
+- **Adopted, but re-scoped for honesty:** retrieval against a case
+  corpus. Their system retrieves against *live, cross-customer confirmed
+  fraud cases* — which requires real multi-user data this project does
+  not have and, per §5.3 C1, refuses to fabricate. **This project's RAG
+  corpus (D11) is a small, static, project-authored reference set of
+  documented scam typologies** (tech-support scam, romance scam,
+  investment/pig-butchering scam, government-impersonation scam, etc.) —
+  closer to a curated reference textbook than a live case database. This
+  is buildable and honest; a fabricated live case-flagging signal is not.
+  See [`08-data-and-scenarios.md`](./08-data-and-scenarios.md) §1.5 for
+  the corpus specification.
+- **Explicitly NOT adopted:** their design lets the LLM ensemble assess
+  its own confidence/tier rather than a separate deterministic formula.
+  This project keeps D5 (deterministic-policy-supreme invariant)
+  unchanged — D10's coordinator still emits the same schema-validated,
+  escalate-only verdict defined in
+  [`03-agent-and-tools.md`](./03-agent-and-tools.md) §7, and the Policy
+  Engine, not any agent, still has sole final authority (FR-POL-01,
+  FR-POL-04). Adding more reasoning depth does not relax who is allowed
+  to decide.
+
+### 5.1.2 The specialist set (D10)
+
+Four specialists, not five copied verbatim from another project's fraud
+taxonomy — each chosen because it maps to a signal this problem actually
+has, per the Core Lever (§2):
+
+| Specialist | Question it answers | Backed by |
+|---|---|---|
+| Identity & Purpose | Does what this payment claims to be for match who the recipient actually is? | D1, FR-REC-02 |
+| Linguistic Manipulation | Does the note show urgency, secrecy, or authority-impersonation language? | D2, FR-AGT-03 |
+| Behavioral Velocity | Is this payment's timing/amount/frequency unusual against a rolling window of this user's own history — not just a single-transaction comparison? | D12 (new), FR-RISK-07 |
+| Historical Pattern | Does this payment's shape resemble a known, documented scam typology? | D11 (new), FR-AGT-08 |
+
+A **Coordinator** step (FR-AGT-07) reconciles the four findings into the
+single structured verdict the Policy Engine consumes — it does not add a
+fifth independent voice, it synthesizes the other four. This keeps the
+system inspectable (four specific questions, four specific answers, one
+synthesis) rather than an opaque ensemble. Full design in
+[`03-agent-and-tools.md`](./03-agent-and-tools.md) §2.
 
 ### 5.2 BONUS — build only after core is complete and demo-stable
 
 | # | Capability | Why bonus, not core |
 |---|---|---|
 | **B1** | Simulated trusted-contact / co-approval step for high-risk + low-confidence + vulnerable-user cases | Refines *what happens next* for one user segment; does not change whether the system detects a scam. Cheap to add (a toggle + a simulated notification) once core is solid. |
+| **B2** | Feedback-driven corpus growth: an operator can mark a past decision "confirmed scam," which adds it as a new retrievable case in the D11 corpus | A scoped, honest analog to the "online learning" idea from the comparison project — it enriches *retrieval*, not the trained risk model itself (no live retraining of the hot-path model is attempted; see §5.3 C9). Valuable to show the system can improve, but not required for the core demo to be complete. |
 
 ### 5.3 CUT — explicitly rejected, not built
 
@@ -155,6 +215,8 @@ a single reasoning pass.
 | **C6** | Literal fund custody / "escrow hold" as a cooling-off mechanism | Requires ledger write access, contradicting the system's own no-fund-custody invariant. Any cooling-off is a soft UI pause only. |
 | **C7** | Exotic/experimental ideas (scambaiter decoys, biometric coercion detection, acoustic deepfake detection, blockchain tracing, FX locks) | Require hardware/data/infrastructure this project cannot access; none change whether the Core Lever fires. |
 | **C8** | Reporting evaluation numbers as if empirically proven on real-world data | This project reports only what it measures on its own synthetic suite — see [`06-evaluation-and-testing.md`](./06-evaluation-and-testing.md) §1. |
+| **C9** | Live retraining of the hot-path risk model from feedback (true "online learning") | Genuine online learning (as in the comparison project's River-based approach) requires a real feedback-label pipeline and drift monitoring this project cannot honestly run in a hackathon timeframe. B2 (feedback-driven RAG corpus growth) is the honest, scoped substitute — it grows what can be *retrieved*, not the trained model's weights. |
+| **C10** | Retrieving against live, cross-user confirmed-fraud case data | Would require real multi-user data this project does not have — the same reason C1 is rejected. D11's corpus is static and project-authored instead (§5.1.1). |
 
 ---
 
@@ -170,6 +232,7 @@ Internal/codebase name: `kurukshetra` (matches the existing
 
 | Document | Purpose |
 |---|---|
+| [`PRD.md`](./PRD.md) | Single comprehensive, standalone narrative covering the entire project end to end — read this if you want everything in one document |
 | [`01-srs.md`](./01-srs.md) | Functional & non-functional requirements, traced to ps.md |
 | [`02-architecture.md`](./02-architecture.md) | System architecture, components, data flow |
 | [`03-agent-and-tools.md`](./03-agent-and-tools.md) | Guardian agent reasoning loop, tool contracts, output schema |
@@ -186,8 +249,16 @@ Internal/codebase name: `kurukshetra` (matches the existing
 - Not a general-purpose fraud-detection platform.
 - Not a compliance or regulatory-reporting product.
 - Not a claim of production readiness or real-world measured performance.
-- Not a multi-agent "swarm" — a single bounded agent is sufficient; see
-  [`02-architecture.md`](./02-architecture.md) §1 for the reasoning.
+- Not an unbounded multi-agent "swarm" — D10 adds four fixed specialist
+  lenses plus one coordinator (five reasoning steps total, not an
+  open-ended negotiating ensemble), all still subordinate to one
+  deterministic Policy Engine; see
+  [`02-architecture.md`](./02-architecture.md) §1 and
+  [`03-agent-and-tools.md`](./03-agent-and-tools.md) §2 for the
+  reasoning and the bound.
+- Not a system where the LLM assesses its own final confidence/authority
+  — that decision stays with deterministic code no matter how many
+  specialist lenses feed into it (§5.1.1).
 
 ## 9. Assumptions & Constraints
 

@@ -11,13 +11,16 @@
 | Does this recipient's registered identity match what the payment claims it's for? | Deterministic lookup + comparison (mock directory) | A lookup and category comparison, not a reasoning task. The *result* is handed to the agent as evidence, not derived by it. |
 | Does this payment note contain manipulation language, and what does it imply? | LLM | The one job in the pipeline that is genuinely unstructured/context-dependent language understanding — what ps.md's "LLM-based reasoning" requirement is for. |
 | Given everything found so far, should this transaction be paused? | Deterministic policy layer, never the LLM directly | Safety-critical and must be auditable and non-manipulable. The LLM's output is one input to it, capped to only increase caution. |
-| Multiple agents negotiating/voting? | Rejected — one bounded agent is sufficient | This problem has one reasoning job (interpret note + recipient context) and one decision job (apply policy). Splitting reasoning across multiple negotiating agents adds latency, cost, and non-determinism with no corresponding capability gained. |
-| Retrieval-augmented generation? | Not used | No large evolving document corpus to search — the recipient directory and user history are small structured lookups exposed as tools, not a RAG index. |
+| Should multiple angles of the same evidence be reasoned about separately? | Yes — four fixed specialist lenses (D10) feeding one coordinator | A single generalist LLM pass tends to under-weight signals it isn't explicitly prompted to look for. Four narrow, specific questions (§3.1) each get a focused answer; the coordinator then reconciles them into one verdict. This is *not* the same as unbounded multi-agent negotiation (next row) — it's a fixed-shape decomposition of one reasoning job into four sub-questions, still bounded, still timed, still subordinate to the Policy Engine. |
+| Multiple agents independently negotiating/voting on the *final decision*? | Rejected | The specialists above answer sub-questions, not the final action — they do not vote, debate, or have decision authority. Splitting *decision* authority across negotiating agents adds latency, cost, and non-determinism with no corresponding capability gained, and — per the comparison against `streaming-fraud-intelligence` (`00-overview.md` §5.1.1) — hands final-confidence judgment to the model itself, which this project explicitly does not do. |
+| Retrieval-augmented generation? | Used narrowly (D11) | Not for general document search — for one specific, bounded lookup: does this payment's shape match a known, documented scam typology? The corpus is small (tens of entries), static, and project-authored, not a live or growing index of real cases (see `08-data-and-scenarios.md` §1.5). This is retrieval against a reference, not memory of real people. |
 
 **Summary:** deterministic/ML components handle everything structured and
-numeric; the LLM handles the one thing that is unstructured and
-linguistic; a deterministic policy layer has final authority and can only
-be moved toward caution by what the LLM finds, never away from it.
+numeric; the LLM (across four bounded specialist lenses plus one
+synthesis step) handles what is unstructured, linguistic, or requires
+comparing against known patterns; a deterministic policy layer has final
+authority and can only be moved toward caution by what the agent finds,
+never away from it.
 
 ---
 
@@ -47,25 +50,31 @@ action fires — not inside a synchronous payment-clearing call.
                 │
                 ▼
  HOT PATH (deterministic + ML)
- Rule checks → Recipient resolution (mock directory) →
+ Rule checks (incl. hard_block) → Recipient resolution (mock directory) →
  Purpose–identity comparison → Feature vector →
- Trained gradient-boosted-tree model → hot_tier + confidence
+ Trained gradient-boosted-tree model → hot_score (0-100), hot_tier,
+ confidence, hard_block
                 │
+    hard_block == true? ──yes──► POLICY LAYER → action = BLOCK (terminal,
+                │                no override path — skips warm path)
+                │ no
     hot_tier confidently LOW? ──yes──► ALLOW
                 │ no
                 ▼
- WARM PATH (bounded LLM agent)
+ WARM PATH (bounded, four specialist lenses + one coordinator — see §3.1)
  Given: note, resolved recipient identity, purpose–identity result,
- user history summary. Agent conditionally calls its read-only tools,
- emits a structured verdict:
+ user history summary, rolling-window velocity features, RAG corpus.
+ Specialists run concurrently, each bounded; Coordinator synthesizes
+ their findings into ONE structured verdict:
  { scam_typology, manipulation_signals[], confidence, evidence[],
-   recommended_tier_delta }
- Hard timeout; on failure/timeout → fail open.
+   matched_pattern_reference, recommended_tier_delta }
+ Hard total timeout; on failure/timeout at any stage → fail open.
                 │
                 ▼
  POLICY LAYER (deterministic, sole authority)
  final_tier = max(hot_tier, capped(agent verdict))   # never below hot_tier
- → action: ALLOW / ADVISE / CHALLENGE / PAUSE
+ → action: ALLOW / ADVISE / CHALLENGE / PAUSE   (BLOCK only via the
+   hard_block branch above — never reachable from score alone)
                 │
                 ▼
  EXPLAINABILITY + INTERVENTION UI
@@ -76,6 +85,44 @@ action fires — not inside a synchronous payment-clearing call.
  AUDIT LOG (hash-chained, append-only)
 ```
 
+### 3.1 Warm-Path Internal Structure (D10)
+
+```
+                    WARM PATH INVOKED
+                            │
+        ┌───────────┬───────┴───────┬───────────────┐
+        ▼           ▼               ▼               ▼
+   Identity &   Linguistic     Behavioral       Historical
+    Purpose    Manipulation     Velocity         Pattern
+   Specialist   Specialist     Specialist       Specialist
+        │           │               │               │
+   (checks tool  (classifies    (checks rolling  (RAG lookup
+    outputs       note for       windows —        against the
+    already       urgency/       txn count/       static scam-
+    computed by   secrecy/       amount over      typology corpus,
+    the hot path) authority)     recent time)     08-data-and-scenarios.md §1.5)
+        │           │               │               │
+        └───────────┴───────┬───────┴───────────────┘
+                             ▼
+                       COORDINATOR
+          Reconciles all four findings into ONE schema-
+          validated verdict (03-agent-and-tools.md §7).
+          Does not add new evidence of its own — only
+          synthesizes and resolves conflicts between the
+          four specialists' outputs.
+                             │
+                             ▼
+              → Policy Engine (still sole final authority)
+```
+
+Each specialist is bounded independently (its own smaller timeout inside
+the total warm-path budget, §6); if one specialist fails or times out,
+the Coordinator synthesizes from whichever specialists *did* return,
+rather than failing the whole warm path — full degradation semantics in
+[`03-agent-and-tools.md`](./03-agent-and-tools.md) §5. Full specialist
+definitions are in [`03-agent-and-tools.md`](./03-agent-and-tools.md) §2;
+tool access is in §3; the Coordinator's synthesis output is in §7.
+
 ---
 
 ## 4. Components
@@ -85,8 +132,9 @@ action fires — not inside a synchronous payment-clearing call.
 | Payment Simulator UI | Compose/review a payment; render evidence reports, graduated friction, audit history | Real |
 | Recipient Directory | Resolves a recipient identifier to an identity category + simulated account age | Simulated (mock, in-project dataset) |
 | User History Store | Prior recipients, typical amounts/timing for the demo persona | Simulated (synthetic dataset) |
-| Risk Engine (hot path) | Rule checks + trained model → score and tier | Real — trained model, on synthetic data, labeled as such |
-| Guardian Agent (warm path) | Bounded LLM reasoning via a small read-only tool set | Real — genuine LLM calls, structured output. Replaces the fully-mocked module in the existing partial prototype. |
+| Risk Engine (hot path) | Rule checks + trained model + rolling-window velocity features → score and tier | Real — trained model, on synthetic data, labeled as such |
+| Historical Pattern Store (RAG corpus) | Small, static, project-authored embeddings of documented scam typologies | Real — a genuine small local vector store (or equivalent similarity search), over synthetic/authored reference text, not live case data |
+| Guardian Agent (warm path) | Four bounded specialist reasoning lenses + one coordinator synthesis step (§3.1) | Real — genuine LLM calls, structured output at every stage. Replaces the fully-mocked module in the existing partial prototype. |
 | Policy Engine | Sole authority mapping (hot tier, agent verdict, uncertainty) → final action | Real |
 | Explainability Engine | Plain-language evidence report; safe phrasing | Real |
 | Audit Log | Hash-chained append-only decision record | Real — local hash chain, not enterprise WORM/blockchain |
@@ -99,19 +147,29 @@ action fires — not inside a synchronous payment-clearing call.
 1. UI submits `{sender_id, recipient_id, amount, note, timestamp}`.
 2. Recipient Directory resolves `recipient_id → {identity_category, account_age_days, is_first_time_for_user}`.
 3. A purpose classifier derives `stated_purpose_category` from the note
-   (rule/keyword-based, or folded into the agent step — see
-   [`03-agent-and-tools.md`](./03-agent-and-tools.md) §1).
-4. Risk Engine assembles the feature vector and produces
-   `{hot_score, hot_tier, hot_confidence}`.
-5. If `hot_tier` is confidently LOW, orchestrator short-circuits to ALLOW —
-   no agent call, no added latency.
-6. Otherwise the orchestrator invokes the Guardian Agent with the
-   assembled context; it returns its structured verdict or the pipeline
-   hits the timeout/fallback path.
-7. Policy Engine computes `final_tier` and `action`.
-8. Explainability Engine renders the plain-language report for `action`.
-9. UI presents graduated friction; captures the user's final choice.
-10. Audit Log appends the record, hash-chained to the previous entry.
+   (rule/keyword-based, or folded into the Identity & Purpose specialist
+   — see [`03-agent-and-tools.md`](./03-agent-and-tools.md) §2).
+4. Risk Engine computes rolling-window velocity features (transaction
+   count/cumulative amount over recent time windows, against the User
+   History Store) alongside the rest of the feature vector, and produces
+   `{hot_score (0-100), hot_tier, hot_confidence, hard_block}`.
+5. If `hard_block = true`, Policy Engine immediately sets `action = BLOCK`
+   (terminal, no override path) and processing skips to step 11 — no
+   agent call.
+6. Else if `hot_tier` is confidently LOW, orchestrator short-circuits to
+   ALLOW — no agent call, no added latency.
+7. Otherwise the orchestrator invokes the Guardian Agent's four
+   specialists concurrently (§3.1), each with the assembled context; the
+   Historical Pattern specialist additionally queries the RAG corpus.
+8. The Coordinator synthesizes whichever specialists returned (all four,
+   or fewer under degradation — `03-agent-and-tools.md` §5) into one
+   structured verdict, or the pipeline hits the total-timeout fallback
+   path.
+9. Policy Engine computes `final_tier` and `action` (one of ALLOW,
+   ADVISE, CHALLENGE, PAUSE — BLOCK only arises via step 5).
+10. Explainability Engine renders the plain-language report for `action`.
+11. UI presents graduated friction; captures the user's final choice.
+12. Audit Log appends the record, hash-chained to the previous entry.
 
 ---
 
@@ -119,9 +177,11 @@ action fires — not inside a synchronous payment-clearing call.
 
 | Stage | Local target | Note |
 |---|---|---|
-| Hot path (steps 1–5) | Low single-digit ms | Achievable locally; not a claimed production SLA |
-| Warm path (agent call) | 1–5s, hard-capped | Bounded by a real LLM API call — the one stage this project does not fully control, hence fail-open |
-| End-to-end (ambiguous case) | Under ~5s perceived | Acceptable for a confirmation-step UX, not evaluated against a payment-rail SLA |
+| Hot path (steps 1–5, incl. velocity features) | Low single-digit ms | Achievable locally; not a claimed production SLA |
+| Each specialist (4x, concurrent) | ≤3s per specialist, own sub-timeout | Run concurrently, not sequentially — total warm-path time is not 4x a single call |
+| Coordinator synthesis | ≤1.5s | One additional LLM call over the specialists' combined findings |
+| Warm path total (steps 7–8) | ≤6s, hard-capped | Bounded by real LLM API calls — the one stage this project does not fully control, hence fail-open. Wider than the original single-agent 4s budget because it now covers four concurrent specialist calls plus one synthesis call, not one call. |
+| End-to-end (ambiguous case) | Under ~7s perceived | Acceptable for a confirmation-step UX, not evaluated against a payment-rail SLA |
 
 All timing figures reported in evaluation are measured locally during
 testing and labeled as such — see
@@ -145,6 +205,10 @@ testing and labeled as such — see
 
 No real bank/NPCI/UPI integration · no real device telemetry · no
 multi-user network signals · no enterprise infrastructure · no
-multi-agent swarm · no RAG pipeline · no autonomous permanent actions.
-See [`00-overview.md`](./00-overview.md) §3.1 and §5.3 for the full,
-binding list.
+*unbounded* multi-agent swarm (the bounded four-specialist-plus-
+coordinator structure in §3.1 is in scope) · no RAG against live/
+cross-user case data (RAG against the small static corpus in §4 and
+`08-data-and-scenarios.md` §1.5 is in scope) · no live retraining of the
+hot-path model · no autonomous permanent actions outside BLOCK. See
+[`00-overview.md`](./00-overview.md) §3.1 and §5.3 for the full, binding
+list.
