@@ -35,3 +35,10 @@ htmlcov/
 *.swp
 *.swo
 .DS_Store
+
+# Office temporary files
+~$*.docx
+~$*.doc
+~$*.pptx
+~$*.xlsx
+*.tmp
