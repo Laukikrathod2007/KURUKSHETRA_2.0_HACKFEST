@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Google Pay — Powered by Kurukshetra FRM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="mode-gpay">
+
+  <!-- Top Global Bar with Mode Switcher & Audit Chip -->
+  <header class="global-navbar">
+    <div class="nav-left">
+      <div class="google-g-logo">
+        <span style="color:#4285F4">G</span><span style="color:#EA4335">o</span><span style="color:#FBBC05">o</span><span style="color:#4285F4">g</span><span style="color:#34A853">l</span><span style="color:#EA4335">e</span>
+        <span class="pay-text">Pay</span>
+      </div>
+      <span class="runtime-badge">KURUKSHETRA LIVE ENGINE</span>
+    </div>
+
+    <div class="nav-center view-mode-selector">
+      <button class="mode-toggle-btn active" id="btn-mode-phone">📱 GPay App</button>
+      <button class="mode-toggle-btn" id="btn-mode-dual">🖥️ Dual View (App + SOC)</button>
+      <button class="mode-toggle-btn" id="btn-mode-soc">🛡️ Ecosystem SOC</button>
+    </div>
+
+    <div class="nav-right">
+      <button class="btn-tool-pill" id="btn-open-citizen-checker" title="Open Public Scam Score Portal (Feature #34)">
+        🛡️ Citizen Scam Check
+      </button>
+      <div class="metric-chip" id="audit-chip" title="Click to verify SHA-256 hash-chain integrity">
+        <span class="icon">⛓️</span>
+        <span>AUDIT: <strong id="audit-status">VERIFIED</strong></span>
+      </div>
+      <button class="btn-reset-pill" id="btn-reset-db" title="Reset all bank accounts and database to seed">
+        <span>🔄</span> Reset
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="main-viewport-container">
+
+    <!-- ================================================================= -->
+    <!-- SECTION 1: GOOGLE PAY MOBILE PHONE CONTAINER                      -->
+    <!-- ================================================================= -->
+    <div class="gpay-phone-wrapper" id="gpay-phone-wrapper">
+      
+      <!-- Multi-App Rail Switcher -->
+      <div class="phone-app-rail-switcher">
+        <button class="rail-tab-btn active" id="tab-app-gpay">🔵 Google Pay</button>
+        <button class="rail-tab-btn" id="tab-app-phonepe">🟣 PhonePe</button>
+        <button class="rail-tab-btn" id="tab-app-netbanking">🏛️ SBI NetBanking</button>
+      </div>
+
+      <div class="phone-device-bezel">
+        <!-- Floating Trusted Contact Alert Toast (Feature #26) -->
+        <div class="trusted-alert-toast hidden" id="trusted-alert-toast">
+          <div class="toast-bell">🔔</div>
+          <div class="toast-body">
+            <div class="toast-title">Kurukshetra Emergency Alert</div>
+            <div class="toast-msg" id="toast-alert-text">Alert sent to Trusted Contact (+91 98200 99887)</div>
+          </div>
+          <button class="toast-close" id="btn-close-toast">&times;</button>
+        </div>
+
+        <div class="phone-notch">
+          <div class="phone-camera"></div>
+          <div class="phone-speaker-slot"></div>
+        </div>
+
+        <div class="phone-screen-inner" id="phone-screen-inner">
+
+          <!-- 1A: ANDROID LOGIN SCREEN (Displayed if not authenticated) -->
+          <div class="gpay-view" id="screen-login">
+            <div class="login-brand-hero">
+              <div class="hero-g-circle">
+                <svg width="40" height="40" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                </svg>
+              </div>
+              <h1 class="hero-title">Google Pay</h1>
+              <p class="hero-subtitle">Fast, simple, and secure payments</p>
+            </div>
+
+            <div class="login-form-card">
+              <div class="login-instruction">Sign in to your simulated Android phone:</div>
+              <div class="login-field-group">
+                <label for="login-username">Username</label>
+                <input type="text" id="login-username" class="g-input" value="android1" placeholder="android1">
+              </div>
+              <div class="login-field-group">
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" class="g-input" value="1234" placeholder="1234">
+              </div>
+
+              <div class="login-quick-helper">
+                <span>Demo User:</span> <code>android1</code> / <code>1234</code>
+                <button type="button" class="btn-text" id="btn-quick-fill">Auto-fill</button>
+              </div>
+
+              <button type="button" class="btn-gpay-primary" id="btn-do-login">
+                Sign in &rarr;
+              </button>
+            </div>
+
+            <div class="login-footer-security">
+              <span>🔒 Protected by Kurukshetra Real-Time ML/Heuristic Interception</span>
+            </div>
+          </div>
+
+          <!-- 1B: GPAY HOME SCREEN (Authenticated State) -->
+          <div class="gpay-view hidden" id="screen-gpay-home">
+            
+            <!-- GPay Header with Search & Profile -->
+            <div class="gpay-home-header">
+              <div class="gpay-search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="gpay-search-input" placeholder="Pay by name or phone number">
+                <span class="mic-icon">🎙️</span>
+              </div>
+              <div class="gpay-profile-circle" id="btn-open-profile" title="View Profile">
+                <span>A</span>
+              </div>
+            </div>
+
+            <!-- Scrollable Home Feed -->
+            <div class="gpay-home-scroll">
+              
+              <!-- Quick Action 4x2 Grid -->
+              <div class="gpay-actions-grid">
+                <div class="gpay-action-item" id="action-scan-qr">
+                  <div class="action-icon-circle blue-grad">📷</div>
+                  <span class="action-label">Scan any QR</span>
+                </div>
+                <div class="gpay-action-item" id="action-pay-contacts">
+                  <div class="action-icon-circle blue-grad">👥</div>
+                  <span class="action-label">Pay contacts</span>
+                </div>
+                <div class="gpay-action-item" id="action-pay-phone">
+                  <div class="action-icon-circle blue-grad">📱</div>
+                  <span class="action-label">Pay phone</span>
+                </div>
+                <div class="gpay-action-item" id="action-bank-transfer">
+                  <div class="action-icon-circle blue-grad">🏛️</div>
+                  <span class="action-label">Bank transfer</span>
+                </div>
+                <div class="gpay-action-item" id="action-pay-upi">
+                  <div class="action-icon-circle blue-grad">🆔</div>
+                  <span class="action-label">Pay UPI ID</span>
+                </div>
+                <div class="gpay-action-item">
+                  <div class="action-icon-circle blue-grad">🔄</div>
+                  <span class="action-label">Self transfer</span>
+                </div>
+                <div class="gpay-action-item">
+                  <div class="action-icon-circle blue-grad">💡</div>
+                  <span class="action-label">Pay bills</span>
+                </div>
+                <div class="gpay-action-item">
+                  <div class="action-icon-circle blue-grad">📶</div>
+                  <span class="action-label">Recharge</span>
+                </div>
+              </div>
+
+              <!-- People Section -->
+              <div class="gpay-section-container">
+                <div class="section-heading-row">
+                  <span class="section-title">People</span>
+                  <span class="section-action" id="btn-add-contact">+ Add</span>
+                </div>
+
+                <div class="people-avatars-grid">
+                  <!-- Suresh Kirana (Safe Grocer) -->
+                  <div class="person-contact-item" data-vpa="grocer.local@oksbi" data-name="Suresh Kirana Store" data-amount="450" data-note="Groceries">
+                    <div class="person-avatar-circle person-suresh">
+                      <span>SK</span>
+                      <div class="safe-badge-tick">✓</div>
+                    </div>
+                    <div class="person-name">Suresh Kirana</div>
+                    <div class="person-sub">Trusted Grocer</div>
+                  </div>
+
+                  <!-- New Shop (Unknown) -->
+                  <div class="person-contact-item" data-vpa="newshop.mumbai@oksbi" data-name="Unregistered New Shop" data-amount="2500" data-note="Apparel">
+                    <div class="person-avatar-circle person-newshop">
+                      <span>NS</span>
+                    </div>
+                    <div class="person-name">New Shop</div>
+                    <div class="person-sub">Unverified</div>
+                  </div>
+
+                  <!-- Fake CBI Clearance Cell (Extortion Scam) -->
+                  <div class="person-contact-item" data-vpa="cbi.clearance.cell@sbi" data-name="Manoj Kumar (Fake CBI)" data-amount="75000" data-note="GOVT_FINE">
+                    <div class="person-avatar-circle person-cbi">
+                      <span>CBI</span>
+                      <div class="alert-badge-icon">⚠️</div>
+                    </div>
+                    <div class="person-name">CBI Clearance</div>
+                    <div class="person-sub" style="color:#fb923c;">Extortion Scam</div>
+                  </div>
+
+                  <!-- Deepak Layering (Mule Syndicate) -->
+                  <div class="person-contact-item" data-vpa="mule.syndicate@axis" data-name="Deepak Layering Account" data-amount="50000" data-note="Crypto Settlement">
+                    <div class="person-avatar-circle person-mule">
+                      <span>DL</span>
+                      <div class="danger-badge-icon">🛑</div>
+                    </div>
+                    <div class="person-name">Mule Syndicate</div>
+                    <div class="person-sub" style="color:#f87171;">Rapid Drain</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Businesses Section -->
+              <div class="gpay-section-container">
+                <div class="section-heading-row">
+                  <span class="section-title">Businesses</span>
+                  <span class="section-action">Explore</span>
+                </div>
+                <div class="people-avatars-grid">
+                  <div class="person-contact-item" id="biz-croma">
+                    <div class="person-avatar-circle biz-croma-avatar">
+                      <span>CR</span>
+                    </div>
+                    <div class="person-name">Croma</div>
+                    <div class="person-sub">Electronics</div>
+                  </div>
+                  <div class="person-contact-item">
+                    <div class="person-avatar-circle biz-swiggy">
+                      <span>SW</span>
+                    </div>
+                    <div class="person-name">Swiggy</div>
+                    <div class="person-sub">Food Delivery</div>
+                  </div>
+                  <div class="person-contact-item">
+                    <div class="person-avatar-circle biz-zomato">
+                      <span>ZO</span>
+                    </div>
+                    <div class="person-name">Zomato</div>
+                    <div class="person-sub">Dining</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Manage Your Money Section -->
+              <div class="gpay-section-container">
+                <div class="section-heading-row">
+                  <span class="section-title">Manage your money</span>
+                </div>
+
+                <div class="manage-money-card" id="btn-check-balance-card">
+                  <div class="money-card-icon">🏦</div>
+                  <div class="money-card-info">
+                    <div class="money-card-title">Check bank balance</div>
+                    <div class="money-card-sub" id="home-account-label">State Bank of India ••••1001</div>
+                  </div>
+                  <div class="money-card-arrow">&rarr;</div>
+                </div>
+
+                <div class="manage-money-card" id="btn-view-history-card">
+                  <div class="money-card-icon">📜</div>
+                  <div class="money-card-info">
+                    <div class="money-card-title">See transaction history</div>
+                    <div class="money-card-sub">Recent UPI debits & credits</div>
+                  </div>
+                  <div class="money-card-arrow">&rarr;</div>
+                </div>
+              </div>
+
+              <!-- UPI ID Pill Footer -->
+              <div class="gpay-home-footer-info">
+                <span>UPI ID: <strong id="home-vpa-pill">aarav@oksbi</strong></span>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 1B-2: PHONEPE HOME SCREEN (Multi-App History Isolation Demo) -->
+          <div class="gpay-view hidden" id="screen-phonepe-home">
+            <div class="phonepe-home-header">
+              <div class="phonepe-logo-row">
+                <div class="phonepe-logo">पे <span>PhonePe</span></div>
+                <div class="phonepe-header-icons">
+                  <span class="ph-icon" id="ph-btn-qr" title="Scan QR">📷</span>
+                  <span class="ph-icon">🔔</span>
+                  <span class="ph-icon">❓</span>
+                </div>
+              </div>
+              <div class="phonepe-profile-card">
+                <div class="ph-avatar">A</div>
+                <div class="ph-user-info">
+                  <div class="ph-name">Aarav Sharma</div>
+                  <div class="ph-vpa">aarav@ybl</div>
+                </div>
+                <div class="ph-iso-badge">ISOLATED LEDGER</div>
+              </div>
+            </div>
+
+            <div class="phonepe-scroll">
+              <div class="phonepe-action-card">
+                <div class="ph-card-title">Transfer Money</div>
+                <div class="ph-actions-grid">
+                  <div class="ph-action-item" id="ph-action-scan">
+                    <div class="ph-icon-box">📷</div>
+                    <span>Scan QR</span>
+                  </div>
+                  <div class="ph-action-item" id="ph-action-contact">
+                    <div class="ph-icon-box">👤</div>
+                    <span>To Mobile</span>
+                  </div>
+                  <div class="ph-action-item" id="ph-action-upi">
+                    <div class="ph-icon-box">🏛️</div>
+                    <span>To UPI ID</span>
+                  </div>
+                  <div class="ph-action-item" id="ph-action-balance">
+                    <div class="ph-icon-box">₹</div>
+                    <span>Check Balance</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PhonePe Cross-PSP Isolation Notice -->
+              <div class="phonepe-isolation-notice">
+                <div class="notice-icon">ℹ️</div>
+                <div class="notice-text">
+                  <strong>Cross-PSP History Blind Spot:</strong> PhonePe operates its own isolated local ledger. Transfers made on Google Pay are invisible here. Suresh Kirana is treated as a <em>new beneficiary</em> on PhonePe, triggering Kurukshetra Tier 1 checks!
+                </div>
+              </div>
+
+              <!-- PhonePe Contacts -->
+              <div class="phonepe-section">
+                <div class="ph-sec-title">Transfers on PhonePe</div>
+                <div class="ph-contacts-row">
+                  <div class="ph-contact-circle" data-vpa="grocer.local@oksbi" data-name="Suresh Kirana (New on PhonePe)" data-amount="450">
+                    <div class="ph-circle-avatar">SK</div>
+                    <span>Suresh (New)</span>
+                  </div>
+                  <div class="ph-contact-circle" data-vpa="mule.syndicate@axis" data-name="Deepak Syndicate" data-amount="12000">
+                    <div class="ph-circle-avatar ph-danger-avatar">DS</div>
+                    <span>Deepak M.</span>
+                  </div>
+                  <div class="ph-contact-circle" data-vpa="crypto.arbitrage@ybl" data-name="Crypto Arbitrage" data-amount="30000">
+                    <div class="ph-circle-avatar ph-warn-avatar">CA</div>
+                    <span>Crypto Arbit.</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 1B-3: SBI NETBANKING PORTAL SCREEN (Internet Banking Rail Demo) -->
+          <div class="gpay-view hidden" id="screen-netbanking-home">
+            <div class="netbanking-header">
+              <div class="nb-logo-row">
+                <div class="nb-sbi-emblem">SBI</div>
+                <div class="nb-brand">State Bank of India <span>Retail NetBanking</span></div>
+              </div>
+              <div class="nb-user-chip">Logged in: <strong>cust_aarav</strong></div>
+            </div>
+
+            <div class="netbanking-scroll">
+              <div class="nb-account-card">
+                <div class="nb-acc-row">
+                  <div>
+                    <div class="nb-label">Primary Account</div>
+                    <div class="nb-acc-no">SBIN-20348911001</div>
+                  </div>
+                  <div class="nb-acc-right">
+                    <div class="nb-label">Available Balance</div>
+                    <div class="nb-balance" id="nb-disp-balance">₹1,50,000.00</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- NetBanking Payees with Cooling-off timer -->
+              <div class="nb-section-card">
+                <div class="nb-sec-header">
+                  <span>Registered Beneficiaries</span>
+                  <span class="nb-rule-hint">RBI 30-min Cooling-Off Mandatory</span>
+                </div>
+                <div class="nb-payee-list" id="nb-payees-list">
+                  <!-- Dynamically populated -->
+                </div>
+              </div>
+
+              <!-- Quick IMPS Transfer Form -->
+              <div class="nb-section-card">
+                <div class="nb-sec-header">Instant IMPS / NEFT Transfer</div>
+                <div class="nb-form-group">
+                  <label for="nb-transfer-payee">Select Beneficiary</label>
+                  <select id="nb-transfer-payee" class="nb-select">
+                    <!-- Populated dynamically -->
+                  </select>
+                </div>
+                <div class="nb-form-group">
+                  <label for="nb-transfer-amount">Amount (₹)</label>
+                  <input type="number" id="nb-transfer-amount" class="nb-input" value="1500" min="1">
+                </div>
+                <div class="nb-form-group">
+                  <label>Transfer Mode</label>
+                  <div class="nb-radio-row">
+                    <label><input type="radio" name="nb-mode" value="IMPS" checked> IMPS (Instant)</label>
+                    <label><input type="radio" name="nb-mode" value="NEFT"> NEFT (Batch)</label>
+                  </div>
+                </div>
+                <button type="button" class="btn-nb-primary" id="btn-nb-initiate">
+                  Initiate Transfer with Kurukshetra Check &rarr;
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 1B-THREAD: CONTACT CONVERSATION & PAY THREAD SCREEN (Actual GPay Thread) -->
+          <div class="gpay-view hidden" id="screen-contact-thread">
+            <div class="thread-header">
+              <button class="btn-icon-back" id="btn-back-from-thread">&larr;</button>
+              <div class="thread-avatar-circle" id="thread-header-avatar">SK</div>
+              <div class="thread-recipient-details">
+                <div class="thread-recipient-name" id="thread-header-name">Suresh Kirana Store</div>
+                <div class="thread-recipient-vpa-row">
+                  <span id="thread-header-vpa">grocer.local@oksbi</span>
+                  <span class="thread-verified-tick" id="thread-header-badge">✓ Verified</span>
+                </div>
+              </div>
+              <div class="thread-header-actions">
+                <button class="btn-thread-icon" title="Call">📞</button>
+                <button class="btn-thread-icon" title="Options">⋮</button>
+              </div>
+            </div>
+
+            <!-- Dynamic Security Advisory (Brainstormed Impersonation / Mule Alert) -->
+            <div class="thread-advisory-banner hidden" id="thread-security-banner">
+              <div class="advisory-icon" id="thread-advisory-icon">⚠️</div>
+              <div class="advisory-content">
+                <div class="advisory-title" id="thread-advisory-title">Kurukshetra Security Advisory</div>
+                <div class="advisory-body" id="thread-advisory-text">
+                  Impersonation & Name Mismatch Warning...
+                </div>
+              </div>
+            </div>
+
+            <!-- Scrollable Messages & Transactions List -->
+            <div class="thread-body-scroll" id="thread-messages-list">
+              <!-- Dynamically populated transaction & chat bubbles -->
+            </div>
+
+            <!-- Bottom Floating Bar: Chat Input & Action Buttons -->
+            <div class="thread-footer">
+              <div class="thread-input-row">
+                <input type="text" id="thread-chat-input" placeholder="Message Suresh Kirana Store..." autocomplete="off">
+                <button class="btn-send-msg" id="btn-send-thread-msg">➤</button>
+              </div>
+              <div class="thread-actions-pills">
+                <button class="btn-thread-pill btn-pill-pay" id="btn-thread-pay-action">
+                  <span class="pill-rupee">₹</span> Pay
+                </button>
+                <button class="btn-thread-pill btn-pill-request" id="btn-thread-request-action">
+                  Request
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1C: GPAY PAYMENT COMPOSER SCREEN -->
+          <div class="gpay-view hidden" id="screen-payment-composer">
+            <div class="composer-header">
+              <button class="btn-icon-back" id="btn-back-from-composer">&larr;</button>
+              <div class="composer-recipient-info">
+                <div class="composer-recipient-name" id="comp-recipient-name">Suresh Kirana Store</div>
+                <div class="composer-recipient-vpa" id="comp-recipient-vpa">grocer.local@oksbi</div>
+              </div>
+              <div class="composer-more">⋮</div>
+            </div>
+
+            <div class="composer-body">
+              <div class="composer-avatar-large" id="comp-avatar-large">SK</div>
+              <div class="composer-paying-text">Paying <span id="comp-target-name">Suresh Kirana Store</span></div>
+
+              <!-- Dynamic Real-Time Kurukshetra Intelligence Audit Card -->
+              <div class="composer-audit-card" id="composer-audit-card">
+                <div class="comp-audit-header">
+                  <span class="comp-audit-badge" id="comp-audit-badge">VERIFIED MERCHANT</span>
+                  <span class="comp-audit-score" id="comp-audit-score">Risk: 0/100</span>
+                </div>
+                <div class="comp-audit-text" id="comp-audit-text">
+                  Checking NPCI Central Mapper & Kurukshetra FRM...
+                </div>
+              </div>
+
+              <!-- Amount Input Display -->
+              <div class="composer-amount-box">
+                <span class="composer-rupee-sign">₹</span>
+                <input type="number" id="comp-amount-input" class="composer-amount-field" value="450" min="1" step="1">
+              </div>
+
+              <!-- Add Note Input / Purpose -->
+              <div class="composer-note-box">
+                <input type="text" id="comp-note-input" placeholder="Add a note (e.g. Groceries, Dinner)" value="Groceries">
+              </div>
+
+              <!-- Declared Purpose Selector for Testing -->
+              <div class="composer-purpose-dropdown">
+                <label for="comp-purpose-select">Intent / Category:</label>
+                <select id="comp-purpose-select" class="g-select-sm">
+                  <option value="">Personal / General Payment</option>
+                  <option value="GOVT_FINE">Government Fine / Tax Penalty</option>
+                  <option value="COURT_BAIL">Court Bail / Law Enforcement</option>
+                  <option value="REFUND">Refund / Reversal</option>
+                </select>
+              </div>
+
+              <!-- Selected Bank Card -->
+              <div class="composer-bank-selector">
+                <div class="bank-sbi-logo" id="comp-bank-initials">SBI</div>
+                <div class="bank-details">
+                  <div class="bank-name" id="comp-bank-name">State Bank of India ••••1001</div>
+                  <div class="bank-balance-hint">Savings Account</div>
+                </div>
+                <div class="bank-check-icon">✓</div>
+              </div>
+
+              <button class="btn-gpay-primary btn-pay-action" id="btn-submit-payment">
+                Pay ₹<span id="btn-pay-amount-label">450</span> &rarr;
+              </button>
+            </div>
+          </div>
+
+          <!-- 1D: NPCI COMMON LIBRARY AUTHENTIC UPI MPIN SCREEN -->
+          <div class="npci-mpin-overlay hidden" id="screen-npci-mpin">
+            <div class="npci-header">
+              <button class="npci-cancel-btn" id="btn-mpin-cancel" title="Cancel">✕</button>
+              <div class="npci-brand-title">NPCI <span>UPI</span></div>
+              <div class="npci-bank-label">State Bank of India</div>
+            </div>
+
+            <div class="npci-body">
+              <div class="npci-txn-summary">
+                <span class="npci-paying-label">ENTER 4-DIGIT UPI PIN</span>
+                <span class="npci-amount-display">₹<span id="npci-amount-val">450</span></span>
+              </div>
+
+              <!-- Masked PIN Circles -->
+              <div class="npci-pin-dots">
+                <div class="pin-dot" id="pdot-0"></div>
+                <div class="pin-dot" id="pdot-1"></div>
+                <div class="pin-dot" id="pdot-2"></div>
+                <div class="pin-dot" id="pdot-3"></div>
+              </div>
+
+              <div class="npci-security-warning">
+                <span>🔒 UPI PIN will debit your account. Never share with anyone.</span>
+              </div>
+
+              <!-- Numeric Keypad -->
+              <div class="npci-keypad">
+                <button class="kbtn" data-key="1">1</button>
+                <button class="kbtn" data-key="2">2</button>
+                <button class="kbtn" data-key="3">3</button>
+                <button class="kbtn" data-key="4">4</button>
+                <button class="kbtn" data-key="5">5</button>
+                <button class="kbtn" data-key="6">6</button>
+                <button class="kbtn" data-key="7">7</button>
+                <button class="kbtn" data-key="8">8</button>
+                <button class="kbtn" data-key="9">9</button>
+                <button class="kbtn kbtn-del" id="npci-key-del">⌫</button>
+                <button class="kbtn" data-key="0">0</button>
+                <button class="kbtn kbtn-submit" id="npci-key-submit">✓</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1D-PROC: AUTHENTIC PAYMENT PROCESSING SCREEN (Snappy <1 sec) -->
+          <div class="gpay-view hidden" id="screen-payment-processing">
+            <div class="processing-screen-inner">
+              <div class="processing-spinner-ring">
+                <div class="spinner-dual-arc"></div>
+              </div>
+              <div class="proc-amount-text">Paying ₹<span id="proc-amount-val">450</span></div>
+              <div class="proc-payee-text">To <strong id="proc-payee-val">Suresh Kirana Store</strong></div>
+              <div class="proc-bank-sub" id="proc-bank-sub">Contacting State Bank of India ••••1001</div>
+              <div class="proc-frm-shield">
+                <span class="shield-pulse">🛡️</span>
+                <span>Protected in real time by Kurukshetra FRM</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1E: GPAY SUCCESS SCREEN -->
+          <div class="gpay-view hidden" id="screen-gpay-success">
+            <div class="success-screen-inner">
+              <div class="success-blue-circle">
+                <svg class="checkmark-svg" viewBox="0 0 52 52">
+                  <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                  <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                </svg>
+              </div>
+
+              <div class="success-amount-text">₹<span id="succ-amount-val">450</span></div>
+              <div class="success-paid-to">Paid to <strong id="succ-payee-val">Suresh Kirana Store</strong></div>
+              <div class="success-timestamp" id="succ-timestamp-val">Just now</div>
+
+              <div class="success-details-card">
+                <div class="succ-detail-row">
+                  <span>UPI transaction ID</span>
+                  <strong id="succ-txnid-val">425400192834</strong>
+                </div>
+                <div class="succ-detail-row">
+                  <span>To:</span>
+                  <span id="succ-vpa-val">grocer.local@oksbi</span>
+                </div>
+                <div class="succ-detail-row">
+                  <span id="succ-bank-name">From: State Bank of India</span>
+                  <span id="succ-bank-acct">••••1001</span>
+                </div>
+                <div class="succ-detail-row">
+                  <span>CBS Invariant:</span>
+                  <span style="color:#10b981; font-weight:700;">Double-Entry 2 Legs Posted</span>
+                </div>
+              </div>
+
+              <button class="btn-gpay-primary" id="btn-success-done">Done</button>
+            </div>
+          </div>
+
+          <!-- 1F: KURUKSHETRA INTERVENTION BOTTOM SHEET (COACH) -->
+          <div class="material-bottom-sheet hidden" id="sheet-coaching">
+            <div class="sheet-content sheet-warning">
+              <div class="sheet-icon-header">
+                <div class="sheet-alert-icon">⚠️</div>
+                <div class="sheet-title" id="coach-sheet-title">Urgent Security Warning</div>
+              </div>
+              
+              <div class="sheet-explanation" id="coach-sheet-body">
+                You are sending funds to a personal savings account claiming official government authority. Real government fines are never collected into private savings accounts.
+              </div>
+
+              <label class="sheet-ack-checkbox">
+                <input type="checkbox" id="coach-ack-checkbox">
+                <span>I understand this is an ordinary individual account and NOT an official government treasury account. Proceed at my own risk.</span>
+              </label>
+
+              <div class="sheet-actions">
+                <button class="btn-sheet-cancel" id="btn-coach-cancel">Cancel Payment</button>
+                <button class="btn-sheet-proceed" id="btn-coach-proceed" disabled>Proceed to PIN &rarr;</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1G: KURUKSHETRA HARD BLOCK BOTTOM SHEET (FREEZE) -->
+          <div class="material-bottom-sheet hidden" id="sheet-freeze">
+            <div class="sheet-content sheet-danger">
+              <div class="sheet-icon-header">
+                <div class="sheet-alert-icon danger-icon">🛑</div>
+                <div class="sheet-title" id="freeze-sheet-title">Payment Intercepted and Blocked</div>
+              </div>
+
+              <div class="sheet-explanation" id="freeze-sheet-body">
+                Kurukshetra Fraud Interception Engine has blocked this payment. The recipient exhibits critical scam indicators: high-velocity sink drain, active fraud reports, and government impersonation.
+              </div>
+
+              <div class="sheet-safe-guarantee">
+                🛡️ <strong>Zero funds moved from your account.</strong> Your SBI balance is 100% safe.
+              </div>
+
+              <div class="sheet-actions">
+                <button class="btn-sheet-helpline" id="btn-call-helpline">📞 Call 1930 Cyber Helpline</button>
+                <button class="btn-sheet-cancel" id="btn-freeze-dismiss">Got It</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1H: BANK BALANCE MODAL -->
+          <div class="gpay-dialog-overlay hidden" id="modal-bank-balance">
+            <div class="gpay-dialog-card">
+              <div class="dialog-bank-icon">🏛️</div>
+              <div class="dialog-title">Available Bank Balance</div>
+              <div class="dialog-sub" id="dialog-bank-sub">State Bank of India ••••1001</div>
+              <div class="dialog-balance-big" id="disp-dialog-balance">₹1,50,000.00</div>
+              <button class="btn-gpay-primary" id="btn-close-balance-dialog">Done</button>
+            </div>
+          </div>
+
+          <!-- 1I: TRANSACTION HISTORY DRAWER -->
+          <div class="gpay-dialog-overlay hidden" id="modal-tx-history">
+            <div class="gpay-drawer-card">
+              <div class="drawer-header">
+                <div class="drawer-title">Transaction History</div>
+                <button class="drawer-close" id="btn-close-history">&times;</button>
+              </div>
+              <div class="drawer-scroll-list" id="drawer-history-list">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 1J: QR SCANNER SIMULATOR MODAL (Features #9 & #10) -->
+          <div class="qr-scanner-modal hidden" id="modal-qr-scanner">
+            <div class="qr-camera-viewfinder">
+              <button class="qr-btn-close" id="btn-close-qr-scanner">&times;</button>
+              <div class="qr-target-box">
+                <div class="qr-laser-line"></div>
+                <div class="qr-corner tl"></div>
+                <div class="qr-corner tr"></div>
+                <div class="qr-corner bl"></div>
+                <div class="qr-corner br"></div>
+              </div>
+              <div class="qr-instruction-text">Point camera at UPI QR Code</div>
+            </div>
+
+            <div class="qr-presets-sheet">
+              <div class="qr-presets-title">Tap a sample QR Code to simulate scan:</div>
+              <div class="qr-chips-row">
+                <div class="qr-sample-card" id="qr-sample-safe" data-uri="upi://pay?pa=grocer.local@oksbi&pn=Suresh%20Kirana&mc=5411">
+                  <div class="qr-card-icon">🛒</div>
+                  <div class="qr-card-info">
+                    <strong>Suresh Kirana (Merchant QR)</strong>
+                    <span>Safe grocer &bull; Standard payment</span>
+                  </div>
+                  <div class="qr-badge-safe">SAFE</div>
+                </div>
+
+                <div class="qr-sample-card qr-card-trap" id="qr-sample-trap" data-uri="upi://pay?pa=scam.lottery@oksbi&pn=Cashback%20Reward&am=25000&tn=claim_reward">
+                  <div class="qr-card-icon">⚠️</div>
+                  <div class="qr-card-info">
+                    <strong>Phishing 'Scan-to-Receive' Trap</strong>
+                    <span>Feature #9 &bull; Pre-filled debit am=25000</span>
+                  </div>
+                  <div class="qr-badge-danger">DEBIT TRAP</div>
+                </div>
+
+                <div class="qr-sample-card qr-card-trap" id="qr-sample-deeplink" data-uri="upi://pay?pa=cbi.clearance.cell@sbi&pn=CBI%20Officer&am=50000&tn=kyc_urgent_fine">
+                  <div class="qr-card-icon">🚨</div>
+                  <div class="qr-card-info">
+                    <strong>Deep-Link Impersonation Trap</strong>
+                    <span>Feature #10 &bull; Pre-filled fine tn=kyc_urgent</span>
+                  </div>
+                  <div class="qr-badge-danger">PHISHING</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1K: INTERACTIVE PAY UPI ID & DEEP AUDIT MODAL -->
+          <div class="gpay-dialog-overlay hidden" id="modal-pay-upi-id">
+            <div class="gpay-drawer-card upi-audit-drawer">
+              <div class="drawer-header">
+                <div class="drawer-title">Pay Any UPI ID / Number</div>
+                <button class="drawer-close" id="btn-close-pay-upi">&times;</button>
+              </div>
+
+              <div class="upi-input-container">
+                <label for="input-custom-upi" class="upi-input-label">Enter or Paste UPI ID:</label>
+                <div class="upi-input-group">
+                  <input type="text" id="input-custom-upi" placeholder="e.g. grocer.local@oksbi, cbi.clearance.cell@sbi" value="grocer.local@oksbi">
+                  <button type="button" class="btn-input-audit" id="btn-run-live-audit">Audit & Verify</button>
+                </div>
+
+                <!-- Quick Presets for Live Testing -->
+                <div class="upi-quick-chips">
+                  <span class="chip-label">Test Samples:</span>
+                  <button type="button" class="sample-upi-chip chip-safe" data-vpa="grocer.local@oksbi" data-name="Suresh Kirana Store">🛒 Suresh Kirana (Safe)</button>
+                  <button type="button" class="sample-upi-chip chip-warn" data-vpa="cbi.clearance.cell@sbi" data-name="CBI Clearance Cell">⚠️ CBI Clearance (Impersonation)</button>
+                  <button type="button" class="sample-upi-chip chip-danger" data-vpa="mule.syndicate@axis" data-name="Mule Syndicate Account">🛑 Mule Syndicate (Rapid Drain)</button>
+                  <button type="button" class="sample-upi-chip chip-info" data-vpa="newshop.mumbai@oksbi" data-name="New Shop Mumbai">🛍️ New Shop (Unverified)</button>
+                </div>
+
+                <!-- Dynamic Real-Time Audit Card -->
+                <div class="live-deep-audit-panel hidden" id="live-deep-audit-panel">
+                  <div class="audit-panel-header">
+                    <span class="audit-status-pill" id="audit-panel-status">AUDITING...</span>
+                    <span class="audit-target-handle" id="audit-panel-handle">vpa@bank</span>
+                  </div>
+                  <div class="audit-panel-detail" id="audit-panel-explanation">
+                    <!-- Dynamic explanation inserted here -->
+                  </div>
+                  <div class="audit-panel-meta" id="audit-panel-meta">
+                    <!-- Resolved name vs handle, account type, risk score -->
+                  </div>
+                  <button type="button" class="btn-gpay-primary btn-proceed-audited" id="btn-proceed-audited-pay">
+                    Open Contact & Pay &rarr;
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- SECTION 2: MINIATURE ECOSYSTEM SOC OBSERVER                       -->
+    <!-- ================================================================= -->
+    <div class="soc-observer-wrapper" id="soc-observer-wrapper">
+      
+      <!-- Preset Demo Trigger Bar -->
+      <div class="soc-preset-bar">
+        <span class="soc-preset-title">DEMO PRESETS:</span>
+        <button class="scen-pill scen-green" data-scen="green">🟢 Grocer (ALLOW)</button>
+        <button class="scen-pill scen-yellow" data-scen="yellow">🟡 New Shop (STEP_UP)</button>
+        <button class="scen-pill scen-orange" data-scen="orange">🟠 CBI Arrest (COACH/FREEZE)</button>
+        <button class="scen-pill scen-red" data-scen="red">🔴 Mule Syndicate (FREEZE)</button>
+        <button class="scen-pill scen-blue" data-scen="blue">🔵 Card CNP (3DS OTP)</button>
+        <button class="scen-pill scen-surprise" id="btn-surprise-scenario">🎲 Surprise Me: Live Scam</button>
+      </div>
+
+      <!-- Narrative caption for whichever preset (or surprise) just ran -->
+      <div class="soc-narrative-card hidden" id="soc-narrative-card">
+        <div class="soc-narrative-title" id="soc-narrative-title"></div>
+        <div class="soc-narrative-body" id="soc-narrative-body"></div>
+        <div class="soc-narrative-meta" id="soc-narrative-meta"></div>
+      </div>
+
+      <!-- Real-Time Hop-by-Hop Topology -->
+      <div class="soc-card">
+        <div class="soc-card-title-row">
+          <span>MINIATURE PAYMENT ECOSYSTEM ARCHITECTURE</span>
+          <span class="soc-live-status"><span class="pulse-dot"></span> LIVE NETWORK</span>
+        </div>
+        <div class="soc-nodes-row">
+          <div class="soc-node" id="snode-payer">
+            <div class="snode-icon">📱</div>
+            <div class="snode-title">Payer GPay</div>
+            <div class="snode-sub">Aarav Sharma</div>
+          </div>
+          <div class="snode-arrow">&rarr;</div>
+          <div class="soc-node" id="snode-switch">
+            <div class="snode-icon">🔄</div>
+            <div class="snode-title">NPCI Switch</div>
+            <div class="snode-sub">Central Mapper</div>
+          </div>
+          <div class="snode-arrow">&rarr;</div>
+          <div class="soc-node node-highlight" id="snode-kurukshetra">
+            <div class="snode-icon">🛡️</div>
+            <div class="snode-title">Kurukshetra FRM</div>
+            <div class="snode-sub">Tier 0 &bull; Tier 1 &bull; MCP</div>
+          </div>
+          <div class="snode-arrow">&rarr;</div>
+          <div class="soc-node" id="snode-remitter">
+            <div class="snode-icon">🏛️</div>
+            <div class="snode-title">Remitter CBS</div>
+            <div class="snode-sub">SBI Core Banking</div>
+          </div>
+          <div class="snode-arrow">&rarr;</div>
+          <div class="soc-node" id="snode-beneficiary">
+            <div class="snode-icon">🏦</div>
+            <div class="snode-title">Beneficiary CBS</div>
+            <div class="snode-sub">Payee Bank</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Real-Time CBS Balances & Double-Entry Invariant -->
+      <div class="soc-card">
+        <div class="soc-card-title-row">
+          <span>CORE BANKING SYSTEM (CBS) LIVE BALANCES</span>
+          <span class="soc-badge-tag">DOUBLE-ENTRY INVARIANT</span>
+        </div>
+        <div class="soc-accounts-grid" id="soc-accounts-grid">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Kurukshetra Decision Breakdown & Signals -->
+      <div class="soc-card">
+        <div class="soc-card-title-row">
+          <span>KURUKSHETRA RISK ENGINE BREAKDOWN</span>
+          <div id="soc-zone-badge" class="soc-zone-badge zone-allow">ALLOW (0.00)</div>
+        </div>
+        
+        <div class="soc-metrics-row">
+          <div class="soc-metric-cell">
+            <div class="sm-label">TIER REACHED</div>
+            <div class="sm-val" id="soc-disp-tier">Tier 0 (Fast-Path)</div>
+          </div>
+          <div class="soc-metric-cell">
+            <div class="sm-label">POLICY ACTION</div>
+            <div class="sm-val" id="soc-disp-action">PROCEED</div>
+          </div>
+          <div class="soc-metric-cell">
+            <div class="sm-label">DATA COMPLETENESS</div>
+            <div class="sm-val" id="soc-disp-completeness">FULL</div>
+          </div>
+          <div class="soc-metric-cell">
+            <div class="sm-label">AUDIT CHAIN SEQ</div>
+            <div class="sm-val" id="soc-disp-audit">#1</div>
+          </div>
+        </div>
+
+        <div class="soc-signals-table-wrap">
+          <table class="soc-table">
+            <thead>
+              <tr>
+                <th>FEAT #</th>
+                <th>DETECTOR</th>
+                <th>LABEL</th>
+                <th>SEVERITY</th>
+                <th>WEIGHT</th>
+                <th>STATUS</th>
+              </tr>
+            </thead>
+            <tbody id="soc-signals-tbody">
+              <tr>
+                <td colspan="6" class="empty-table-msg">Run a scenario or make a payment in the GPay app to inspect live detection signals.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Hop-by-Hop Trace Timeline -->
+      <div class="soc-card soc-trace-card">
+        <div class="soc-card-title-row">
+          <span>HOP-BY-HOP TRANSACTION JOURNEY</span>
+          <span class="trace-chip-mono" id="soc-trace-id">TRC_READY</span>
+        </div>
+        <div class="soc-timeline" id="soc-timeline">
+          <div class="empty-timeline-msg">Live events with microsecond timestamps will stream here.</div>
+        </div>
+      </div>
+
+      <!-- Feature #33: NPCI Central Ops Dashboard & Nationwide Kill-Switch -->
+      <div class="soc-card soc-killswitch-card" id="soc-killswitch-card">
+        <div class="soc-card-title-row">
+          <span>⚡ NPCI CENTRAL OPS: REAL-TIME CAMPAIGN & NATIONWIDE KILL-SWITCH</span>
+          <span class="soc-badge-tag tag-red">CENTRAL REGULATORY LAYER</span>
+        </div>
+        <div class="soc-ks-intro">
+          Cross-PSP lookup analytics. Engaging the <strong>Nationwide Kill-Switch</strong> revokes malicious VPAs centrally in the NPCI Central Mapper and freezes CBS accounts across all banks with zero delay.
+        </div>
+        <div class="soc-campaigns-table-wrap">
+          <table class="soc-table">
+            <thead>
+              <tr>
+                <th>TARGET IDENTIFIER</th>
+                <th>BENEFICIARY</th>
+                <th>BANK</th>
+                <th>LOOKUPS</th>
+                <th>ABANDON %</th>
+                <th>STATUS</th>
+                <th>KILL-SWITCH ACTION</th>
+              </tr>
+            </thead>
+            <tbody id="soc-campaigns-tbody">
+              <!-- Dynamically populated from /api/ecosystem/npci/campaigns -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- CITIZEN PUBLIC SCAM SCORE CHECKER MODAL (Feature #34) -->
+  <div class="gpay-dialog-overlay hidden" id="modal-citizen-checker">
+    <div class="citizen-checker-card">
+      <div class="citizen-checker-header">
+        <div class="cc-icon-title">
+          <span class="cc-shield">🛡️</span>
+          <div>
+            <div class="cc-title">Citizen Public Scam Score Lookup</div>
+            <div class="cc-sub">Zero-login public safety portal (Feature #34)</div>
+          </div>
+        </div>
+        <button class="drawer-close" id="btn-close-citizen-checker">&times;</button>
+      </div>
+
+      <div class="citizen-checker-body">
+        <div class="cc-search-row">
+          <input type="text" id="citizen-search-input" placeholder="Enter UPI ID, Phone, or Bank Account..." value="mule.syndicate@axis">
+          <button class="btn-gpay-primary" id="btn-citizen-search">Verify Safety</button>
+        </div>
+
+        <div class="cc-quick-tags">
+          <span>Quick checks:</span>
+          <button class="tag-chip" data-query="grocer.local@oksbi">grocer.local@oksbi</button>
+          <button class="tag-chip" data-query="mule.syndicate@axis">mule.syndicate@axis</button>
+          <button class="tag-chip" data-query="cbi.clearance.cell@sbi">cbi.clearance.cell@sbi</button>
+        </div>
+
+        <!-- Result Card -->
+        <div class="cc-result-card" id="cc-result-box">
+          <div class="cc-status-row">
+            <span class="cc-verdict-pill verdict-critical" id="cc-verdict-pill">🚨 CRITICAL_BLOCKED</span>
+            <span class="cc-score-pill" id="cc-score-pill">Risk: 1.00</span>
+          </div>
+          <div class="cc-name-row">
+            Target: <strong id="cc-target-id">mule.syndicate@axis</strong> (<span id="cc-target-name">Deepak Layering</span>)
+          </div>
+          <p class="cc-verdict-text" id="cc-verdict-text">
+            🚨 CRITICAL WARNING: This identifier has been suspended nationwide or flagged on official cybercrime registries. DO NOT TRANSFER ANY MONEY.
+          </p>
+          <div class="cc-meta-grid">
+            <div class="cc-meta-item">
+              <span class="cc-m-lbl">Community Reports</span>
+              <span class="cc-m-val" id="cc-report-count">5 independent reporters</span>
+            </div>
+            <div class="cc-meta-item">
+              <span class="cc-m-lbl">Sybil Verification</span>
+              <span class="cc-m-val" id="cc-sybil-status">Awaiting lookup</span>
+            </div>
+            <div class="cc-meta-item">
+              <span class="cc-m-lbl">Nationwide Status</span>
+              <span class="cc-m-val" id="cc-vpa-status">ACTIVE</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Report Account Section -->
+        <div class="cc-report-section">
+          <div class="cc-rep-title">Submit Community Fraud Report (Feature #11)</div>
+          <div class="cc-rep-row">
+            <select id="cc-report-reason" class="g-select-sm">
+              <option value="IMPERSONATION_OFFICIAL">Fake Government / Police Impersonation</option>
+              <option value="ELECTRICITY_BILL_FRAUD">Electricity / Utility Bill Scam</option>
+              <option value="CRYPTO_TASK_FRAUD">Part-time Job / Crypto Arbitrage Scam</option>
+              <option value="ACCIDENTAL_TRANSFER_TRAP">Accidental Transfer Refund Trap</option>
+            </select>
+            <button class="btn-report-action" id="btn-submit-citizen-report">Report Account</button>
+          </div>
+          <div class="cc-rep-notice" id="cc-report-feedback">🔒 Anti-Sybil rule enforced: 1 report per identity hash with exponential decay.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
