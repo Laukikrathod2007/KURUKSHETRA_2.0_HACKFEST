@@ -41,5 +41,8 @@ logs/
 # Byte-compiled
 *.pyc
 
-# Distribution
-dist/
+# Temporary and Cache
+*.tmp
+~WRL*
+tempo_js_cache/
+
