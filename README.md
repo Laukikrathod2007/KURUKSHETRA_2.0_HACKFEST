@@ -37,6 +37,8 @@ Digital payment scams (such as Authorized Push Payment / APP fraud) exploit a fu
 ```
 MIT_Hackathon/
 ├── README.md                                    # Master project overview & index
+├── base.md                                      # 36 technical features & banking protocol specs
+├── FR.md                                        # Functional requirements & PS09 traceability
 ├── ps.md                                        # PS09 challenge overview (single source of truth)
 ├── docs/                                        # Consolidated documentation & submission
 │   ├── Kurukshetra_Agentic_Guardian_PS09_Submission.docx  # Final HACKFEST 2026 DOCX
