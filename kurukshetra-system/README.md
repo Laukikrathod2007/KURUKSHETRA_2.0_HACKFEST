@@ -15,6 +15,32 @@ Nothing in here contradicts the prior documents. This folder makes them buildabl
 6. **[06-canonical-contracts.md](docs/06-canonical-contracts.md)** — the exact request/response schemas that cross every component boundary.
 7. **[07-build-order.md](docs/07-build-order.md)** — the dependency graph and the phased order to actually write code in.
 8. **[08-observability.md](docs/08-observability.md)** — what to log, trace, and dashboard once the system is running.
+9. **[09-build-status.md](docs/09-build-status.md)** — what is actually built and verified right now, versus deliberately not built.
+
+## Running it
+
+```bash
+python -m venv .venv
+./.venv/Scripts/python.exe -m pip install -r requirements.txt   # add --trusted-host flags behind a corporate proxy
+bash scripts/dev.sh        # seeds the demo data and starts the consolidated backend on :8000
+./.venv/Scripts/python.exe -m pytest -q                          # 28 tests
+```
+
+Frontend: open `frontend/index.html` (or serve that folder) while the backend runs — see `frontend/README.md` for Vercel deployment.
+
+MCP server, standalone: `PYTHONPATH=src ./.venv/Scripts/python.exe -m kurukshetra_mcp.server`
+
+## Key endpoints
+
+| Endpoint | Purpose |
+|---|---|
+| `POST /pay/initiate` | UPI Event 1 (recipient lookup → Tier 0, escalating to Tier 1 if needed) |
+| `POST /pay/confirm` | UPI Event 2 (amount entered → full scoring + MCP intervention on COACH/FREEZE) |
+| `POST /v1/score-vpa`, `POST /v1/score-transaction` | The risk engine directly, for a PSP integrating against it |
+| `POST /card/authorize` | 3-D Secure RBA signal for card-not-present |
+| `POST /netbanking/add-payee`, `POST /netbanking/confirm-transfer` | NetBanking equivalents |
+| `GET /public/lookup/{ref}` | Public Scam Score Lookup (feature #34) |
+| `POST /community/report` | Submit a community fraud report (feature #11) |
 
 ## The one-paragraph mental model
 

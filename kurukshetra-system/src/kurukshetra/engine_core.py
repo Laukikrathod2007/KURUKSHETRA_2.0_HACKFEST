@@ -20,6 +20,8 @@ from kurukshetra.contracts import (
     TransactionAnalysisRequest,
 )
 from kurukshetra.db import SessionLocal
+from kurukshetra.registry import check_registry_flags
+from kurukshetra.reputation import check_community_reports
 from kurukshetra.scoring import score_transaction
 from kurukshetra.tier0 import (
     check_authority_handle_pattern,
@@ -27,18 +29,64 @@ from kurukshetra.tier0 import (
     is_known_beneficiary,
     parse_qr_or_deeplink,
 )
+from kurukshetra.tier1_cbs import (
+    check_account_graph,
+    check_burst_drain_dormant,
+    check_one_way_account,
+    check_rapid_drainage,
+    check_scam_hours,
+)
+from kurukshetra.tier1_ledger import (
+    check_collect_request_abuse,
+    check_drip_escalation,
+    check_high_value_outlier,
+    check_post_hold_escalation,
+    check_purpose_contradiction,
+    check_refund_reversal,
+    check_threshold_evasion,
+)
+from kurukshetra.tier1_switch import check_abandon_ratio, check_resolution_burst
 
 log = logging.getLogger("kurukshetra.engine")
 
 
-def _run_tier1(req: TransactionAnalysisRequest) -> tuple[list[DetectionSignal], DataCompleteness]:
-    """Seam for Phase 3's Tier 1 detectors (Mock CBS / Reputation).
-
-    Returns no additional signals yet and reports PARTIAL completeness so the
-    fallback contract in `scoring.score_transaction` correctly raises the
-    risk floor for new beneficiaries until those services exist.
+def _run_tier1(req: TransactionAnalysisRequest, session) -> tuple[list[DetectionSignal], DataCompleteness]:
+    """Tier 1 -- real detectors against seeded/simulated recipient-side data
+    (Mock CBS, Reputation) plus real amount-dependent local-ledger detectors.
+    Data completeness degrades to PARTIAL only if the Mock CBS has no record
+    for this account at all (see tier1_cbs._no_data_signal).
     """
-    return [], DataCompleteness.PARTIAL
+    beneficiary_ref = req.recipient_context.beneficiary_ref_hash
+    payer_id = req.payer_context.payer_id_hash
+
+    signals: list[DetectionSignal] = []
+    signals.append(check_abandon_ratio(session, beneficiary_ref))
+    signals.append(check_resolution_burst(session, beneficiary_ref))
+    signals.append(check_community_reports(session, beneficiary_ref))
+    signals.append(check_rapid_drainage(session, beneficiary_ref))
+    signals.append(check_one_way_account(session, beneficiary_ref))
+    signals.append(check_burst_drain_dormant(session, beneficiary_ref))
+    signals.append(check_scam_hours(session, beneficiary_ref))
+    signals.append(check_account_graph(session, beneficiary_ref))
+    signals.extend(check_registry_flags(session, beneficiary_ref))
+
+    cbs_missing = any(s.evidence.get("reason") == "no_cbs_record" for s in signals)
+
+    amount = req.transaction.amount
+    if amount is not None:
+        signals.append(check_high_value_outlier(session, payer_id, amount))
+        signals.append(check_drip_escalation(session, payer_id, beneficiary_ref, amount))
+        signals.append(check_threshold_evasion(session, payer_id, beneficiary_ref, amount))
+        signals.append(check_refund_reversal(session, payer_id, beneficiary_ref, amount))
+        signals.append(check_purpose_contradiction(req.recipient_context))
+        signals.append(check_post_hold_escalation(session, payer_id, beneficiary_ref, amount))
+
+        collect_signal = check_collect_request_abuse(req.transaction.collect_note, req.transaction.type.value)
+        if collect_signal:
+            signals.append(collect_signal)
+
+    completeness = DataCompleteness.PARTIAL if cbs_missing else DataCompleteness.FULL
+    return signals, completeness
 
 
 def evaluate(req: TransactionAnalysisRequest) -> RiskDecision:
@@ -68,7 +116,7 @@ def evaluate(req: TransactionAnalysisRequest) -> RiskDecision:
         any_tier0_fired = any(s.triggered for s in signals)
         if not known or any_tier0_fired:
             tier_reached = 1
-            tier1_signals, data_completeness = _run_tier1(req)
+            tier1_signals, data_completeness = _run_tier1(req, session)
             signals.extend(tier1_signals)
 
         decision = score_transaction(

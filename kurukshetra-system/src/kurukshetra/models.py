@@ -44,10 +44,25 @@ class LedgerTransaction(Base):
     beneficiary_ref: Mapped[str] = mapped_column(String)
     amount: Mapped[float] = mapped_column(Float)
     currency: Mapped[str] = mapped_column(String, default="INR")
+    direction: Mapped[str] = mapped_column(String, default="OUTBOUND")  # OUTBOUND / INBOUND
     initiated_at: Mapped[dt.datetime] = mapped_column(DateTime, default=_now)
     decision: Mapped[str] = mapped_column(String, default="")
     held_until: Mapped[dt.datetime | None] = mapped_column(DateTime, nullable=True)
     completed: Mapped[bool] = mapped_column(Boolean, default=False)
+
+
+class SwitchMetric(Base):
+    """PSP-scoped ReqValAdd/ReqPay counters -- features #1 and #2. See
+    docs/03-feature-tier-map.md: the true cross-PSP version of these needs
+    NPCI-native deployment; this is the honest single-PSP proxy."""
+
+    __tablename__ = "switch_metrics"
+    target_ref: Mapped[str] = mapped_column(String, primary_key=True)
+    lookup_count: Mapped[int] = mapped_column(Integer, default=0)
+    pay_count: Mapped[int] = mapped_column(Integer, default=0)
+    first_lookup_at: Mapped[dt.datetime] = mapped_column(DateTime, default=_now)
+    last_lookup_at: Mapped[dt.datetime] = mapped_column(DateTime, default=_now)
+    baseline_lookups_per_hour: Mapped[float] = mapped_column(Float, default=0.05)
 
 
 # ---------------------------------------------------------------------------
@@ -102,6 +117,30 @@ class RegistryFlag(Base):
     flag_type: Mapped[str] = mapped_column(String)
     reference_id: Mapped[str] = mapped_column(String)
     flagged_at: Mapped[dt.datetime] = mapped_column(DateTime, default=_now)
+
+
+class InterventionOutcome(Base):
+    """Feature #36 -- Intervention Effectiveness Tracking. Which template was
+    shown for a COACH/FREEZE decision, and whether the user proceeded or
+    aborted. Written by the MCP tool `log_intervention_outcome`."""
+
+    __tablename__ = "intervention_outcomes"
+    outcome_id: Mapped[str] = mapped_column(String, primary_key=True)
+    transaction_id: Mapped[str] = mapped_column(String)
+    intervention_template_id: Mapped[str] = mapped_column(String)
+    user_action: Mapped[str] = mapped_column(String)  # 'PROCEEDED' / 'ABORTED' / 'PENDING'
+    recorded_at: Mapped[dt.datetime] = mapped_column(DateTime, default=_now)
+
+
+class TrustedContactNotification(Base):
+    """Feature #26 -- mocked delivery channel for the trusted-contact override."""
+
+    __tablename__ = "trusted_contact_notifications"
+    notification_id: Mapped[str] = mapped_column(String, primary_key=True)
+    payer_id: Mapped[str] = mapped_column(String)
+    transaction_id: Mapped[str] = mapped_column(String)
+    message: Mapped[str] = mapped_column(String)
+    sent_at: Mapped[dt.datetime] = mapped_column(DateTime, default=_now)
 
 
 # ---------------------------------------------------------------------------

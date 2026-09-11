@@ -26,7 +26,9 @@ from kurukshetra.contracts import (
     TransactionAnalysisRequest,
     TransactionDetails,
 )
+from kurukshetra.db import SessionLocal
 from kurukshetra.engine_core import evaluate
+from kurukshetra.tier1_switch import record_lookup, record_pay
 
 router = APIRouter(tags=["mock-npci-switch"])
 
@@ -36,6 +38,8 @@ DIRECTORY: dict[str, tuple[str, str]] = {
     "military.canteen.cctv@oksbi": ("Ramesh G", "0000"),
     "cbi.clearance.cell@sbi": ("Manoj Kumar", "0000"),
     "tneb.billing.officer@oksbi": ("Arun Kumar", "0000"),
+    "newshop.mumbai@oksbi": ("Unregistered New Shop", "0000"),
+    "mule.syndicate@axis": ("Deepak Layering Account", "0000"),
 }
 
 
@@ -60,6 +64,12 @@ class ReqPay(BaseModel):
 def resolve_and_score_val_add(req: ReqValAdd) -> dict:
     resolved_name, mc_code = DIRECTORY.get(req.beneficiary_ref_hash, ("Unknown Individual", "0000"))
     transaction_id = f"txn_{uuid.uuid4().hex[:10]}"
+
+    metrics_session = SessionLocal()
+    try:
+        record_lookup(metrics_session, req.beneficiary_ref_hash)
+    finally:
+        metrics_session.close()
 
     engine_req = TransactionAnalysisRequest(
         event=EventType.VPA_RESOLUTION,
@@ -99,6 +109,14 @@ def score_pay(req: ReqPay) -> dict:
         transaction=TransactionDetails(amount=req.amount),
     )
     risk: RiskDecision = evaluate(engine_req)
+
+    if risk.risk_zone.value != "FREEZE":
+        metrics_session = SessionLocal()
+        try:
+            record_pay(metrics_session, req.beneficiary_ref_hash)
+        finally:
+            metrics_session.close()
+
     return {"transaction_id": req.transaction_id, "risk": risk.model_dump(mode="json")}
 
 

@@ -11,6 +11,8 @@ from __future__ import annotations
 from fastapi import APIRouter
 from pydantic import BaseModel
 
+from kurukshetra.contracts import RiskDecision
+from kurukshetra_mcp.host import build_intervention
 from services.mock_npci_switch import ReqPay, ReqValAdd, resolve_and_score_val_add, score_pay
 
 router = APIRouter(tags=["mock-psp-app"])
@@ -59,7 +61,18 @@ def initiate(req: InitiatePayment) -> dict:
 
 @router.post("/pay/confirm")
 def confirm(req: ConfirmPayment) -> dict:
-    """EVENT 2: user entered an amount and tapped Pay. Amount-dependent scoring + final decision."""
+    """EVENT 2: user entered an amount and tapped Pay. Amount-dependent scoring + final decision.
+
+    MCP is invoked here, and only here, if the zone is COACH or FREEZE -- see
+    kurukshetra_mcp/host.py's module docstring for why this never touches
+    Tier 0/1 scoring and never runs for ALLOW/STEP_UP.
+    """
     result = score_pay(ReqPay(**req.model_dump()))
     zone = result["risk"]["risk_zone"]
-    return {**result, "next_step": _NEXT_STEP[zone]}
+
+    intervention = None
+    if zone in ("COACH", "FREEZE"):
+        decision = RiskDecision.model_validate(result["risk"])
+        intervention = build_intervention(decision, payer_id=req.payer_id_hash, amount=req.amount)
+
+    return {**result, "next_step": _NEXT_STEP[zone], "intervention": intervention}
