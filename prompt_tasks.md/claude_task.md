@@ -1,358 +1,830 @@
-The current working directory (PWD/root folder) contains the complete project knowledge base and documentation.
+# Council This: Adaptive, Progressive Architecture for Real-Time Payment Scam Interception
 
-It includes material brainstormed and explored across multiple areas: ideas, research, possible features, architecture concepts, agentic approaches, ML/AI approaches, implementation considerations, evaluation ideas, and other project-development material.
+The current working directory contains the complete project knowledge base, including the previously researched and finalized fraud/scam detection features, ideas, architecture concepts, implementation considerations, and project context.
 
-**Council on this.**
+**Use that knowledge base as the source of truth for the project's existing detection features. Do not recreate, enumerate, or propose an alternative feature list unless the council identifies a critical architectural reason to modify it.**
 
-This is for a hackathon, so do NOT optimize for a basic, minimal, or generic implementation. We need a project that is genuinely impressive, technically ambitious, demonstrable, and differentiated.
-
-Your task is to first deeply understand the problem statement in `ps.md`. Treat `ps.md` as the authoritative source for what the hackathon problem actually requires. The other documents in the PWD are supporting knowledge, brainstorming, research, and ideas that can be used to build upon the problem statement.
-
-## 1. Read and Understand the Entire Knowledge Base
-
-Before defining anything, **read and understand every relevant document present in the PWD/root folder**.
-
-Do not selectively read only a few documents.
-
-For every document:
-
-- Understand its purpose and contents.
-- Extract relevant ideas, requirements, research, constraints, assumptions, features, architecture concepts, risks, and insights.
-- Determine what is valuable and should carry forward.
-- Identify contradictions between documents.
-- Identify duplicate or overlapping ideas.
-- Identify weak, unrealistic, unnecessary, or purely cosmetic ideas.
-- Identify gaps that the existing material has not addressed.
-
-Do not simply summarize the documents.
-
-**Synthesize the entire knowledge base into a stronger project.**
-
-`ps.md` is the authoritative source for the actual hackathon problem. Everything else is supporting knowledge that should be evaluated and used appropriately.
+The objective of this council session is to determine the **strongest system architecture and execution strategy** for turning those existing capabilities into a convincing, technically defensible hackathon implementation.
 
 ---
 
-# 2. Understand the Problem Statement Deeply
+## 1. Core Architectural Idea
 
-Extract the actual problem being solved from `ps.md`.
+The system is an **Agentic Guardian for Real-Time Payment Scam Interception**.
+
+Conceptually, it sits around the payment-processing flow and evaluates transactions across payment methods such as:
+
+- UPI
+- Cards
+- Internet banking
+- Other digital payment flows where applicable
+
+The key architectural principle is:
+
+> **Do not execute every available detection capability for every transaction. Start with inexpensive/basic evaluation and progressively escalate analysis only when the transaction's context or risk warrants it.**
+
+Think of this as **risk-adaptive computation**.
+
+A normal transaction should travel through a very lightweight path.
+
+A suspicious transaction should progressively unlock deeper analysis.
+
+A highly suspicious transaction should receive the maximum level of scrutiny.
+
+The council should determine the optimal implementation of this principle.
+
+---
+
+# 2. Progressive Detection / Escalation
+
+The existing detection capabilities should be organized into logical execution tiers rather than indiscriminately executed.
+
+Conceptually:
+
+```text
+Transaction
+     ↓
+Initial Context
+     ↓
+Basic / Low-Cost Evaluation
+     ↓
+Risk / Trigger?
+   ↙       ↘
+ NO         YES
+ ↓           ↓
+Proceed    Escalate
+             ↓
+       Deeper Evaluation
+             ↓
+       Risk / Trigger?
+          ↙      ↘
+        NO        YES
+        ↓          ↓
+     Proceed     Escalate
+                    ↓
+              Deep Analysis
+```
+
+The council should determine:
+
+- How many execution tiers are appropriate
+- Which existing capabilities belong in each tier
+- Which checks should be effectively always-on
+- Which should be conditional
+- What triggers escalation
+- Whether escalation should depend on individual signals, aggregate risk, transaction context, or a combination
+- Whether a previously triggered signal should unlock a particular subset of checks
+- Whether some checks should run in parallel
+- Which checks should be skipped when their information is irrelevant
+- How to minimize unnecessary latency
+
+Do not simply divide the existing capabilities arbitrarily.
+
+Design an **intelligent routing strategy**.
+
+---
+
+# 3. Recipient Familiarity — Important UPI Optimization
+
+For UPI transactions, we want to explore an important optimization.
+
+When the user selects/searches for a recipient, the system should determine whether that recipient is already familiar to the user.
+
+For example:
+
+```text
+User selects recipient
+        ↓
+Recipient/context lookup
+        ↓
+Has this user previously transacted
+with this recipient?
+        ↓
+     ┌───────┴───────┐
+     ↓               ↓
+   Known             New
+     ↓               ↓
+Lower-cost        Reputation /
+execution         contextual analysis
+     ↓               ↓
+Minimal path      Progressive path
+```
+
+A recipient with an established successful transaction history could be treated as a **known/familiar beneficiary**.
+
+A completely new beneficiary should receive additional scrutiny.
+
+The council must determine the correct implementation of this mechanism.
+
+---
+
+# 4. Critical Data-Access Question
+
+We need to challenge the assumption that the payment infrastructure layer can directly access a user's complete transaction history.
 
 Determine:
 
-- What problem actually needs to be solved.
-- Who the users/stakeholders are.
-- What the real-world workflow looks like.
-- What the system must accomplish.
-- Explicit requirements.
-- Implicit requirements.
-- Constraints.
-- Failure modes.
-- Safety considerations.
-- What constitutes genuinely solving the PS.
-- What would merely be superficial compliance.
+### NPCI
 
-Do not design the project around technology first.
+Does NPCI realistically have the information necessary to answer:
 
-Design it around **solving the problem extremely well**.
+> "Has this particular payer previously transacted with this particular beneficiary?"
+
+If yes, explain:
+
+- What level of information could realistically exist there
+- Whether it is available at transaction-processing time
+- Whether it could theoretically be exposed to a fraud-interception service
+- What privacy/security constraints would apply
+
+If no, identify where this information would realistically reside.
+
+Potential entities to analyze include:
+
+- Issuing bank
+- PSP
+- UPI application
+- Account provider
+- Payment processor
+- Fraud platform
+- Distributed/shared infrastructure
+
+Do not assume that because a transaction passes through a payment network, that network necessarily has unrestricted access to all historical user-level information.
 
 ---
 
-# 3. Define a Serious Hackathon-Level Project
+# 5. Recipient Reputation / Community Intelligence
 
-I do NOT want the council to simply produce:
+For a new recipient, we want the system to perform an initial recipient-level assessment before expensive transaction-level analysis.
 
-- a basic agent architecture
-- a generic multi-agent system
-- a simple ML model
-- an LLM wrapper
-- a CRUD/dashboard application with AI attached
-- a collection of obvious/basic features
-- buzzword-heavy architecture without meaningful functionality
+Explore how the system could conceptually query information such as:
 
-Instead, rigorously determine what would make this a **serious, technically impressive, differentiated hackathon solution**.
+- recipient reputation
+- scam reports
+- fraud reports
+- community intelligence
+- known malicious identifiers
+- historical risk
+- account/UPI-ID/phone-number reputation
+- merchant reputation where applicable
+
+Determine:
+
+- What a realistic reputation service would look like
+- Whether this should be centralized or distributed
+- How it should be queried
+- How reputation should affect escalation
+- How false reports should be handled
+- How stale reputation data should be handled
+- How malicious users could attempt to manipulate reputation
+
+For the hackathon, determine what should be simulated.
+
+---
+
+# 6. UPI Transaction Lifecycle
+
+The proposed UPI flow is approximately:
+
+```text
+Recipient selected
+        ↓
+Recipient familiarity/reputation analysis
+        ↓
+Amount entered
+        ↓
+Amount + transaction-context analysis
+        ↓
+User authentication / PIN
+        ↓
+Final risk decision
+        ↓
+Payment execution
+```
+
+The council should determine whether this sequence makes technical sense.
+
+More importantly:
+
+> **At which exact stages can a fraud-interception system realistically intervene?**
+
+Determine how the architecture should behave if:
+
+- The recipient is familiar
+- The recipient is new
+- The recipient is suspicious
+- The amount is abnormal
+- Multiple risk signals appear
+- Risk increases only after amount entry
+- Risk is discovered immediately before payment authorization
+- Additional user verification is required
+
+---
+
+# 7. Card and Internet-Banking Flows
+
+Apply the same architectural thinking to:
+
+### Card payments
+
+```text
+Transaction initiated
+      ↓
+Context evaluation
+      ↓
+Risk evaluation
+      ↓
+Authentication / authorization
+      ↓
+Decision
+```
+
+### Internet banking
+
+Define the equivalent lifecycle.
+
+The council should identify which parts of the architecture can be shared across payment methods and which must remain payment-method-specific.
 
 The goal is:
 
-> **What is the strongest technically credible system we could build that directly and convincingly solves this PS, demonstrates meaningful intelligence, has genuinely standout capabilities, and creates an exceptional hackathon demonstration?**
-
-Do not artificially constrain the conceptual scope at this stage.
-
-If a large number of capabilities genuinely contribute to solving the problem, include them.
-
-Do not add features simply to make the project look large.
+> **One common risk-intelligence architecture with payment-method-specific adapters.**
 
 ---
 
-# 4. Go Beyond Basic Functionality
+# 8. Risk Scoring Architecture
 
-Explore capabilities that could make the project substantially more advanced than a standard hackathon implementation.
+Each invoked detection capability should return a structured assessment.
 
-Consider, where genuinely relevant:
+The council should design a common contract containing concepts such as:
 
-- intelligent orchestration
-- autonomous reasoning and decision loops
-- evidence-based decisions
-- uncertainty/confidence estimation
-- explainability and traceability
-- adaptive behavior
-- simulation and what-if analysis
-- real-time capabilities
-- anomaly detection
-- predictive capabilities
-- continuous learning/feedback
-- adversarial/failure-aware behavior
-- human-in-the-loop escalation
-- automated evidence generation
-- verification and cross-validation
-- robust evaluation
-- operational intelligence
-- useful visualizations
-- novel user interactions
-- other capabilities discovered from the knowledge base or through your analysis
+```text
+Detection result
+├── identifier
+├── triggered / not triggered
+├── risk contribution
+├── confidence
+├── severity
+├── evidence
+├── explanation
+└── recommended escalation
+```
 
-These are **examples, not requirements**.
+Determine the exact schema.
 
-Only include something if it meaningfully improves the solution.
+Then determine how these individual outputs should be aggregated.
 
----
+Critically compare:
 
-# 5. Challenge the Architecture
+### Architecture A
 
-Do not assume that multi-agent architecture is inherently better.
+Detection outputs → LLM → final risk
 
-Determine objectively:
+### Architecture B
 
-- Where agents are useful.
-- Where deterministic logic is better.
-- Where conventional ML is better.
-- Where LLMs are useful.
-- Where RAG is useful.
-- Where external tools/data sources are useful.
-- Where rules or constraints should override model decisions.
-- How components should cooperate.
-- How decisions should be validated.
-- How uncertainty should be handled.
-- How the system should fail safely.
+Detection outputs → deterministic scoring engine → final risk
 
-Every major architectural choice should have a reason.
+### Architecture C
 
-Avoid AI/agentic decoration.
+Detection outputs → calibrated ML model → risk score → policy engine
 
----
+### Architecture D
 
-# 6. Define the Project Comprehensively
+Detection outputs → risk engine → LLM reasoning/explanation
 
-Once the council has synthesized the knowledge base and explored the solution space, converge on a **complete project definition**.
+### Architecture E
 
-Define the project at the level of detail required for another technical team to understand exactly what is intended to be built.
+Hybrid agentic architecture
 
-Cover all aspects that are relevant, including as appropriate:
+Evaluate each against:
 
-- Problem definition
-- Objectives
-- Users
-- Use cases
-- User journeys
-- Functional capabilities
-- Advanced capabilities
-- Differentiators
-- System behavior
-- End-to-end workflows
-- Modules
-- Components
-- Architecture
-- AI/ML/LLM responsibilities
-- Agent responsibilities
-- Data
-- Integrations
-- Interfaces
-- Decision-making
-- Human-in-the-loop behavior
-- Security
-- Safety
-- Failure handling
-- Evaluation
-- Metrics
-- Testing
-- Demo strategy
-- Implementation priorities
-- Risks
-- Assumptions
-- Scope boundaries
-- Non-goals
-- Future extensions
+- Latency
+- Explainability
+- Determinism
+- Auditability
+- Reliability
+- Hallucination risk
+- Adversarial manipulation
+- Calibration
+- Financial-system suitability
+- Hackathon feasibility
 
-**Do not treat the above as a mandatory document structure.**
+Do not assume that the LLM should make the final authorization decision.
 
-Use your own judgment to determine what the final project actually requires.
+If a non-LLM decision engine is architecturally superior, say so.
 
 ---
 
-# 7. Design the Hackathon Demonstration
+# 9. Risk Zones and User Experience
 
-The project must have a compelling end-to-end demonstration.
+The system should ultimately produce a decision that maps to four broad user experiences:
+
+### GREEN
+
+Low risk.
+
+Transaction proceeds normally.
+
+Minimal or no additional friction.
+
+### YELLOW
+
+Suspicious enough to warrant a warning.
+
+The user is informed and given an opportunity to verify the transaction.
+
+### ORANGE
+
+High-risk transaction.
+
+Introduce stronger friction such as:
+
+- prominent warning
+- explicit confirmation
+- re-verification
+- additional authentication where appropriate
+- explanation of why the transaction was flagged
+
+For the hackathon demonstration, we are considering an explicit acknowledgement mechanism such as:
+
+> "I understand that this transaction has been flagged as suspicious and I choose to proceed at my own risk."
+
+The user must explicitly acknowledge the warning before proceeding.
+
+### RED
+
+Critical risk.
+
+Automatically block the transaction.
+
+The user should not be able to bypass a critical fraud decision through a simple acknowledgement.
+
+The council should determine whether these zones and behaviors are well designed and how they should map to the underlying risk engine.
+
+---
+
+# 10. Important Security Boundary
+
+The fraud system should **never require or receive authentication secrets** such as:
+
+- UPI PIN
+- OTP
+- Banking password
+- Card CVV
+- Authentication credentials
+
+The council should explicitly define the boundary between:
+
+```text
+Fraud intelligence
+        ↕
+Payment authorization
+```
+
+Determine what data can safely be passed into the fraud-analysis system and what must remain entirely within the payment/authentication infrastructure.
+
+---
+
+# 11. MCP Architecture
+
+We are considering an **MCP server** as part of the architecture.
+
+Do not assume MCP is automatically the correct choice simply because the project is agentic.
 
 Determine:
 
-- The strongest demo scenarios.
-- Realistic inputs.
-- How the system responds.
-- What intelligence is visible.
-- What decisions are made.
-- What actions are taken.
-- Where humans intervene.
-- How edge cases are demonstrated.
-- How failures are demonstrated.
-- What measurable outcomes can be shown.
-- What should be shown to judges in the first 2–5 minutes.
-- What makes the project memorable and clearly differentiated.
+- What role MCP should play
+- Whether MCP should expose detection capabilities as tools
+- Whether MCP should act as the orchestration layer
+- Whether a separate risk orchestrator should sit above MCP
+- Whether MCP introduces unacceptable latency
+- Whether MCP is appropriate for synchronous payment decisions
+- Whether MCP should be internal infrastructure or primarily a demonstration abstraction
+- Which operations should be synchronous
+- Which operations can be asynchronous
+- How tool execution should be controlled
+- How tool permissions should work
+- How tool outputs should be standardized
+
+The final architecture should use MCP **only where it provides genuine architectural value**.
 
 ---
 
-# 8. Define Rigorous Evaluation
+# 12. MCP Tool Architecture
 
-Do not simply use "accuracy" as the evaluation strategy.
+Using the existing detection capabilities from the knowledge base, determine how they should be exposed.
 
-Determine meaningful metrics for the actual PS, potentially including:
+Do not blindly make every individual feature a separate MCP tool.
 
-- Detection performance
-- False positives / false negatives
-- Latency
-- Reliability
-- Robustness
-- Explainability
-- Intervention success
-- Human workload
-- Cost/efficiency
-- Generalization
-- Adversarial/failure-case performance
-- Other domain-specific metrics
+Consider whether the correct abstraction is:
 
-Define how realistic evaluation data, simulations, scenarios, and test cases could be created for the hackathon.
+```text
+MCP Server
+│
+├── Recipient Intelligence
+├── Transaction Intelligence
+├── Behavioural Intelligence
+├── Reputation Intelligence
+├── Device / Context Intelligence
+├── Advanced Analysis
+└── Supporting Services
+```
 
----
+or another architecture.
 
-# 9. Be Brutally Critical
+Determine the optimal tool granularity.
 
-Challenge every major idea.
+For each tool/module, define:
 
-For every proposed feature/capability, ask:
-
-- Does this actually solve the PS?
-- Is it technically meaningful?
-- Is it demonstrable?
-- Is it differentiated?
-- Is it feasible?
-- Is it worth the complexity?
-- Does it create real user value?
-- Is it merely AI/agentic decoration?
-- Does it introduce unnecessary risk?
-- Does it make the overall system better?
-
-Explicitly reject weak ideas.
-
-Do not be afraid to make the project smaller in one area and significantly deeper in another if that produces a stronger solution.
+- Input
+- Output
+- Execution cost
+- Expected latency
+- Dependencies
+- Whether it is deterministic, statistical, ML-based, or agentic
+- Whether it can run in parallel
+- What causes it to be invoked
+- What causes further escalation
+- What evidence it returns
 
 ---
 
-# 10. Create the Project Documentation
+# 13. Canonical Input Contract
 
-After fully analyzing the entire knowledge base and converging on the strongest project definition, **create a new `docs/` folder in the PWD/root directory.**
+Design the canonical transaction object entering the fraud system.
 
-Inside it, create a **professional, comprehensive project documentation package** describing the project the council has decided should be built.
+It should contain only the information genuinely required for risk analysis.
 
-**You decide what documents are necessary.**
+Conceptually:
 
-Do NOT follow a predefined documentation structure.
+```json
+{
+  "transaction_id": "...",
+  "payment_method": "UPI",
 
-Determine the appropriate documentation architecture based on:
+  "payer_context": {
+    "user_reference": "...",
+    "account_reference": "...",
+    "device_reference": "..."
+  },
 
-- The nature of the PS.
-- The complexity of the proposed system.
-- The modules and capabilities you decide are necessary.
-- The engineering requirements.
-- The AI/ML requirements.
-- The security/safety requirements.
-- The evaluation requirements.
-- The hackathon requirements.
+  "recipient_context": {
+    "recipient_reference": "...",
+    "upi_reference": "...",
+    "merchant_reference": "..."
+  },
 
-If the project requires an SRS, create an SRS.
+  "transaction": {
+    "amount": 12500,
+    "currency": "INR",
+    "type": "P2P"
+  },
 
-If it requires architecture specifications, create them.
+  "context": {
+    "recipient_is_known": false,
+    "previous_transaction_count": 0
+  }
+}
+```
 
-If it requires module specifications, create them.
+This is only a starting point.
 
-If it requires threat models, evaluation specifications, data specifications, API/interface specifications, agent specifications, workflows, decision policies, or other technical documentation, create those as well.
+The council should define the proper schema and identify:
 
-If something is unnecessary, do not create filler documentation.
-
-The final `docs/` directory should be a **coherent professional documentation set**, not a random collection of files.
-
-The documents should cross-reference one another where appropriate and remain internally consistent.
-
-The documentation should capture **every important aspect of the project that the council decides should exist**.
-
-The `docs/` folder should ultimately become the **authoritative project specification for the development phase that comes later**.
-
----
-
-# 11. NO DEVELOPMENT
-
-This task is strictly:
-
-**PROJECT RESEARCH → SYNTHESIS → DEFINITION → SPECIFICATION → DOCUMENTATION**
-
-Do NOT develop the project.
-
-Do NOT:
-
-- write application code
-- build the frontend
-- build the backend
-- implement agents
-- implement ML models
-- implement LLM pipelines
-- configure infrastructure
-- install dependencies
-- create production code
-- start development
-- build the prototype
-
-You may use pseudocode, schemas, diagrams, workflows, interface definitions, examples, or technical specifications **inside the documentation when necessary to precisely define the system**.
-
-But do not implement anything.
+- Required fields
+- Optional fields
+- Sensitive fields
+- Derived fields
+- Fields that should never be passed
+- Fields that can be anonymized/tokenized
 
 ---
 
-# Final Objective
+# 14. Canonical Output Contract
 
-The final result should be:
+Design the output of the complete fraud-analysis pipeline.
 
-1. A deeply understood and synthesized knowledge base.
-2. A rigorously interpreted `ps.md`.
-3. A carefully reasoned, technically ambitious project definition.
-4. A complete understanding of every module, capability, workflow, dependency, and requirement the proposed project should contain.
-5. A professionally organized `docs/` directory containing whatever documentation is necessary to fully specify that project.
+It should be capable of communicating:
 
-Do not merely give me recommendations in chat.
+```text
+Transaction
+     ↓
+Risk assessment
+     ↓
+Decision
+     ↓
+Explanation
+     ↓
+Recommended action
+```
 
-**Actually create the documentation in the PWD.**
+Potential concepts:
 
-The council should decide what the project needs to be.
+```json
+{
+  "risk_score": 0.87,
+  "confidence": 0.93,
+  "risk_zone": "ORANGE",
+  "decision": "STEP_UP",
+  "checks_executed": "...",
+  "signals": [],
+  "evidence": [],
+  "reasons": [],
+  "recommended_action": "USER_CONFIRMATION"
+}
+```
 
-The council should decide what capabilities it should have.
+Again, determine the correct production-style contract rather than simply accepting this example.
 
-The council should decide how the system should be structured.
+---
 
-The council should decide what documentation is necessary.
+# 15. Dynamic Execution Strategy
 
-The council should decide what belongs in each document.
+The system should make an execution decision dynamically.
 
-The only fixed anchors are:
+Conceptually:
 
-- `ps.md` is the authoritative problem statement.
-- The entire PWD knowledge base must be understood and synthesized.
-- The result must be a serious, differentiated hackathon project.
-- The result must be comprehensively documented.
-- **No development is to be performed.**
+```text
+             Transaction
+                  ↓
+          Context Assessment
+                  ↓
+           Initial Checks
+                  ↓
+             Risk Router
+            /           \
+       Low Risk       Elevated Risk
+          ↓                ↓
+       Proceed       Additional Checks
+                           ↓
+                     Risk Router
+                    /          \
+               Accept          Escalate
+                                 ↓
+                           Deep Analysis
+                                 ↓
+                          Final Decision
+```
 
-Stop after the project has been fully defined and documented.
+The council should investigate more sophisticated routing strategies, including:
+
+- Rule-based escalation
+- Threshold-based routing
+- Weighted risk
+- Decision trees
+- Policy engines
+- Learned routing
+- Cost-aware routing
+- Confidence-aware routing
+- Agentic routing
+- Hybrid approaches
+
+The final system should optimize:
+
+> **Risk detection quality × latency × computational cost × explainability**
+
+---
+
+# 16. Hackathon Architecture vs Production Architecture
+
+This distinction is extremely important.
+
+Produce two views.
+
+## Production Concept
+
+What the architecture would look like if integrated with actual banking/payment infrastructure.
+
+## Hackathon Implementation
+
+What we can actually build and demonstrate without access to NPCI, banks, live payment rails, or proprietary fraud datasets.
+
+Clearly mark:
+
+### Real
+
+Components we can genuinely implement.
+
+### Simulated
+
+Components whose APIs/data/infrastructure must be mocked.
+
+### Conceptual
+
+Components that demonstrate how the system would integrate into a real payment ecosystem.
+
+Do not pretend that the hackathon prototype has access to infrastructure it does not actually have.
+
+---
+
+# 17. Demo Architecture
+
+Design the strongest possible demonstration.
+
+The demo should show the system adapting its computational effort based on risk.
+
+For example:
+
+### Demo A — Familiar Recipient
+
+```text
+Known recipient
+      ↓
+Minimal evaluation
+      ↓
+Low risk
+      ↓
+GREEN
+      ↓
+Proceed
+```
+
+### Demo B — New Recipient
+
+```text
+New recipient
+      ↓
+Recipient intelligence
+      ↓
+Additional contextual evaluation
+      ↓
+Moderate risk
+      ↓
+YELLOW
+      ↓
+Warning
+```
+
+### Demo C — Suspicious Transaction
+
+```text
+New recipient
+      ↓
+Suspicious context
+      ↓
+Progressive escalation
+      ↓
+Multiple deeper analyses
+      ↓
+ORANGE
+      ↓
+Strong warning + explicit acknowledgement
+```
+
+### Demo D — Critical Scam
+
+```text
+Suspicious recipient
+      ↓
+Multiple severe signals
+      ↓
+Deep analysis
+      ↓
+RED
+      ↓
+BLOCK
+```
+
+The council should improve these scenarios and identify the demonstration sequence that best communicates the project's novelty.
+
+---
+
+# 18. Latency
+
+A central requirement is real-time or near-real-time operation.
+
+We are considering a few seconds of total additional processing in the demonstration.
+
+Analyze:
+
+- Which operations can execute synchronously
+- Which can execute concurrently
+- Which should be cached
+- Which should be precomputed
+- Which should be asynchronous
+- Which should never block the transaction
+- How recipient reputation can be cached
+- How progressive execution reduces latency
+- How MCP affects latency
+- How an LLM affects latency
+
+Provide a realistic latency budget for the hackathon implementation.
+
+---
+
+# 19. Security and Adversarial Considerations
+
+Challenge the architecture against attackers.
+
+Consider:
+
+- Attackers learning which signals trigger blocking
+- Manipulation of reputation data
+- False community reports
+- Adversarial transaction patterns
+- Detector evasion
+- Prompt injection if LLMs interact with external data
+- Tool poisoning
+- Compromised tools
+- Conflicting detector results
+- Missing data
+- Stale data
+- False positives
+- False negatives
+
+Determine the appropriate safeguards.
+
+---
+
+# 20. Final Council Deliverable
+
+After brainstorming and challenging the assumptions, converge on **one strong recommended architecture**.
+
+Produce:
+
+### 1. Final End-to-End Architecture
+
+A clean architectural diagram and explanation.
+
+### 2. Component Responsibilities
+
+What every major component does.
+
+### 3. Progressive Execution Model
+
+Exactly how the system decides what to execute next.
+
+### 4. Data Architecture
+
+Where transaction history, recipient familiarity, reputation, contextual information, and risk signals conceptually originate.
+
+### 5. MCP Architecture
+
+Exactly what MCP does and does not do.
+
+### 6. Input Contract
+
+Canonical transaction-analysis schema.
+
+### 7. Detection Output Contract
+
+Standardized result schema.
+
+### 8. Risk Aggregation
+
+How individual detection results become an overall risk assessment.
+
+### 9. Decision Engine
+
+How GREEN/YELLOW/ORANGE/RED decisions are generated.
+
+### 10. LLM Role
+
+Precisely identify where LLM reasoning belongs and where it should NOT be trusted.
+
+### 11. Payment Lifecycle Integration
+
+How UPI, cards, and internet banking differ.
+
+### 12. Privacy/Security Boundary
+
+What information the system requires and what it must never access.
+
+### 13. Hackathon Architecture
+
+Exactly what we should implement.
+
+### 14. Mock Infrastructure
+
+Exactly what needs to be simulated.
+
+### 15. Demo Flow
+
+The most compelling end-to-end demonstration.
+
+### 16. Architectural Risks
+
+Assumptions, limitations, and real-world integration challenges.
+
+### 17. Final Recommendation
+
+End with a single opinionated architecture.
+
+Do not give us a menu of disconnected possibilities.
+
+The goal is to converge on the strongest implementation strategy for the hackathon.
+
+---
+
+## Central Design Principle
+
+Throughout the analysis, preserve this principle:
+
+> **A payment fraud system should not spend maximum computational effort on every transaction. It should intelligently determine how much scrutiny a transaction deserves, starting with cheap checks and escalating only when risk, context, or uncertainty justifies deeper analysis.**
+
+The novelty we want to demonstrate is therefore not merely "many fraud checks."
+
+It is:
+
+> **An adaptive, agentic risk-interception system that dynamically determines the depth of analysis required for each transaction while maintaining low latency for legitimate payments.**
+
+Use the existing project knowledge base to determine what detection capabilities already exist. Focus this council entirely on **how those capabilities should be orchestrated, routed, scored, exposed, secured, and integrated into the payment lifecycle.**
