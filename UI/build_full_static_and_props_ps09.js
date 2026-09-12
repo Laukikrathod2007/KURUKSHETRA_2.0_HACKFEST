@@ -246,14 +246,230 @@ html = html.replace(/src="\/content\/tempo-full-logo\.svg"/g, 'src="/images/payk
 html = html.replace(/alt="Tempo full logo"/g, 'alt="PayKavach — Intercept Before It Reaches"');
 html = html.replace(/alt="Tempo"/g, 'alt="PayKavach"');
 
-// Inject custom styles for logo display so it renders cleanly and sharp
+// Inject custom styles: logo display + gold accent touches + bigger logo cells + page-load animation
 if (!html.includes('paykavach-logo-styles')) {
   html = html.replace('</head>', `<style id="paykavach-logo-styles">
+/* ─── Logo Display ─── */
 ._headerLogo_aukpd_20 a { display: flex !important; align-items: center !important; text-decoration: none !important; }
 ._headerLogo_aukpd_20 img { width: auto !important; height: 38px !important; max-width: 210px !important; object-fit: contain !important; }
 ._footerLogoImg_cl0m3_63 { width: auto !important; height: 52px !important; max-width: 250px !important; object-fit: contain !important; }
 ._mobileNavLogoImg_aukpd_521 { width: auto !important; height: 44px !important; max-width: 220px !important; object-fit: contain !important; }
-</style></head>`);
+
+/* ─── Gold Accent Color Touches (matching #C9A227 / #F0C040 logo palette) ─── */
+/* Primary buttons — gold gradient */
+._buttonPrimary_1wyxw_12 {
+  background: linear-gradient(135deg, #C9A227 0%, #F0C040 100%) !important;
+  color: #0a0a0f !important;
+  border: none !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 20px rgba(201,162,39,0.35) !important;
+  transition: all 0.25s ease !important;
+}
+._buttonPrimary_1wyxw_12:hover {
+  box-shadow: 0 6px 28px rgba(201,162,39,0.55) !important;
+  transform: translateY(-1px) !important;
+}
+/* Secondary buttons — gold border */
+._buttonSecondary_1wyxw_17 {
+  border-color: rgba(201,162,39,0.4) !important;
+  color: #C9A227 !important;
+  transition: all 0.25s ease !important;
+}
+._buttonSecondary_1wyxw_17:hover {
+  border-color: #C9A227 !important;
+  background: rgba(201,162,39,0.06) !important;
+}
+/* Feature list accent dots / icons */
+._featureItemIcon_1wyxw_1, ._icon_1wyxw_1 { color: #C9A227 !important; }
+/* Section headers — subtle gold underline */
+._headerTitle_osd0a_6::after {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 2px;
+  background: linear-gradient(90deg, #C9A227, #F0C040);
+  margin-top: 12px;
+  border-radius: 2px;
+}
+/* Logo wall cells — hover gold glow */
+._logoCell_osd0a_37 {
+  transition: all 0.2s ease !important;
+}
+._logoCell_osd0a_37:hover {
+  background: rgba(201,162,39,0.04) !important;
+}
+/* Footer gold accent */
+._footerSectionTitle_cl0m3_1 { color: #C9A227 !important; }
+
+/* ─── Bigger logo wall cells ─── */
+._logosGrid_osd0a_31 ._logoCell_osd0a_37 {
+  padding: 28px 20px !important;
+  min-height: 100px !important;
+}
+._logoImageCompact_osd0a_89 {
+  width: 130px !important;
+  height: auto !important;
+  max-height: 56px !important;
+  filter: grayscale(1) brightness(0) !important;
+  opacity: 0.75 !important;
+  transition: opacity 0.2s ease !important;
+  object-fit: contain !important;
+}
+._logoCell_osd0a_37:hover ._logoImageCompact_osd0a_89 {
+  opacity: 1 !important;
+  filter: grayscale(0) brightness(1) !important;
+}
+
+/* ─── Splash / Page-Load Animation ─── */
+#pk-splash {
+  position: fixed;
+  inset: 0;
+  background: #0a0a0f;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  pointer-events: none;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+#pk-splash.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+#pk-splash-logo {
+  width: 100px;
+  height: 100px;
+  animation: pkLogoReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  opacity: 0;
+}
+#pk-splash-wordmark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  animation: pkFadeUp 0.6s ease 0.5s forwards;
+  opacity: 0;
+}
+#pk-splash-wordmark span:first-child {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+}
+#pk-splash-wordmark span:last-child {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: #C9A227;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+#pk-splash-bar {
+  width: 200px;
+  height: 2px;
+  background: #1a1a2e;
+  border-radius: 2px;
+  overflow: hidden;
+  animation: pkFadeUp 0.5s ease 0.7s forwards;
+  opacity: 0;
+}
+#pk-splash-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #C9A227, #F0C040);
+  animation: pkBarFill 1s ease 0.8s forwards;
+  border-radius: 2px;
+}
+#pk-splash-dots {
+  display: flex;
+  gap: 6px;
+  animation: pkFadeUp 0.5s ease 0.9s forwards;
+  opacity: 0;
+}
+#pk-splash-dots span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #C9A227;
+  animation: pkDotPulse 1.2s ease infinite;
+}
+#pk-splash-dots span:nth-child(2) { animation-delay: 0.2s; }
+#pk-splash-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+/* Gold orbit ring around splash logo */
+#pk-splash-orbit {
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  border: 1.5px solid rgba(201,162,39,0.3);
+  border-radius: 50%;
+  animation: pkOrbitSpin 2s linear infinite, pkFadeUp 0.4s ease 0.2s forwards;
+  opacity: 0;
+}
+#pk-splash-orbit::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #C9A227;
+  border-radius: 50%;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 10px #C9A227;
+}
+
+@keyframes pkLogoReveal {
+  from { opacity: 0; transform: scale(0.5) rotate(-15deg); }
+  to   { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+@keyframes pkFadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pkBarFill {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+@keyframes pkDotPulse {
+  0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
+  40%           { transform: scale(1); opacity: 1; }
+}
+@keyframes pkOrbitSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+</style>
+
+<!-- PayKavach Page Load Splash Animation -->
+<script>
+(function() {
+  // Inject splash DOM before body renders
+  document.addEventListener('DOMContentLoaded', function() {
+    var splash = document.createElement('div');
+    splash.id = 'pk-splash';
+    splash.innerHTML = \`
+      <div id="pk-splash-orbit"></div>
+      <img id="pk-splash-logo" src="/images/paykavach-icon.png" alt="PayKavach" />
+      <div id="pk-splash-wordmark">
+        <span>PayKavach</span>
+        <span>Autonomous AI Payment Defense</span>
+      </div>
+      <div id="pk-splash-bar"><div id="pk-splash-bar-fill"></div></div>
+      <div id="pk-splash-dots"><span></span><span></span><span></span></div>
+    \`;
+    document.body.insertBefore(splash, document.body.firstChild);
+    // Dismiss after 2.2s
+    setTimeout(function() { splash.classList.add('hidden'); }, 2200);
+    setTimeout(function() { splash.remove(); }, 2900);
+  });
+})();
+</script>
+
+</head>`);
 }
 
 // Replace static HTML texts throughout the document
