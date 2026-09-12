@@ -141,47 +141,61 @@ def explain_decision(
         sentences.append(text)
     deterministic_explanation = " ".join(sentences)
 
-    # 2. Generative LLM synthesis enhancement with comprehensive few-shot edge case benchmark
-    if use_llm and (os.getenv("GEMINI_API_KEY") or os.getenv("OPENAI_API_KEY")):
+    # 2. Generative LLM synthesis enhancement with primary & fallback keys
+    candidate_keys = [
+        k for k in [
+            os.getenv("GEMINI_API_KEY"),
+            os.getenv("GEMINI_API_KEY_FALLBACK"),
+            os.getenv("GOOGLE_API_KEY"),
+            os.getenv("GOOGLE_API_KEY_FALLBACK"),
+        ] if k
+    ]
+
+    if use_llm and candidate_keys:
         try:
             import json
             import urllib.request
 
-            gemini_key = os.getenv("GEMINI_API_KEY")
-            if gemini_key:
-                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key={gemini_key}"
-                prompt_text = (
-                    f"{_LLM_GUARDIAN_SYSTEM_PROMPT}\n\n"
-                    f"NOW EVALUATE THIS LIVE DETECTED TRANSACTION:\n"
-                    f"Detected risk indicators: {', '.join(reasons)}\n"
-                    f"Forensic details: {deterministic_explanation}\n\n"
-                    f"Generate a 2-3 sentence victim intervention following the rules and examples above:"
-                )
-                payload = {
-                    "contents": [{
-                        "parts": [{
-                            "text": prompt_text
-                        }]
-                    }],
-                    "generationConfig": {
-                        "maxOutputTokens": 150,
-                        "temperature": 0.2
-                    }
+            prompt_text = (
+                f"{_LLM_GUARDIAN_SYSTEM_PROMPT}\n\n"
+                f"NOW EVALUATE THIS LIVE DETECTED TRANSACTION:\n"
+                f"Detected risk indicators: {', '.join(reasons)}\n"
+                f"Forensic details: {deterministic_explanation}\n\n"
+                f"Generate a 2-3 sentence victim intervention following the rules and examples above:"
+            )
+            payload = {
+                "contents": [{
+                    "parts": [{
+                        "text": prompt_text
+                    }]
+                }],
+                "generationConfig": {
+                    "maxOutputTokens": 150,
+                    "temperature": 0.2
                 }
-                req = urllib.request.Request(
-                    url,
-                    data=json.dumps(payload).encode("utf-8"),
-                    headers={"Content-Type": "application/json"},
-                    method="POST",
-                )
-                with urllib.request.urlopen(req, timeout=3.5) as resp:
-                    if resp.status == 200:
-                        data = json.loads(resp.read().decode("utf-8"))
-                        candidates = data.get("candidates", [])
-                        if candidates:
-                            gen_text = candidates[0].get("content", {}).get("parts", [{}])[0].get("text", "").strip()
-                            if gen_text:
-                                return f"{gen_text} {deterministic_explanation}"
+            }
+            req_data = json.dumps(payload).encode("utf-8")
+
+            # Try primary key, then fail-over automatically to fallback key
+            for key in candidate_keys:
+                try:
+                    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key={key}"
+                    req = urllib.request.Request(
+                        url,
+                        data=req_data,
+                        headers={"Content-Type": "application/json"},
+                        method="POST",
+                    )
+                    with urllib.request.urlopen(req, timeout=3.5) as resp:
+                        if resp.status == 200:
+                            data = json.loads(resp.read().decode("utf-8"))
+                            candidates = data.get("candidates", [])
+                            if candidates:
+                                gen_text = candidates[0].get("content", {}).get("parts", [{}])[0].get("text", "").strip()
+                                if gen_text:
+                                    return f"{gen_text} {deterministic_explanation}"
+                except Exception:
+                    continue
         except Exception:
             pass
 
