@@ -52,3 +52,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+# Local SQLite databases -- regenerated on every server start by init_and_seed()
+*.db

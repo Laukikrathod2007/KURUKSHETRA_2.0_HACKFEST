@@ -1,9 +1,10 @@
 # Kurukshetra // Granular Module Architecture & Technical Approach Specification
 ## Code-Level Architectural Decomposition of Every System Module, Pipeline, and Service
 
-**Document Version:** 3.0.0-CODE-SPEC  
+**Document Version:** 3.1.0-CODE-SPEC  
 **Classification:** Deep Technical Architecture & Code-Level Module Specification  
 **Problem Statement Reference:** PS09 — Agentic Guardian for Real-Time Payment Scam Interception  
+**Foundational Source Document:** `research-archive/fresh_base (1).md` (*Master Technical Feature Base & Verification Architecture* — superseding legacy `base.md`)  
 **Target Codebases:**
 - `kurukshetra-ecosystem/src/ecosystem/` (Deterministic Risk Engine, CBS, Switch, MCP, WORM Audit)
 - `laukik/USPs/guardian/` (Multi-Agent Cognitive Interception, Intent/Coercion Analysis, Voice AI Guardian)
@@ -135,6 +136,29 @@ sequenceDiagram
         Payer->>Client: Waits 5s, checks acknowledgment, taps "Confirm"
         Client->>Vault: Log Cryptographic Override Proof
     end
+```
+
+### 2.1 Verification Timing, Latency Budgets & The 3-Phase Lifecycle
+Derived from the authoritative master specification `fresh_base (1).md`, timing is split into two non-interfering dimensions:
+- **Machine Verification Latency:** Hard P99 execution ceiling of **$< 45\text{ ms}$**. User-perceived latency overhead is strictly **under 20 ms**.
+- **Human Cognitive Friction:** Proportional delays triggered **only** upon confirmed fraud risk:
+  - `ALLOW` (0.00–0.30): **0 seconds** friction (seamless pass to MPIN).
+  - `STEP-UP` (0.31–0.65): **2–3 seconds** confirmation.
+  - `COACH` (0.66–0.85): **5 seconds** mandatory cognitive dwell gate.
+  - `FREEZE` (0.86–1.00): **4-hour hold** or hard block.
+
+```
+Processing Phase Breakdown:
+• Phase 0: Parallel Pre-fetch (~25 ms, 0 ms added user wait)
+  Runs concurrently while client awaits NPCI ReqValAdd name resolution (~120ms).
+  Executes 13 recipient/network detectors: Cat A (1-4), Cat F (18-20), Cat G (21-24), Cat D (11, 13).
+• Phase 1: Pre-Flight Inference (~12-18 ms)
+  Runs when user taps "Pay". Evaluates 14 contextual/pattern signals: Cat B (5-8), Cat C (9-10),
+  Cat D (12), Cat E (14-17), Cat I (32) + Dense feature assembly + LightGBM calibrated model.
+• Phase 2: Asynchronous Audit & Sync (0 ms critical path)
+  WORM Merkle audit ledger hashing, cross-app smurfing updates, self-tuning metrics run out-of-band.
+• Fail-Open Safe Harbor:
+  If total machine execution exceeds 45 ms, circuit breaker automatically emits TIER_3_FAIL_OPEN (ALLOW).
 ```
 
 ---
@@ -443,4 +467,59 @@ Located in `laukik/Frontend/src/components/PaymentModal.tsx`:
 3. **Client Clock Tampering:** The 5-second dwell gate timer is measured against server-issued nonce timestamps, preventing clients from fast-forwarding local device clocks.
 
 ---
+
+# 25. Developer Blueprint: How to Add or Extend Any Module / Feature from `fresh_base (1).md`
+
+To add any new forensic detector, signal, or cognitive intervention from `fresh_base (1).md`, follow the standard 6-step engineering protocol:
+
+```mermaid
+flowchart LR
+    S1[1. Signal Contract in contracts.py] --> S2[2. Forensic Detector in tier0/tier1]
+    S2 --> S3[3. Pipeline Hook in engine.py]
+    S3 --> S4[4. Scoring Weight in scoring.py]
+    S4 --> S5[5. MCP Narrative in tools.py]
+    S5 --> S6[6. Unit Test in test_risk_detectors.py]
+```
+
+### Step 1: Define the Signal Contract
+In `src/ecosystem/risk/contracts.py`:
+```python
+class DetectionSignal(BaseModel):
+    feature_name: str
+    feature_id: int          # Corresponds to Feature #1-36 in fresh_base (1).md
+    triggered: bool
+    risk_contribution: float # e.g. 0.35, 0.50, 0.80
+    explanation_code: str    # e.g. "REFUND_REVERSAL_TRAP"
+    evidence: dict[str, Any]
+```
+
+### Step 2: Implement the Forensic Detector
+Place the detector in the appropriate tier module based on its data dependencies:
+- **`src/ecosystem/risk/tier0.py`:** If the check only requires public VPA string syntax or QR parameters (`ReqValAdd` preflight, $< 10\text{ms}$).
+- **`src/ecosystem/risk/tier1_switch.py`:** If the check evaluates network switch metrics (abandonment ratios, lookup bursts, cross-PSP lookups).
+- **`src/ecosystem/risk/tier1_cbs.py`:** If the check evaluates counterparty bank ledger metrics (rapid fund drainage velocity, one-way sink ratios, dormant bursts).
+- **`src/ecosystem/risk/tier1_ledger.py`:** If the check evaluates transaction amounts, velocity windows, or sender-recipient histories (drip escalation, threshold evasion, refund reversal).
+- **`src/ecosystem/risk/registry.py`:** If the check evaluates external regulatory blocklists (I4C 1930, SEBI, TRAI Sanchar Saathi).
+
+### Step 3: Register in the Master Evaluation Engine
+In `src/ecosystem/risk/engine.py`:
+- Determine whether the signal belongs in **Phase 0** (parallel pre-fetch concurrent with NPCI address resolution, no amount required) or **Phase 1** (preflight inference upon tapping Pay, amount required).
+- Append the detector function call to `_run_tier1()` or the preflight array.
+
+### Step 4: Calibrate Weights & Missing Data Floors
+In `src/ecosystem/risk/scoring.py`:
+- Verify how the signal's `risk_contribution` shifts the composite score into `ALLOW`, `STEP_UP`, `COACH`, or `FREEZE`.
+- If the feature relies on external bank telemetry that could be unavailable, ensure the **Missing Data Safety Floor** applies (`floor = RiskZone.STEP_UP`).
+
+### Step 5: Author Causal Explanations & UI Modals
+In `src/ecosystem/mcp/tools.py`:
+- Map the `explanation_code` to plain-language, non-accusatory customer facts.
+- Register an intervention UI template in `select_intervention_template()`.
+
+### Step 6: Verify via Automated Test Suite
+In `tests/test_risk_detectors.py` or `tests/test_scenarios_e2e.py`:
+- Create a test case validating that the detector triggers on the specified scam payload and stays dormant on benign baseline transactions.
+
+---
 *End of Granular Module Architecture & Technical Approach Specification — Project Kurukshetra (PS09)*
+

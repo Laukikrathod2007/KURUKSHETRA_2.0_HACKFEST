@@ -1,6 +1,6 @@
 # 01 — System Model: How the Payment Ecosystem Actually Works
 
-This is the mental model everything else in this folder is built from. It is derived from the established knowledge base (`../kurukshetra-system/docs/00-fresh-base.md`, `00-implementation-plan.md`, `00-council-verdict.md`) — not re-derived from scratch.
+This is the mental model everything else in this folder is built from. It is derived from the established knowledge base (`system-design-history/00-fresh-base.md`, `00-implementation-plan.md`, `00-council-verdict.md`) — not re-derived from scratch. That folder holds the full design/decision record from the original `kurukshetra-system` implementation, which this package superseded and absorbed.
 
 ---
 

@@ -2,9 +2,10 @@
 ## Project Kurukshetra // Agentic Guardian for Real-Time Payment Scam Interception (PS09)
 
 **Authoritative Technical Documentation Suite:**
-1. [Master 48-Section System Architecture & End-to-End Traceability Specification](../../implementation-plan/MASTER_PS09_SYSTEM_SPECIFICATION.md)
-2. [Granular Module Architecture & Technical Approach Specification](../../implementation-plan/MODULE_ARCHITECTURE_AND_TECHNICAL_APPROACH.md)
-3. [Master Implementation Readiness Review](./implementation-readiness.md)
+1. [Complete 36 Scenarios & Forensic Capabilities Specification](../../implementation-plan/COMPLETE_36_SCENARIOS_AND_FEATURES_SPECIFICATION.md)
+2. [Master 48-Section System Architecture & End-to-End Traceability Specification](../../implementation-plan/MASTER_PS09_SYSTEM_SPECIFICATION.md)
+3. [Granular Module Architecture & Technical Approach Specification](../../implementation-plan/MODULE_ARCHITECTURE_AND_TECHNICAL_APPROACH.md)
+4. [Master Implementation Readiness Review](./implementation-readiness.md)
 
 ---
 

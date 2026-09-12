@@ -286,6 +286,24 @@ The following comprehensive matrix documents the 16 primary payment scam typolog
 | **15** | **First-Time Recipient Attack** | Exploit absence of relationship history for immediate high-value theft | Surprise, novel scenario pretexting | Beneficiary VPA never seen in user's 180-day history; Amount $>5\times$ user's median payment | Offline real-world relationship | Recipient novelty factor + Outlier amount score | Genuine payment to new plumber or doctor | **Tier 1 (Passive Context Badge)** |
 | **16** | **SIM Swap & Social Hybrid** | Attacker swaps SIM, pretexts victim's contacts for emergency funds | Impersonation of close relative/friend in distress | Sudden device hardware fingerprint change + Immediate high-value outbound transfers | Telecom carrier IMSI logs | Device trust score + In-app voice pattern anomaly | Legitimate user buying a new phone | **Tier 3 (Strong Verification + Cool-off)** |
 
+### 9.1 The Authoritative 36 Forensic Scenarios & Capabilities Catalog
+In addition to the 16 synthesized attack archetypes above, Kurukshetra formally operationalizes and implements the complete suite of **36 Discrete Forensic Features & Fraud Scenarios** defined in `research-archive/base.md`. 
+
+The exhaustive mathematical formulations, banking protocol hooks (Event 1 `ReqValAdd` vs. Event 2 `ReqPay`), victim-attacker pretexts, and code-level file mappings for all 36 features are documented in the companion specification:
+👉 **[COMPLETE_36_SCENARIOS_AND_FEATURES_SPECIFICATION.md](./COMPLETE_36_SCENARIOS_AND_FEATURES_SPECIFICATION.md)**
+
+#### Summary of the 10 Scenario Categories:
+- **Category A: VPA Resolution Intelligence (Features 1–4):** Verify-to-Abandon Ratio, Resolution Burst Detection, Beneficiary Name Clash, Authority Handle Patterns.
+- **Category B: Transaction Context & Initiation Intelligence (Features 5–8):** Multi-VPA Phone Mapping, High-Value Outlier Anomaly, Rapid Fund Drainage Velocity ($T_{\text{residence}} < 300\text{s}$), Island Node Graph Isolation.
+- **Category C: QR Code & Payment Link Forensics (Features 9–10):** P2P Dynamic QR "Scan-to-Receive" Trap, Deep-Link Phishing Parameter Forensics.
+- **Category D: Network-Level Cross-Victim Intelligence (Features 11–13):** Decentralized Community Reports (14-day half-life decay), Cross-Victim Caller-Recipient Correlation, Verification Fan-In Leading Surge Indicator.
+- **Category E: Transaction Pattern & Evasion Forensics (Features 14–17):** Drip Scam Geometric Escalation, Threshold Evasion (Smurfing/Splitting), Refund Reversal ("Accidental ₹50k Transfer") Trap, Collect Request Abuse.
+- **Category F: Recipient Account Forensics & CBS Indicators (Features 18–20):** One-Way Pass-Through Sinks, Burst-Drain-Dormant Account Lifecycles, Scam Hours Concentration (Boiler Room Shifts).
+- **Category G: Banking & National Regulatory Infrastructure (Features 21–24):** Cross-State Mule Geographic Spread, Aadhaar/PAN Regulatory Freezes, I4C / 1930 Cybercrime Registry, TRAI Sanchar Saathi Blacklists.
+- **Category H: Cognitive Interventions & Decoupling Gates (Features 25–31):** Scam Playbook Visual Stepper, Trusted Contact Dual-Key Override, Purpose Contradiction Checks, Voice Debiasing Challenge, Account Timeline Visualization, One-Tap Bank Support Dial, 15-Minute Regret Escrow Window.
+- **Category I: Cross-App MCP Ecosystem Middleware (Features 32–34):** Cross-App Smurfing Correlation (GPay + PhonePe + Paytm), Automated Campaign Termination Kill-Switch, Citizen Public Scam Score Lookup API.
+- **Category J: Adaptive Learning & Self-Tuning Closed Loop (Features 35–36):** Post-Hold Escalation Coaching Detection, Intervention Effectiveness A/B Tracking.
+
 ---
 
 # 10. Observable Evidence Model
