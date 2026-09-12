@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+const fs = require('fs');
+
+const goldSaaSHTML = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -587,3 +589,7 @@
   <script type="module" src="/_astro/index.astro_astro_type_script_index_0_lang.5Yvueq_s.js"></script>
 </body>
 </html>
+`;
+
+fs.writeFileSync('index.html', goldSaaSHTML, 'utf8');
+console.log('Successfully written Black & Gold Luxury SaaS landing page into index.html!');
