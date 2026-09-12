@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1100" height="1180" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <style>
+    .bg { fill: #ffffff; }
+    .outer-box { fill: #ffffff; stroke: #1a1a1a; stroke-width: 2; rx: 6; ry: 6; }
+    .inner-box { fill: #ffffff; stroke: #222222; stroke-width: 1.5; rx: 4; ry: 4; }
+    .container-box { fill: #fafafa; stroke: #444444; stroke-width: 1.5; stroke-dasharray: 6 4; rx: 8; ry: 8; }
+    .header-text { fill: #1a1a1a; font-weight: 700; font-size: 13px; text-anchor: middle; letter-spacing: 0.5px; }
+    .box-text { fill: #1a1a1a; font-weight: 600; font-size: 12px; text-anchor: middle; }
+    .sub-text { fill: #555555; font-size: 10px; text-anchor: middle; }
+    .arrow { stroke: #1a1a1a; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+    .badge { fill: #ffffff; stroke: #1a1a1a; stroke-width: 1.5; rx: 4; ry: 4; }
+  </style>
+
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#1a1a1a" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1100" height="1180" class="bg" />
+
+  <!-- 1. SIMULATED PSP PAYMENT APPS LAYER -->
+  <g transform="translate(60, 40)">
+    <rect width="980" height="90" class="outer-box" />
+    <text x="490" y="24" class="header-text">1. SIMULATED PSP PAYMENT APPS</text>
+    
+    <g transform="translate(40, 36)">
+      <rect width="260" height="40" class="inner-box" />
+      <text x="130" y="25" class="box-text">Google Pay Interface</text>
+    </g>
+
+    <g transform="translate(360, 36)">
+      <rect width="260" height="40" class="inner-box" />
+      <text x="130" y="25" class="box-text">PhonePe Interface</text>
+    </g>
+
+    <g transform="translate(680, 36)">
+      <rect width="260" height="40" class="inner-box" />
+      <text x="130" y="25" class="box-text">Card / NetBanking Portal</text>
+    </g>
+  </g>
+
+  <!-- Arrow to Switch -->
+  <path d="M 550, 130 L 550, 165" class="arrow" />
+
+  <!-- 2. NPCI SWITCH & CENTRAL MAPPER -->
+  <g transform="translate(60, 165)">
+    <rect width="980" height="60" class="outer-box" />
+    <text x="490" y="24" class="header-text">2. NPCI SWITCH &amp; CENTRAL MAPPER</text>
+    <text x="490" y="44" class="sub-text">Routes ReqValAdd (VPA Resolution) &amp; ReqPay (Pre-PIN Payment Execution)</text>
+  </g>
+
+  <!-- Arrow to Engine -->
+  <path d="M 550, 225 L 550, 260" class="arrow" />
+
+  <!-- 3. KURUKSHETRA FRAUD INTERCEPTION ENGINE -->
+  <g transform="translate(60, 260)">
+    <rect width="980" height="420" class="container-box" />
+    <text x="490" y="24" class="header-text">3. KURUKSHETRA FRAUD INTERCEPTION ENGINE</text>
+
+    <!-- Tier 0 -->
+    <g transform="translate(40, 40)">
+      <rect width="900" height="50" class="inner-box" />
+      <text x="450" y="22" class="box-text">Tier 0: App-Local History Ledger (&lt; 10ms In-Memory)</text>
+      <text x="450" y="38" class="sub-text">Evaluates payer's local payment history &amp; VPA handle authority patterns</text>
+    </g>
+
+    <path d="M 490, 90 L 490, 115" class="arrow" />
+
+    <!-- Tier 1 -->
+    <g transform="translate(40, 115)">
+      <rect width="900" height="155" class="inner-box" />
+      <text x="450" y="22" class="box-text">Tier 1: Multi-Source Detectors (&lt; 45ms Sub-System Checks)</text>
+      
+      <g transform="translate(20, 36)">
+        <rect width="270" height="100" class="badge" />
+        <text x="135" y="24" class="box-text">CBS Detector</text>
+        <text x="135" y="45" class="sub-text">• Account Age &amp; KYC Tier</text>
+        <text x="135" y="62" class="sub-text">• Rapid Fund Drainage</text>
+        <text x="135" y="79" class="sub-text">• Burst-Drain-Dormant</text>
+      </g>
+
+      <g transform="translate(315, 36)">
+        <rect width="270" height="100" class="badge" />
+        <text x="135" y="24" class="box-text">Ledger Detector</text>
+        <text x="135" y="45" class="sub-text">• Drip Scam Escalation</text>
+        <text x="135" y="62" class="sub-text">• Threshold Evasion (Smurfing)</text>
+        <text x="135" y="79" class="sub-text">• Refund Reversal Exploits</text>
+      </g>
+
+      <g transform="translate(610, 36)">
+        <rect width="270" height="100" class="badge" />
+        <text x="135" y="24" class="box-text">Switch &amp; Reputation</text>
+        <text x="135" y="45" class="sub-text">• Resolution Burst Rate</text>
+        <text x="135" y="62" class="sub-text">• Verify-to-Abandon Ratio</text>
+        <text x="135" y="79" class="sub-text">• Community Fraud Reports</text>
+      </g>
+    </g>
+
+    <path d="M 490, 270 L 490, 290" class="arrow" />
+
+    <!-- Tier 2 -->
+    <g transform="translate(40, 290)">
+      <rect width="900" height="40" class="inner-box" />
+      <text x="450" y="25" class="box-text">Tier 2: Staged Government Registries (I4C 1930 / TRAI CNAP / Aadhaar-PAN Freeze)</text>
+    </g>
+
+    <path d="M 490, 330 L 490, 350" class="arrow" />
+
+    <!-- Scoring Engine -->
+    <g transform="translate(40, 350)">
+      <rect width="900" height="50" class="outer-box" />
+      <text x="450" y="22" class="header-text">DETERMINISTIC RISK SCORING ENGINE</text>
+      <text x="450" y="38" class="sub-text">Aggregates signals into final decision: ALLOW  |  STEP_UP  |  COACH  |  FREEZE</text>
+    </g>
+  </g>
+
+  <!-- Branching Arrows from Engine -->
+  <path d="M 300, 680 L 300, 720" class="arrow" />
+  <path d="M 800, 680 L 800, 720" class="arrow" />
+
+  <!-- 4. FastMCP INTERVENTION HOST & 5. CORE BANKING SYSTEMS -->
+  <g transform="translate(60, 720)">
+    <rect width="460" height="110" class="outer-box" />
+    <text x="230" y="24" class="header-text">4. FastMCP INTERVENTION HOST</text>
+    <text x="230" y="45" class="sub-text">• Invoked on COACH / FREEZE decisions</text>
+    <text x="230" y="65" class="sub-text">• Contextual intervention UI generation</text>
+    <text x="230" y="85" class="sub-text">• Plain-English evidence reports</text>
+  </g>
+
+  <g transform="translate(580, 720)">
+    <rect width="460" height="110" class="outer-box" />
+    <text x="230" y="24" class="header-text">5. CORE BANKING SYSTEMS (CBS)</text>
+    <text x="230" y="45" class="sub-text">• Mock Banks: SBI, HDFC, Axis, ICICI</text>
+    <text x="230" y="65" class="sub-text">• ReqDebit &amp; ReqCredit balance posting</text>
+    <text x="230" y="85" class="sub-text">• Integer paise balances (zero-float precision)</text>
+  </g>
+
+  <!-- Arrows to Audit & Telemetry -->
+  <path d="M 290, 830 L 550, 870" class="arrow" />
+  <path d="M 810, 830 L 550, 870" class="arrow" />
+
+  <!-- 6. AUDIT & TELEMETRY OBSERVABILITY ENGINE -->
+  <g transform="translate(60, 870)">
+    <rect width="980" height="110" class="outer-box" />
+    <text x="490" y="24" class="header-text">6. AUDIT &amp; TELEMETRY OBSERVABILITY ENGINE (SOC Observer)</text>
+
+    <g transform="translate(40, 40)">
+      <rect width="270" height="50" class="inner-box" />
+      <text x="135" y="22" class="box-text">Hash-Chained Audit Trail</text>
+      <text x="135" y="38" class="sub-text">Append-only SHA-256 logs</text>
+    </g>
+
+    <g transform="translate(355, 40)">
+      <rect width="270" height="50" class="inner-box" />
+      <text x="135" y="22" class="box-text">Live Telemetry Stream</text>
+      <text x="135" y="38" class="sub-text">/api/ecosystem/traces feed</text>
+    </g>
+
+    <g transform="translate(670, 40)">
+      <rect width="270" height="50" class="inner-box" />
+      <text x="135" y="22" class="box-text">Citizen &amp; Public Lookup</text>
+      <text x="135" y="38" class="sub-text">Community fraud reporting &amp; scores</text>
+    </g>
+  </g>
+
+</svg>
