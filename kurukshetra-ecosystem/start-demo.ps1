@@ -26,7 +26,7 @@ if (-not (Test-Path $PythonPath)) {
     $PythonPath = "python"
     Write-Host "[!] Local .venv not found, falling back to system python: $PythonPath" -ForegroundColor Yellow
 } else {
-    Write-Host "[✓] Utilizing Python Virtual Environment: $PythonPath" -ForegroundColor Green
+    Write-Host "[OK] Utilizing Python Virtual Environment: $PythonPath" -ForegroundColor Green
 }
 
 # 2. Check pre-built frontend artifacts
@@ -37,31 +37,39 @@ if (-not (Test-Path $DistIndex) -or -not (Test-Path $DistApp)) {
     Write-Host "[*] Pre-compiled frontend bundle missing. Checking dependencies and building Vite applications..." -ForegroundColor Yellow
     
     # Landing Page
-    Set-Location (Join-Path $ScriptDir "frontend\landing")
+    Push-Location (Join-Path $ScriptDir "frontend\landing")
     if (-not (Test-Path "node_modules")) {
         Write-Host "[*] Installing npm dependencies for landing page..." -ForegroundColor Gray
         npm install
     }
     npm run build
+    Pop-Location
 
     # Citizen GPay App
-    Set-Location (Join-Path $ScriptDir "frontend\gpay-app")
+    Push-Location (Join-Path $ScriptDir "frontend\gpay-app")
     if (-not (Test-Path "node_modules")) {
         Write-Host "[*] Installing npm dependencies for citizen payment app..." -ForegroundColor Gray
         npm install
     }
     npm run build
+    Pop-Location
 
-    Set-Location $ScriptDir
-    Write-Host "[✓] Frontend applications compiled to frontend/dist/" -ForegroundColor Green
-} else {
-    Write-Host "[✓] Production UI bundles verified in frontend/dist/" -ForegroundColor Green
+    Write-Host "[OK] Frontend applications compiled to frontend/dist/" -ForegroundColor Green
 }
+Write-Host "[OK] Production UI bundles verified in frontend/dist/" -ForegroundColor Green
 
 # 3. Environment check
 $envFile = Join-Path $ScriptDir ".env"
 if (Test-Path $envFile) {
-    Write-Host "[✓] Environment credentials configured (.env loaded)" -ForegroundColor Green
+    Write-Host "[OK] Environment credentials configured (.env loaded)" -ForegroundColor Green
+}
+
+# 4. Port 8000 Conflict Resolution
+$PortConn = Get-NetTCPConnection -LocalPort 8000 -State Listen -ErrorAction SilentlyContinue
+if ($PortConn) {
+    Write-Host "[!] Port 8000 is occupied by PID $($PortConn.OwningProcess). Releasing port..." -ForegroundColor Yellow
+    Stop-Process -Id $PortConn.OwningProcess -Force -ErrorAction SilentlyContinue
+    Start-Sleep -Milliseconds 600
 }
 
 Write-Host ""
