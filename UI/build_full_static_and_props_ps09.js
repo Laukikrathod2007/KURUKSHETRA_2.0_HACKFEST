@@ -611,7 +611,7 @@ html = html.replace(/href="\/privacy-policy\/"/g, 'href="http://localhost:3000/s
 html = html.replace(/href="\/contact"/g, 'href="http://localhost:3000/soc-console"');
 
 // Remove leftover 07 Privacy card from Section 4
-html = html.replace(/<article class="_blockFeature_phh4x_1 _isLinked_phh4x_30"><a href="https:\/\/tempo\.xyz\/blog\/privacy-on-tempo\/"[\s\S]*?<\/article>/i, '');
+html = html.replace(/<article class="_blockFeature_phh4x_1 _isLinked_phh4x_30">[\s\S]*?Opt-in privacy for balances and transfers[\s\S]*?<\/article>/i, '');
 
 // Read Customer Journey Touchpoints Component (matching media_1789188728892.png)
 const customerJourneyHTML = fs.readFileSync('C:/Users/LAUKIK/.gemini/antigravity/brain/988ba458-3ecc-4c12-a616-04b83c88d640/scratch/customer_journey_component.html', 'utf8');
