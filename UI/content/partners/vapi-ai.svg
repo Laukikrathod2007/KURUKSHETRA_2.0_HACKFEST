@@ -1,0 +1,8 @@
+<svg width="200" height="60" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Mic icon -->
+  <rect x="18" y="8" width="12" height="22" rx="6" fill="#061B31"/>
+  <path d="M12 26 Q12 40 24 40 Q36 40 36 26" stroke="#061B31" stroke-width="2" fill="none"/>
+  <line x1="24" y1="40" x2="24" y2="50" stroke="#061B31" stroke-width="2"/>
+  <text x="125" y="28" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#061B31">Vapi AI</text>
+  <text x="125" y="44" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#061B31" letter-spacing="2">VOICE GUARDIAN</text>
+</svg>

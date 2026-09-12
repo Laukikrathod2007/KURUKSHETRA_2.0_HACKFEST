@@ -1,0 +1,14 @@
+<svg width="200" height="60" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Network graph -->
+  <circle cx="14" cy="18" r="4" fill="#061B31"/>
+  <circle cx="32" cy="30" r="4" fill="#061B31"/>
+  <circle cx="14" cy="44" r="4" fill="#061B31"/>
+  <circle cx="48" cy="18" r="3" fill="#061B31"/>
+  <circle cx="48" cy="44" r="3" fill="#061B31"/>
+  <line x1="18" y1="18" x2="28" y2="28" stroke="#061B31" stroke-width="1.5"/>
+  <line x1="18" y1="44" x2="28" y2="32" stroke="#061B31" stroke-width="1.5"/>
+  <line x1="36" y1="28" x2="45" y2="20" stroke="#061B31" stroke-width="1.5"/>
+  <line x1="36" y1="32" x2="45" y2="42" stroke="#061B31" stroke-width="1.5"/>
+  <text x="132" y="26" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#061B31">Mule Graph</text>
+  <text x="132" y="42" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#061B31" letter-spacing="1.5">NETWORK PROFILING</text>
+</svg>

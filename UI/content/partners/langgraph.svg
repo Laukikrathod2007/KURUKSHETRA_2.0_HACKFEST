@@ -1,0 +1,10 @@
+<svg width="200" height="60" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Graph nodes -->
+  <circle cx="18" cy="18" r="5" fill="#061B31"/>
+  <circle cx="38" cy="36" r="5" fill="#061B31"/>
+  <circle cx="18" cy="50" r="3" fill="#061B31"/>
+  <line x1="18" y1="23" x2="35" y2="31" stroke="#061B31" stroke-width="1.5"/>
+  <line x1="38" y1="41" x2="18" y2="47" stroke="#061B31" stroke-width="1.5"/>
+  <text x="128" y="28" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#061B31">LangGraph</text>
+  <text x="128" y="44" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#061B31" letter-spacing="2">AGENT FRAMEWORK</text>
+</svg>

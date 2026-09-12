@@ -1,0 +1,6 @@
+<svg width="200" height="60" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <text x="100" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="800" fill="#061B31" letter-spacing="1">Fed</text>
+  <text x="130" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="300" fill="#061B31" letter-spacing="1">Now</text>
+  <rect x="20" y="35" width="160" height="2" fill="#061B31" rx="1"/>
+  <text x="100" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="400" fill="#061B31" letter-spacing="2.5">INSTANT PAYMENTS</text>
+</svg>

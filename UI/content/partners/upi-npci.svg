@@ -1,0 +1,5 @@
+<svg width="200" height="60" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <text x="100" y="26" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#061B31" letter-spacing="2">UPI</text>
+  <line x1="20" y1="34" x2="180" y2="34" stroke="#061B31" stroke-width="1.5"/>
+  <text x="100" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="400" fill="#061B31" letter-spacing="3">NPCI</text>
+</svg>
