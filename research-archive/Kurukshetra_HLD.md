@@ -85,12 +85,109 @@ Every one of these checks contributes a small or large amount of "risk weight" i
 
 | Risk Score | Zone | What happens |
 |---|---|---|
-| Very low | **Allow** | Transaction proceeds immediately, no friction |
-| Moderate | **Step-Up** | User must actively confirm before proceeding |
-| High | **Coach** | User must explicitly acknowledge a warning before proceeding |
-| Very high | **Freeze** | Transaction is hard-blocked; no money moves at all |
+| 0.00 – 0.30 | **Allow** | Transaction proceeds immediately, no friction |
+| 0.31 – 0.65 | **Step-Up** | User must actively confirm before proceeding |
+| 0.66 – 0.85 | **Coach** | User must explicitly acknowledge a warning before proceeding |
+| 0.86 – 1.00 | **Freeze** | Transaction is hard-blocked; no money moves at all |
 
 There is also a safety rule built in: if the deeper banking data needed to fully evaluate a stranger couldn't be retrieved in time, the system refuses to default to "safe" — it automatically floors the decision at least at Step-Up. Missing information is never treated as a green light.
+
+---
+
+## 3a. The actual formulas — what each check computes
+
+This is the part that's usually glossed over: every "signal" below is a real, specific calculation, not a vague heuristic. Each one either fires (`triggered = true`) or doesn't, and if it fires it adds a fixed **risk weight** to the running total. The final score is simply:
+
+```
+risk_score = min(1.0, sum of risk_weight for every check that fired)
+```
+
+Nothing is multiplied, normalized, or run through a model — it's a capped sum of independent weights. Below is every check, grouped by which stage it belongs to, with its actual condition and weight as configured in the system today.
+
+### Stage One — Instant Checks (weight fires immediately, no history needed)
+
+| Check | Condition to trigger | Weight added |
+|---|---|---|
+| **Identity / authority mismatch** | The recipient's handle or the user's stated payment purpose implies an official authority (police, court, tax office, etc.) **AND** the account NPCI returns is an ordinary personal savings account (merchant code `0000`, not a verified government/enterprise code) | **0.40** |
+| **Suspicious handle keyword** | The handle text contains an authority/utility keyword (e.g. "cbi", "police", "customs", "tneb", "incometax", "court") **AND** the account is not a verified authority merchant code | **0.35** |
+| **QR / payment-link trap** | The scanned QR or opened link contains a pre-filled amount, OR uses a link-shortener domain, OR its note field contains a deceptive term ("kyc", "verify", "cashback", "claim", "reactivate") | **0.30** |
+
+### Stage Two — Deep Investigation (only runs for flagged or unfamiliar recipients)
+
+**Network / switch-level checks** — visible only to the switch because it sees traffic across all payment apps:
+
+- **Verify-to-Abandon Ratio.** For a recipient with at least 10 lookups recorded:
+  $$\text{abandon\_ratio} = 1 - \frac{\text{payments completed}}{\text{lookups requested}}$$
+  Triggers if `abandon_ratio ≥ 0.85` (i.e. 85%+ of people who checked this account walked away without paying) → **+0.30**
+
+- **Resolution Burst.** Compares the current lookup rate to the account's own historical baseline:
+  $$\text{current\_rate} = \frac{\text{total lookups}}{\text{hours since first lookup}}$$
+  Triggers if `current_rate > 50 × baseline_rate` and there have been at least 10 lookups total → **+0.35**
+
+**Recipient account (Core Banking) checks** — computed from the recipient's own ledger:
+
+- **Rapid Fund Drainage.** For every inbound credit, measure the time until the next outbound debit; take the **median** of those gaps across the account's history:
+  $$T_{\text{residence}} = \text{median}(t_{\text{debit}} - t_{\text{credit}})$$
+  Triggers if `T_residence < 300 seconds` (funds are cashed out within 5 minutes of arriving) → **+0.45**
+
+- **One-Way Sink Account.** Compares how many distinct people paid *into* the account versus how many distinct people it paid *out to*:
+  $$\text{sink\_ratio} = \frac{\text{unique inbound senders}}{\text{unique outbound recipients}}$$
+  Triggers if `sink_ratio ≥ 10`, the account is a personal (non-merchant) account, and it has received at least 5 payments → **+0.40**
+
+- **Burst-Drain-Dormant Lifecycle.** Looks for a dormant account that suddenly wakes up:
+  $$\text{drain\_ratio} = \frac{\text{amount withdrawn in last 48h}}{\text{amount received in last 48h}}$$
+  Triggers if inflow in the last 48 hours exceeds ₹1,00,000 **AND** `drain_ratio > 0.9` (90%+ of what came in has already left) → **+0.50**
+
+- **Scam Hours Concentration.** Of all credits ever received, what fraction landed on a weekday between 10:00–18:00?
+  $$\text{business\_hours\_ratio} = \frac{\text{credits received Mon–Fri, 10:00–18:00}}{\text{total credits}}$$
+  Triggers if `ratio ≥ 0.95` with at least 5 credits on record (a genuine personal account gets paid at all hours; this one only gets paid on a call-center's shift) → **+0.20**
+
+- **Recipient Account Graph.** Combines account age, KYC level, and how geographically spread out its recent senders are:
+  Triggers (partially or fully) if the account is under 7 days old (**+0.20**) or if its senders in the last 48 hours came from 3+ different states while it only has basic OTP-level KYC (**+0.25**) — the two can stack up to **+0.45**
+
+**Sender's own history checks** — only run once an amount is entered (Moment 2):
+
+- **High-Value Outlier.** Compares the current amount to the sender's own past first-time-payment amounts using a standard Z-score:
+  $$Z = \frac{\text{amount} - \mu_{\text{sender's past first-payments}}}{\sigma_{\text{sender's past first-payments}}}$$
+  Triggers if `Z > 3.0` (needs at least 3 prior data points to compute) → **+0.30**
+
+- **Drip Escalation.** Compares this payment to the sender's *previous* payment to the same recipient:
+  $$\text{amount}_n \geq 2.5 \times \text{amount}_{n-1}$$
+  Triggers if the new amount is 2.5× or more of the last one sent to this same recipient → **+0.35**
+
+- **Threshold Evasion (Smurfing).** Looks at all payments to the same recipient in the last 60 minutes:
+  $$\sum(\text{amounts in window}) > ₹10{,}000 \quad \text{while every individual amount} < ₹10{,}000$$
+  Triggers if there are 3 or more such payments, each individually under the reporting threshold, that together exceed it → **+0.40**
+
+- **Refund Reversal Trap.** Compares a tiny inbound credit to a large outbound request to the same person within 2 hours:
+  $$\text{ratio} = \frac{\text{amount now being sent out}}{\text{amount received}}$$
+  Triggers if the amount received was ≤ ₹10 and `ratio > 500` → **+0.45**
+
+- **Collect Request Abuse.** For an incoming UPI collect (debit) request, checks whether its note field contains a deceptive term ("claim", "refund", "cashback", "bonus", "receive", "reward") → **+0.50**
+
+- **Purpose Contradiction.** The user declared the payment is for something official (a government fine, court bail, tax penalty) but the recipient's account is an ordinary personal savings account → **+0.40**
+
+- **Post-Hold Escalation.** The sender just completed a payment that had been held for a cooling-off period, and within 5 minutes attempts a *larger* payment to that same recipient (a sign the scammer coached them through the wait) → **+0.50**
+
+**Community reputation check** — Sybil-resistant by design:
+
+- **Community Scam Reports.** Needs at least 3 *distinct* reporters (one report per identity is enforced) before it counts at all:
+  $$\text{raw\_score} = \min(1.0,\ 0.2 \times \text{distinct reporters})$$
+  That raw score then decays over time with a 14-day half-life:
+  $$\text{effective\_score} = \text{raw\_score} \times 0.5^{\,(\text{days since last report} / 14)}$$
+  The decayed score itself becomes the risk weight added (capped at 1.0)
+
+### Stage Three — External Registries (illustrative)
+
+Each of these three checks (police Aadhaar/PAN freeze, national cybercrime 1930 registry, telecom spam registry) is a simple **yes/no flag lookup** — if the recipient identifier appears in the (simulated) registry, it triggers with a flat **+0.60** weight. They're structurally wired into the same scoring sum as everything else, but permanently labeled illustrative in the system because no real government data feed exists yet.
+
+### Putting it together — a worked example
+
+Say a user is sending money to a UPI handle containing "cbi" (Stage One authority-keyword check fires, **+0.35**), the account turns out to be under a week old with basic KYC and multi-state senders (Stage Two account-graph check fires, **+0.45**), and three other people have already reported it as a scam (community check, roughly **+0.6** if reports are recent). The running total is capped at **1.0**, which lands the transaction in the **Freeze** zone — hard blocked, zero money moved, regardless of how many other checks did or didn't fire.
+
+### The safety floor (missing-data rule)
+
+If Stage Two can't retrieve full Core Banking data for a stranger recipient in time, the system doesn't just skip those checks and let the score stand — it force-floors the zone at **Step-Up** even if the computed score alone would have landed in Allow. In other words, incomplete information about an unfamiliar recipient is itself treated as a reason for friction.
 
 ### Layer 4 — The Intervention Layer
 This layer only wakes up if the decision from Layer 3 was Coach or Freeze — for the majority of ordinary, low-risk payments, it does nothing at all. Its job is entirely about *how the warning is communicated to the human*, never about the decision itself:

@@ -46,8 +46,8 @@
   <text x="295" y="147" font-size="9.5" fill="#5b6472" text-anchor="middle">who / how much</text>
 
   <!-- Arrow Switch -> App (result) -->
-  <path d="M 450 202 L 450 236 L 158 236 L 158 210" fill="none" stroke="#5b6472" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
-  <text x="304" y="230" font-size="9.5" fill="#5b6472" text-anchor="middle">result shown to user</text>
+  <path d="M 570 157 L 610 157 L 610 246 L 158 246 L 158 210" fill="none" stroke="#5b6472" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+  <text x="384" y="240" font-size="9.5" fill="#5b6472" text-anchor="middle">result shown to user</text>
 
   <!-- Arrow Switch -> Intelligence -->
   <line x1="450" y1="202" x2="450" y2="260" stroke="#3a638f" stroke-width="1.8" marker-end="url(#arrow)"/>
@@ -128,12 +128,12 @@
   <text x="940" y="486" font-size="9.5" fill="#c0501f">STEP-UP / COACH / FREEZE</text>
 
   <!-- Arrow Allow -> Switch bypass -->
-  <path d="M 416 472 L 416 240 L 470 240" fill="none" stroke="#1e7a4a" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#arrowGreen)"/>
-  <text x="330" y="236" font-size="9.5" fill="#1e7a4a" text-anchor="end">ALLOW → straight through</text>
+  <path d="M 380 472 L 380 218 L 440 218 L 440 204" fill="none" stroke="#1e7a4a" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#arrowGreen)"/>
+  <text x="380" y="211" font-size="9.5" fill="#1e7a4a" text-anchor="middle">ALLOW → straight through</text>
 
   <!-- Arrow Intervention -> Switch -->
-  <path d="M 972 384 L 940 384 L 940 240 L 578 240" fill="none" stroke="#c0501f" stroke-width="1.6" marker-end="url(#arrowRed)"/>
-  <text x="940" y="228" font-size="9.5" fill="#c0501f" text-anchor="middle">confirmed / blocked</text>
+  <path d="M 972 384 L 940 384 L 940 218 L 620 218 L 620 204" fill="none" stroke="#c0501f" stroke-width="1.6" marker-end="url(#arrowRed)"/>
+  <text x="880" y="211" font-size="9.5" fill="#c0501f" text-anchor="middle">confirmed / blocked</text>
 
   <!-- ================= Layer 5 : Ledger & Audit ================= -->
   <g filter="url(#cardShadow)">

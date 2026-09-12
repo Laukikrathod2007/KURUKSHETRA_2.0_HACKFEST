@@ -75,7 +75,17 @@ export class CinematicCamera {
     }
   }
 
-  startGlideToGraph(onStart, onComplete) {
+  setDegreeLevel(degree) {
+    if (degree === 1) {
+      this.targetRadius = 4.2;
+    } else if (degree === 2) {
+      this.targetRadius = 5.4;
+    } else if (degree === 3) {
+      this.targetRadius = 6.8;
+    }
+  }
+
+  startGlideToGraph(onStart, onComplete, targetGlobePos = null) {
     this.mode = 'GLIDE_TO_GRAPH';
     this.isGraphActive = true;
     this.glideProgress = 0;
@@ -89,9 +99,18 @@ export class CinematicCamera {
     // Engaging 3D perspective angle: slightly tilted down & angled from the right
     this.setSidebarOffset(this.sidebarOpen, this.sidebarExpanded);
 
+    let targetTheta = 0.38;
+    let targetPhi = 1.36;
+
+    if (targetGlobePos) {
+      const norm = targetGlobePos.clone().normalize();
+      targetPhi = THREE.MathUtils.clamp(Math.acos(THREE.MathUtils.clamp(norm.y, -1, 1)), 0.45, Math.PI - 0.45);
+      targetTheta = Math.atan2(norm.x, norm.z) + 0.28;
+    }
+
     this.glideTo = {
-      theta: 0.38,
-      phi: 1.36,
+      theta: targetTheta,
+      phi: targetPhi,
       radius: 4.5,
     };
 

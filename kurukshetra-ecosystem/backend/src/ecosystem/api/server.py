@@ -123,6 +123,7 @@ def login(req: LoginRequest, session: Session = Depends(get_db)):
             "success": True,
             "token": "sess_android1_verified_jwt",
             "user": {
+                "role": "CITIZEN",
                 "customer_id": "cust_aarav",
                 "name": cust.name if cust else "Aarav Sharma",
                 "phone": cust.phone if cust else "+919820011223",
@@ -135,7 +136,28 @@ def login(req: LoginRequest, session: Session = Depends(get_db)):
                 "vpa": "aarav@oksbi",
             },
         }
-    raise HTTPException(status_code=401, detail="Invalid credentials. Use android1 / 1234.")
+    if req.username == "analyst" and req.password == "soc123":
+        return {
+            "success": True,
+            "token": "sess_analyst_verified_jwt",
+            "user": {
+                "role": "ANALYST",
+                "customer_id": None,
+                "name": "SOC Analyst",
+                "phone": None,
+                "account_id": None,
+                "account_number": None,
+                "bank_id": "NPCI_CENTRAL_OPS_01",
+                "bank_name": "NPCI Central Ops",
+                "balance_paise": None,
+                "balance_formatted": None,
+                "vpa": None,
+            },
+        }
+    raise HTTPException(
+        status_code=401,
+        detail="Invalid credentials. Use android1 / 1234 (citizen) or analyst / soc123 (SOC).",
+    )
 
 
 @router.post("/upi/check-balance")
@@ -329,6 +351,19 @@ def lookup_reputation(target_ref: str, session: Session = Depends(get_db)):
 def verify_audit_chain(session: Session = Depends(get_db)):
     valid, broken_id = audit.verify_chain(session)
     return {"valid": valid, "broken_txn_id": broken_id}
+
+
+@router.get("/payer/{customer_id}/known-beneficiary/{beneficiary_ref}")
+def check_known_beneficiary(customer_id: str, beneficiary_ref: str, session: Session = Depends(get_db)):
+    """Payer-aware 'have I paid this recipient before?' check, exposed for the
+    citizen app's pay-flow warning. Thin read wrapper around the same
+    is_known_beneficiary() gate the deterministic engine already uses
+    internally to floor unknown-recipient transactions at STEP_UP.
+    """
+    from ecosystem.risk.tier0 import is_known_beneficiary
+
+    known = is_known_beneficiary(session, customer_id, beneficiary_ref)
+    return {"customer_id": customer_id, "beneficiary_ref": beneficiary_ref, "known": known}
 
 
 # --- Live Registry Stream (external node/edge visualization sync) --------

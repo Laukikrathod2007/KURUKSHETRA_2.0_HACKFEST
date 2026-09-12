@@ -27,10 +27,19 @@ def test_api_login(client):
     assert data["success"] is True
     assert data["user"]["name"] == "Aarav Sharma"
     assert data["user"]["account_id"] == "acc_aarav_sbi"
+    assert data["user"]["role"] == "CITIZEN"
 
     # Invalid credentials
     res_bad = client.post("/api/ecosystem/auth/login", json={"username": "wrong", "password": "000"})
     assert res_bad.status_code == 401
+
+
+def test_api_login_analyst_role(client):
+    res = client.post("/api/ecosystem/auth/login", json={"username": "analyst", "password": "soc123"})
+    assert res.status_code == 200
+    data = res.json()
+    assert data["success"] is True
+    assert data["user"]["role"] == "ANALYST"
 
 
 def test_api_check_balance(client):
@@ -107,6 +116,19 @@ def test_api_audit_verify(client):
     res = client.get("/api/ecosystem/audit/verify")
     assert res.status_code == 200
     assert res.json()["valid"] is True
+
+
+def test_api_known_beneficiary_check(client):
+    # grocer.local@oksbi has real AppLocalHistory + a SavedBeneficiary row for
+    # cust_aarav in seed.py -- a genuinely known recipient.
+    known_res = client.get("/api/ecosystem/payer/cust_aarav/known-beneficiary/grocer.local@oksbi")
+    assert known_res.status_code == 200
+    assert known_res.json()["known"] is True
+
+    # A VPA cust_aarav has never transacted with should come back unknown.
+    unknown_res = client.get("/api/ecosystem/payer/cust_aarav/known-beneficiary/never.paid@upi")
+    assert unknown_res.status_code == 200
+    assert unknown_res.json()["known"] is False
 
 
 def test_api_registry_graph_reflects_real_accounts(client):
