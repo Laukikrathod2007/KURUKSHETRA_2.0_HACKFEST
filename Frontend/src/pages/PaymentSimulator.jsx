@@ -96,7 +96,7 @@ export default function PaymentSimulator() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Payment Simulator</h1>
-          <p className="text-slate-400">Test the Agentic Guardian security system</p>
+          <p className="text-slate-400">Test the PayKavach multi-agent security pipeline</p>
         </div>
         <button
           onClick={() => setShowVoice(true)}

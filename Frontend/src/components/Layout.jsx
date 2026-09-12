@@ -19,12 +19,12 @@ export default function Layout({ children }) {
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-600">
-                <Shield className="w-6 h-6 text-white" />
+              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-slate-950/80 border border-amber-500/30 p-1 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+                <img src="/paykavach-icon.png" alt="PayKavach" className="w-8 h-8 object-contain" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-white">Agentic Guardian</h1>
-                <p className="text-xs text-slate-400">Real-Time Payment Security</p>
+                <h1 className="text-xl font-bold text-white tracking-wide">PayKavach</h1>
+                <p className="text-xs text-amber-400/90 font-medium">Intercept Before It Reaches</p>
               </div>
             </div>
 
@@ -65,7 +65,7 @@ export default function Layout({ children }) {
       <footer className="border-t border-slate-800 bg-slate-900/50 mt-16">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between text-sm text-slate-400">
-            <p>&copy; 2026 Agentic Guardian. KURUKSHETRA 2.0 - Midnight Ciphers</p>
+            <p>&copy; 2026 PayKavach. KURUKSHETRA 2.0 - Midnight Ciphers (PS09)</p>
             <div className="flex items-center space-x-4">
               <span className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-success-500 rounded-full animate-pulse"></div>
