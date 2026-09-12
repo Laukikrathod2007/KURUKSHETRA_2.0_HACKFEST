@@ -142,6 +142,18 @@ def explain_decision(
     deterministic_explanation = " ".join(sentences)
 
     # 2. Generative LLM synthesis enhancement with primary & fallback keys
+    if not any(os.getenv(k) for k in ["GEMINI_API_KEY", "GOOGLE_API_KEY", "GEMINI_API_KEY_FALLBACK"]):
+        try:
+            from dotenv import load_dotenv
+            from pathlib import Path
+            env_file = Path(__file__).resolve().parents[4] / ".env"
+            if env_file.exists():
+                load_dotenv(env_file)
+            else:
+                load_dotenv()
+        except Exception:
+            pass
+
     candidate_keys = [
         k for k in [
             os.getenv("GEMINI_API_KEY"),

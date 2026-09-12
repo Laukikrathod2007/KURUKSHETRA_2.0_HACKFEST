@@ -54,6 +54,29 @@
   background-color: #020617;
 }
 
+.registry-loading-gate {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-family: inherit;
+}
+
+.registry-loading-title {
+  font-size: 1.4rem;
+  letter-spacing: 0.35em;
+  color: #5eead4;
+}
+
+.registry-loading-sub {
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+}
+
 /* Fullscreen Canvas */
 .universe-canvas-container {
   position: absolute;

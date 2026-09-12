@@ -19,6 +19,7 @@ from sqlalchemy.orm import Session
 
 from ecosystem.config import to_paise
 from ecosystem.db import reset_db, session_scope
+from ecosystem.scenarios.seed_bulk import seed_bulk_population
 from ecosystem.models import (
     Account,
     AccountStatus,
@@ -239,8 +240,16 @@ def seed_all(session: Session) -> None:
     session.add(saved_ben)
 
     # 7. Seed Mule Account rapid drain history (Feature #7, #18, #21)
-    # Rapid inflows followed within 60 seconds by debits
+    # Rapid inflows followed within 60 seconds by debits. Counterparties
+    # reference real bulk-population accounts (seeded in step 12 below,
+    # rows already exist by insert time -- SQLAlchemy only needs the FK
+    # target to exist by flush/commit, not by this line of Python) so the
+    # live registry graph can render real, resolvable connections for this
+    # scenario's mule account instead of dangling account-id string labels
+    # that were never backed by an actual Account row.
     mule_entries = []
+    victim_account_ids = [f"acc_bulk_{n:03d}" for n in (1, 3, 5, 7, 9, 11, 13, 15)]
+    drain_target_account_id = "acc_bulk_017"
     for i in range(8):
         t_in = now - dt.timedelta(hours=24 - i * 2)
         t_out = t_in + dt.timedelta(seconds=90)  # Drained in 90 seconds!
@@ -251,7 +260,7 @@ def seed_all(session: Session) -> None:
                 direction=Direction.CREDIT,
                 amount_paise=to_paise(25_000),
                 balance_after_paise=to_paise(25_850),
-                counterparty_account_id=f"acc_victim_{i}",
+                counterparty_account_id=victim_account_ids[i],
                 counterparty_state="Gujarat" if i % 2 == 0 else "Tamil Nadu",
                 narration=f"INFLOW/VICTIM_{i}",
                 posted_at=t_in,
@@ -264,7 +273,7 @@ def seed_all(session: Session) -> None:
                 direction=Direction.DEBIT,
                 amount_paise=to_paise(25_000),
                 balance_after_paise=to_paise(850),
-                counterparty_account_id="acc_crypto_desk",
+                counterparty_account_id=drain_target_account_id,
                 counterparty_state="Offshore",
                 narration="ATM-CASH-OUT",
                 posted_at=t_out,
@@ -395,6 +404,16 @@ def seed_all(session: Session) -> None:
     )
 
     session.flush()
+
+    # 12. Bulk synthetic population -- ~100 additional accounts/VPAs, richly
+    # interconnected with each other AND bridged into the 5 curated scenario
+    # identities, so the live registry graph is one real expandable network
+    # instead of a handful of isolated dots.
+    seed_bulk_population(
+        session,
+        now,
+        anchor_account_ids=["acc_aarav_sbi", "acc_suresh_sbi", "acc_newshop_hdfc", "acc_mule_axis"],
+    )
 
 
 def init_and_seed() -> None:

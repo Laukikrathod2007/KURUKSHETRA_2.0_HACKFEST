@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { SYNTHETIC_ENTITIES } from '../data/syntheticDataset.js';
+import { SYNTHETIC_ENTITIES } from '../data/liveRegistry.js';
 
 /**
  * Builds the volumetric multi-population particle geometry and network filaments.

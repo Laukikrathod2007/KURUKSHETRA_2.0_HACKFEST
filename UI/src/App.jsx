@@ -1,13 +1,21 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { ParticleUniverseScene } from './core/ParticleUniverseScene';
-import { getNetworkForEntity, searchEntities, formatINR } from './data/syntheticDataset';
+import {
+  getNetworkForEntity,
+  searchEntities,
+  formatINR,
+  loadRegistrySnapshot,
+  openLiveStream,
+  onLiveEvent,
+} from './data/liveRegistry';
 import './App.css';
 
 export default function App() {
   const containerRef = useRef(null);
   const sceneRef = useRef(null);
 
-  const [searchQuery, setSearchQuery] = useState('Kabir Singhania');
+  const [registryReady, setRegistryReady] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [isGraphMode, setIsGraphMode] = useState(false);
   const [nodeLabels, setNodeLabels] = useState([]);
   const [showControls, setShowControls] = useState(false);
@@ -30,9 +38,26 @@ export default function App() {
   // so the panel doesn't pop in and compete with the camera glide for attention.
   const pendingEntityRef = useRef(null);
 
-  // Initialize Three.js scene
+  // Load the real backend registry snapshot before the Three.js scene reads
+  // SYNTHETIC_ENTITIES (ParticleFieldGenerator/EntityNetworkSystem read it
+  // synchronously at construction), then open the live SSE feed.
   useEffect(() => {
-    if (!containerRef.current) return;
+    let cancelled = false;
+    loadRegistrySnapshot().then((entities) => {
+      if (cancelled) return;
+      const firstId = Object.keys(entities)[0];
+      if (firstId) setSearchQuery(entities[firstId].name);
+      setRegistryReady(true);
+      openLiveStream();
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Initialize Three.js scene only once the live registry has loaded.
+  useEffect(() => {
+    if (!containerRef.current || !registryReady) return;
 
     const scene = new ParticleUniverseScene(
       containerRef.current,
@@ -62,10 +87,18 @@ export default function App() {
     );
     sceneRef.current = scene;
 
+    // Every real risk-engine decision pulses the affected node live, and
+    // refreshes the open dossier if it's the entity currently on screen.
+    const unsubscribe = onLiveEvent((ev) => {
+      scene.pulse();
+      setSelectedEntity((prev) => (prev && prev.id === ev.node.id ? getNetworkForEntity(ev.node.id) : prev));
+    });
+
     return () => {
+      unsubscribe();
       scene.destroy();
     };
-  }, []);
+  }, [registryReady]);
 
   // Synchronize sidebar open/expanded state to Three.js camera framing
   useEffect(() => {
@@ -158,6 +191,17 @@ export default function App() {
     return true;
   });
 
+  if (!registryReady) {
+    return (
+      <div className="universe-root">
+        <div className="registry-loading-gate">
+          <span className="registry-loading-title">KURUKSHETRA</span>
+          <span className="registry-loading-sub">Connecting to live registry…</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={`universe-root ${isGraphMode ? 'graph-mode-active' : ''}`}>
       {/* 3D WebGL Canvas Viewport */}
@@ -188,7 +232,7 @@ export default function App() {
                   setShowSuggestions(true);
                 }}
                 onFocus={() => setShowSuggestions(true)}
-                placeholder="Search 100+ entities (e.g. Kabir Singhania)"
+                placeholder="Search live accounts / VPAs"
               />
               {isGraphMode ? (
                 <button

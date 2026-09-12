@@ -107,3 +107,35 @@ def test_api_audit_verify(client):
     res = client.get("/api/ecosystem/audit/verify")
     assert res.status_code == 200
     assert res.json()["valid"] is True
+
+
+def test_api_registry_graph_reflects_real_accounts(client):
+    res = client.get("/api/ecosystem/registry/graph")
+    assert res.status_code == 200
+    data = res.json()
+    # 5 curated scenario identities + ~100 bulk synthetic accounts (seed_bulk.py)
+    assert len(data["nodes"]) >= 100
+    node_ids = {n["id"] for n in data["nodes"]}
+    assert "acc_aarav_sbi" in node_ids
+    assert "acc_mule_axis" in node_ids
+    sample = next(n for n in data["nodes"] if n["id"] == "acc_mule_axis")
+    assert sample["vpa"] == "mule.syndicate@axis"
+
+
+def test_api_stream_events_emits_real_decision_on_scenario_run(client):
+    # Registry graph carries the recent-event ring buffer, which is simpler
+    # to assert on synchronously than consuming the live SSE stream in a test.
+    before = len(client.get("/api/ecosystem/registry/graph").json()["recent_events"])
+
+    res = client.get("/api/ecosystem/scenarios/run/red")
+    assert res.status_code == 200
+
+    after_data = client.get("/api/ecosystem/registry/graph").json()
+    after_events = after_data["recent_events"]
+    assert len(after_events) > before
+
+    freeze_events = [e for e in after_events if e["node"]["risk_zone"] == "FREEZE"]
+    assert freeze_events, "expected at least one FREEZE event from the mule scenario"
+    latest = freeze_events[-1]
+    assert latest["source"] == "DETERMINISTIC_ENGINE"
+    assert any(s["triggered"] for s in latest["signals"])

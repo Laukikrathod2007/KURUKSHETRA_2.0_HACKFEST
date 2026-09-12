@@ -25,6 +25,10 @@ from ecosystem.risk.contracts import (
 AUTHORITY_KEYWORDS = [
     "cbi", "rbi", "police", "customs", "ebill", "tneb", "bescom",
     "incometax", "court", "narcotics", "officer", "cybercrime",
+    "fine", "penalty", "tax", "challan",
+]
+CORPORATE_IMPERSONATION_KEYWORDS = [
+    "refund", "kyc", "support", "helpdesk", "lottery", "amazon", "flipkart", "airtel", "telecom",
 ]
 AUTHORITY_MC_CODES = {"9311", "9399"}
 OFFICIAL_PURPOSE_ACCOUNT_TYPES = {"GOVT_FINE", "COURT_BAIL", "TAX_PENALTY", "CHALLAN"}

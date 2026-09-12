@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { getNetworkForEntity } from '../data/syntheticDataset.js';
+import { getNetworkForEntity } from '../data/liveRegistry.js';
 
 // Matches CinematicCamera's glide easing so the node constellation unfurls
 // in lockstep with the camera dive instead of drifting independently.
@@ -28,12 +28,19 @@ export class EntityNetworkSystem {
     this.filamentObjects = [];
     this.beadStreams = [];
 
-    // Initialize with Kabir Singhania or default primary
-    this.setEntity('kabir-singhania');
+    // Default entity is resolved lazily via getNetworkForEntity(undefined),
+    // which falls back to the first real account in the live registry --
+    // App.jsx guarantees the registry snapshot has loaded before this
+    // constructor ever runs (see loadRegistrySnapshot / registryReady gate).
+    this.setEntity(undefined);
   }
 
   setEntity(queryOrId) {
-    const entityData = typeof queryOrId === 'string' ? getNetworkForEntity(queryOrId) : queryOrId;
+    const entityData =
+      typeof queryOrId === 'string' || queryOrId === undefined
+        ? getNetworkForEntity(queryOrId)
+        : queryOrId;
+    if (!entityData) return; // registry empty (backend unreachable) -- nothing to render yet
     this.currentEntity = entityData;
     this.rebuildNetwork(entityData);
   }
