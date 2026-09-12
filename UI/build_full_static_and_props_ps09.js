@@ -610,11 +610,17 @@ html = html.replace(/href="\/advisory"/g, 'href="http://localhost:3000/soc-conso
 html = html.replace(/href="\/privacy-policy\/"/g, 'href="http://localhost:3000/soc-console"');
 html = html.replace(/href="\/contact"/g, 'href="http://localhost:3000/soc-console"');
 
+// Remove leftover 07 Privacy card from Section 4
+html = html.replace(/<article class="_blockFeature_phh4x_1 _isLinked_phh4x_30"><a href="https:\/\/tempo\.xyz\/blog\/privacy-on-tempo\/"[\s\S]*?<\/article>/i, '');
+
+// Read Customer Journey Touchpoints Component (matching media_1789188728892.png)
+const customerJourneyHTML = fs.readFileSync('C:/Users/LAUKIK/.gemini/antigravity/brain/988ba458-3ecc-4c12-a616-04b83c88d640/scratch/customer_journey_component.html', 'utf8');
+
 // Read Exact Oscilar Methodology Component (matching media_1789179124045.png)
 const methodologyHTML = fs.readFileSync('C:/Users/LAUKIK/.gemini/antigravity/brain/988ba458-3ecc-4c12-a616-04b83c88d640/scratch/oscilar_exact_component.html', 'utf8');
 
-// Insert methodology component right BEFORE ImageTextOverlay island ("Protect Real-Time Payments with PayKavach")
-html = html.replace(/(<astro-island[^>]*component-url="[^"]*ImageTextOverlay[^"]*"[\s\S]*?<\/astro-island>)/i, (match) => methodologyHTML + '\n' + match);
+// Insert Customer Journey & Methodology components right BEFORE ImageTextOverlay island ("Protect Real-Time Payments with PayKavach")
+html = html.replace(/(<astro-island[^>]*component-url="[^"]*ImageTextOverlay[^"]*"[\s\S]*?<\/astro-island>)/i, (match) => customerJourneyHTML + '\n' + methodologyHTML + '\n' + match);
 
 fs.writeFileSync('index.html', html, 'utf8');
 console.log('Clean PayKavach build with Exact Oscilar Methodology completed successfully!');
