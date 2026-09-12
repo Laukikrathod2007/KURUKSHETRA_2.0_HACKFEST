@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
-import { AlertTriangle, CheckCircle, Shield, Clock, User, IndianRupee, MessageSquare, Mic, Eye } from 'lucide-react'
+import { AlertTriangle, CheckCircle, Shield, Clock, User, IndianRupee, MessageSquare, Mic, Eye, Phone, Video } from 'lucide-react'
 import { calculateRiskScore } from '../utils/riskCalculator'
 import RiskMeter from '../components/RiskMeter'
 import RecipientPanel from '../components/RecipientPanel'
 import EvidenceModal from '../components/EvidenceModal'
 import DwellGate from '../components/DwellGate'
 import VoiceGuardian from '../components/VoiceGuardian'
+import AriaVideoGuardian from '../components/AriaVideoGuardian'
+import EmergencyCallDemo from '../components/EmergencyCallDemo'
 
 export default function PaymentSimulator() {
   const [formData, setFormData] = useState({
@@ -26,6 +28,8 @@ export default function PaymentSimulator() {
   const [showEvidence, setShowEvidence] = useState(false)
   const [showDwell, setShowDwell] = useState(false)
   const [showVoice, setShowVoice] = useState(false)
+  const [showAriaVideo, setShowAriaVideo] = useState(false)
+  const [showEmergencyCall, setShowEmergencyCall] = useState(false)
   const [processing, setProcessing] = useState(false)
 
   const handleInputChange = (e) => {
@@ -324,6 +328,28 @@ export default function PaymentSimulator() {
                   </button>
                 )}
               </div>
+
+              {/* Aria + Emergency Call buttons — shown for PAUSE / CHALLENGE / BLOCK */}
+              {(riskAnalysis.action === 'PAUSE' || riskAnalysis.action === 'CHALLENGE' || riskAnalysis.action === 'BLOCK') && (
+                <div className="mt-3 grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => setShowAriaVideo(true)}
+                    className="btn flex items-center justify-center space-x-2"
+                    style={{ background: 'linear-gradient(135deg,#0ea5e9,#8b5cf6)', color: '#fff' }}
+                  >
+                    <Video className="w-4 h-4" />
+                    <span>Talk to Aria</span>
+                  </button>
+                  <button
+                    onClick={() => setShowEmergencyCall(true)}
+                    className="btn flex items-center justify-center space-x-2"
+                    style={{ background: '#ef4444', color: '#fff' }}
+                  >
+                    <Phone className="w-4 h-4" />
+                    <span>Emergency Call</span>
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -356,6 +382,26 @@ export default function PaymentSimulator() {
       {showVoice && (
         <VoiceGuardian
           onClose={() => setShowVoice(false)}
+        />
+      )}
+
+      {showAriaVideo && riskAnalysis && (
+        <AriaVideoGuardian
+          riskLevel={riskAnalysis.riskLevel}
+          amount={parseFloat(formData.amount).toLocaleString('en-IN')}
+          recipient={formData.recipientUPI || 'Unknown'}
+          name="User"
+          onClose={() => setShowAriaVideo(false)}
+        />
+      )}
+
+      {showEmergencyCall && riskAnalysis && (
+        <EmergencyCallDemo
+          amount={parseFloat(formData.amount).toLocaleString('en-IN')}
+          recipient={formData.recipientUPI || 'Unknown'}
+          name="User"
+          phone="+91 98765 43210"
+          onClose={() => setShowEmergencyCall(false)}
         />
       )}
     </div>

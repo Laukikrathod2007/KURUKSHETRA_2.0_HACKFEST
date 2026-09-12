@@ -1,15 +1,17 @@
 import { Link, useLocation } from 'react-router-dom'
-import { Shield, Home, CreditCard, FileText, Settings, AlertTriangle } from 'lucide-react'
+import { Shield, Home, CreditCard, FileText, Settings, AlertTriangle, Zap, GitBranch } from 'lucide-react'
 import { cn } from '../utils/cn'
 
 export default function Layout({ children }) {
   const location = useLocation()
 
   const navigation = [
+    { name: 'Hero', href: '/hero', icon: Zap },
     { name: 'Dashboard', href: '/', icon: Home },
-    { name: 'Payment Simulator', href: '/payment', icon: CreditCard },
-    { name: 'Audit History', href: '/audit', icon: FileText },
-    { name: 'SOC Console', href: '/soc-console', icon: AlertTriangle },
+    { name: 'Payment', href: '/payment', icon: CreditCard },
+    { name: 'Audit', href: '/audit', icon: FileText },
+    { name: 'SOC', href: '/soc-console', icon: AlertTriangle },
+    { name: 'Architecture', href: '/architecture', icon: GitBranch },
   ]
 
   return (

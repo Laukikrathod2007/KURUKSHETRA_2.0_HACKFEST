@@ -1,7 +1,7 @@
 import json
 import logging
 from typing import Optional, Dict
-from app.models.schemas import RiskDossier
+from ..models.schemas import RiskDossier
 
 logger = logging.getLogger(__name__)
 
