@@ -101,7 +101,7 @@ def explain_decision(
 
             gemini_key = os.getenv("GEMINI_API_KEY")
             if gemini_key:
-                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={gemini_key}"
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key={gemini_key}"
                 payload = {
                     "contents": [{
                         "parts": [{

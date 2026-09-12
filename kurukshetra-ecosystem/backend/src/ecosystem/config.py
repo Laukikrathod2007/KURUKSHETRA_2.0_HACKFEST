@@ -11,6 +11,17 @@ from pathlib import Path
 
 # --- Storage ---------------------------------------------------------------
 _PROJECT_ROOT = Path(__file__).resolve().parents[3]
+_ENV_FILE = _PROJECT_ROOT / ".env"
+if _ENV_FILE.exists():
+    try:
+        for line in _ENV_FILE.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                k, v = line.split("=", 1)
+                os.environ.setdefault(k.strip(), v.strip().strip("'\""))
+    except Exception:
+        pass
+
 DEFAULT_SQLITE = f"sqlite:///{_PROJECT_ROOT / 'ecosystem.db'}"
 DATABASE_URL = os.environ.get("DATABASE_URL", DEFAULT_SQLITE)
 
