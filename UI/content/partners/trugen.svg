@@ -1,0 +1,7 @@
+<svg width="200" height="60" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Camera/video icon -->
+  <rect x="10" y="16" width="28" height="22" rx="3" fill="#061B31"/>
+  <polygon points="38,24 50,18 50,38 38,32" fill="#061B31"/>
+  <text x="130" y="28" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#061B31">TruGen</text>
+  <text x="130" y="44" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#061B31" letter-spacing="2">AI VIDEO AVATAR</text>
+</svg>

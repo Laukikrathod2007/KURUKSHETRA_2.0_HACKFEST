@@ -1,0 +1,5 @@
+<svg width="200" height="60" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <text x="100" y="24" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="800" fill="#061B31" letter-spacing="1">FPS</text>
+  <line x1="25" y1="30" x2="175" y2="30" stroke="#061B31" stroke-width="1.2"/>
+  <text x="100" y="46" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#061B31" letter-spacing="2">FASTER PAYMENTS UK</text>
+</svg>

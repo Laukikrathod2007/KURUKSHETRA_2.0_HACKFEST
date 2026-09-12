@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-slate-800;
+  }
+  
+  body {
+    @apply bg-slate-950 text-slate-100 font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  h1 {
+    @apply text-4xl lg:text-5xl;
+  }
+
+  h2 {
+    @apply text-3xl lg:text-4xl;
+  }
+
+  h3 {
+    @apply text-2xl lg:text-3xl;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply bg-primary-600 text-white hover:bg-primary-700 focus-visible:ring-primary-600;
+  }
+
+  .btn-danger {
+    @apply bg-danger-600 text-white hover:bg-danger-700 focus-visible:ring-danger-600;
+  }
+
+  .btn-warning {
+    @apply bg-warning-600 text-white hover:bg-warning-700 focus-visible:ring-warning-600;
+  }
+
+  .btn-success {
+    @apply bg-success-600 text-white hover:bg-success-700 focus-visible:ring-success-600;
+  }
+
+  .btn-outline {
+    @apply border border-slate-700 bg-transparent text-slate-300 hover:bg-slate-800 hover:text-slate-100;
+  }
+
+  .card {
+    @apply rounded-xl border border-slate-800 bg-slate-900/50 backdrop-blur-sm p-6;
+  }
+
+  .input {
+    @apply w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-2.5 text-slate-100 placeholder:text-slate-500 focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20 transition-all;
+  }
+
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold;
+  }
+
+  .badge-success {
+    @apply bg-success-500/10 text-success-400 border border-success-500/20;
+  }
+
+  .badge-warning {
+    @apply bg-warning-500/10 text-warning-400 border border-warning-500/20;
+  }
+
+  .badge-danger {
+    @apply bg-danger-500/10 text-danger-400 border border-danger-500/20;
+  }
+
+  .badge-info {
+    @apply bg-primary-500/10 text-primary-400 border border-primary-500/20;
+  }
+
+  .gradient-bg {
+    @apply bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950;
+  }
+
+  .glass-effect {
+    @apply bg-white/5 backdrop-blur-md border border-white/10;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-700 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-600;
+}
