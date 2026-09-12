@@ -268,10 +268,12 @@ html = html.replace(/Stablecoins enable instant, borderless, programmable transa
   'Traditional fraud engines only check stolen card credentials or account takeover. When victims are manipulated into voluntarily completing payments themselves, legacy rules are completely blind. PayKavach analyzes payment memos, NLP urgency signals, mule graph networks, and cognitive stress in under 200ms.');
 html = html.replace(/>About Tempo</g, '>Explore Architecture &rarr;<');
 
-html = html.replace(/Shaped with global payment leaders/g, 'Trusted by Next-Gen Financial Institutions');
-html = html.replace(/Incubated by Stripe and Paradigm, Tempo was designed with input from category-defining fintechs, banks, and commerce platforms serving billions worldwide\./g,
-  'Built for KURUKSHETRA 2.0 (Problem Statement PS09), PayKavach integrates directly with UPI, FedNow, FPS, and enterprise core banking systems with zero customer checkout friction.');
-html = html.replace(/>See customer stories &rarr;</g, '>Launch SOC Console &rarr;<');
+// Read Ecosystem Grid Component (replacing generic partner logos)
+const ecosystemGridHTML = fs.readFileSync('C:/Users/LAUKIK/.gemini/antigravity/brain/988ba458-3ecc-4c12-a616-04b83c88d640/scratch/ecosystem_grid_component.html', 'utf8');
+
+// Replace Section 2 logo wall
+html = html.replace(/<div data-section="animation-2" class="landing-module-logo-wall"[\s\S]*?<\/section>\s*<\/div>/i, () => ecosystemGridHTML);
+
 
 // Static Section 3 texts
 html = html.replace(/Performant &amp; scalable for any payments flow/g, 'Performant &amp; Explainable Multi-Agent Defense Pipeline');
