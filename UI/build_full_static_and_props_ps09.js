@@ -223,7 +223,7 @@ const overlayPropsObj = {
   "data-astro-cid-lcdefpme": [0, true]
 };
 
-// Replace Astro Island props attributes
+// Replace Astro Island props attributes safely
 html = html.replace(/(<astro-island[^>]*component-url="[^"]*Header[^"]*"[^>]*props=")([^"]*)(")/i, (m, p1, p2, p3) => p1 + encodeProps(headerPropsObj) + p3);
 html = html.replace(/(<astro-island[^>]*component-url="[^"]*LandingHero[^"]*"[^>]*props=")([^"]*)(")/i, (m, p1, p2, p3) => p1 + encodeProps(heroPropsObj) + p3);
 
@@ -264,39 +264,30 @@ html = html.replace(/>Get started</g, '>Try Payment Simulator<');
 html = html.replace(/>See how companies are using Tempo/g, '>Open SOC Analyst Console');
 
 html = html.replace(/Purpose-built for stablecoins/g, 'Purpose-built for Authorized Push Payment (APP) Scams');
-html = html.replace(/Stablecoins enable instant, borderless, programmable transactions[\s\S]*?designed for payments at scale\./g, 
+html = html.replace(/Stablecoins enable instant, borderless, programmable transactions, but current blockchain infrastructure isn’t designed for them: existing systems are either fully general or trading-focused\. Tempo is designed for payments at scale\./g, 
   'Traditional fraud engines only check stolen card credentials or account takeover. When victims are manipulated into voluntarily completing payments themselves, legacy rules are completely blind. PayKavach analyzes payment memos, NLP urgency signals, mule graph networks, and cognitive stress in under 200ms.');
 html = html.replace(/>About Tempo</g, '>Explore Architecture &rarr;<');
 
 html = html.replace(/Shaped with global payment leaders/g, 'Trusted by Next-Gen Financial Institutions');
-html = html.replace(/Incubated by Stripe and Paradigm[\s\S]*?serving billions worldwide\./g,
+html = html.replace(/Incubated by Stripe and Paradigm, Tempo was designed with input from category-defining fintechs, banks, and commerce platforms serving billions worldwide\./g,
   'Built for KURUKSHETRA 2.0 (Problem Statement PS09), PayKavach integrates directly with UPI, FedNow, FPS, and enterprise core banking systems with zero customer checkout friction.');
 html = html.replace(/>See customer stories &rarr;</g, '>Launch SOC Console &rarr;<');
 
 // Static Section 3 texts
 html = html.replace(/Performant &amp; scalable for any payments flow/g, 'Performant &amp; Explainable Multi-Agent Defense Pipeline');
 html = html.replace(/>Remittances</g, '>Intent NLP Parsing<');
-html = html.replace(/Send money across borders in seconds with sub-cent fees and guaranteed delivery\./g, 'Reads payment memos and detects urgency, authority impersonation, extortion, and coercive social engineering patterns in real time.');
 html = html.replace(/Send money across borders instantly, securely, and at a fraction of traditional costs\./g, 'Reads payment memos and detects urgency, authority impersonation, extortion, and coercive social engineering patterns in real time.');
 html = html.replace(/>Global payouts</g, '>Tiered Latency ML Scoring<');
-html = html.replace(/Pay anyone, anywhere, in any currency—without banking rails or correspondent networks\./g, '114-feature LightGBM GBDT hot-path model delivering sub-15ms risk scoring on payee velocity and historical behavioral baselines.');
 html = html.replace(/Pay anyone, anywhere, in any currency—without banking delays or fees\./g, '114-feature LightGBM GBDT hot-path model delivering sub-15ms risk scoring on payee velocity and historical behavioral baselines.');
 html = html.replace(/>Payroll</g, '>Parallel Multi-Agent Consensus<');
-html = html.replace(/Stream wages by the second, automate contractor payments, and eliminate payroll batch windows\./g, 'Four specialized LangGraph agents (Intent, Transaction, Recipient, Policy Gatekeeper) evaluate context concurrently.');
 html = html.replace(/Faster funding, cheaper cross-border payouts, and new revenue streams for payroll providers\./g, 'Four specialized LangGraph agents (Intent, Transaction, Recipient, Policy Gatekeeper) evaluate context concurrently.');
 html = html.replace(/>Embedded finance</g, '>Cross-Bank Mule Graph Profiling<');
-html = html.replace(/Integrate accounts, cards, and payments directly into your software with simple APIs\./g, 'Continuously tracks recipient account age, rapid fan-out velocity spikes, and money mule network clusters across banks.');
-html = html.replace(/Build compliant, programmable payments—in any currency—directly into your products\./g, 'Continuously tracks recipient account age, rapid fan-out velocity spikes, and money mule network clusters across banks.');
-html = html.replace(/Build compliant, programmable payments—in any payment—directly into your products\./g, 'Continuously tracks recipient account age, rapid fan-out velocity spikes, and money mule network clusters across banks.');
+html = html.replace(/Build compliant, programmable payments—in any stablecoin—directly into your products\./g, 'Continuously tracks recipient account age, rapid fan-out velocity spikes, and money mule network clusters across banks.');
 html = html.replace(/>Microtransactions</g, '>Cognitive Dwell Gate<');
-html = html.replace(/Enable payments down to fractions of a cent for APIs, content, and metering\./g, 'Deploys calibrated psychological friction, pausing high-risk transfers before money leaves the victim\'s account.');
-html = html.replace(/Enable sub-cent payments for pay-per-use services\./g, 'Deploys calibrated psychological friction, pausing high-risk transfers before money leaves the victim\'s account.');
-html = html.replace(/Enable sub-cent payment scam interception for pay-per-use services\./g, 'Deploys calibrated psychological friction, pausing high-risk transfers before money leaves the victim\'s account.');
+html = html.replace(/Enable sub-cent stablecoin payments for pay-per-use services\./g, 'Deploys calibrated psychological friction, pausing high-risk transfers before money leaves the victim\'s account.');
 html = html.replace(/>Agentic commerce</g, '>Voice Guardian Emergency Call<');
-html = html.replace(/Give AI agents their own wallets with granular permissions, spending limits, and audit trails\./g, 'Triggers an instant real-time AI voice conversation (Vapi AI) to speak directly with the user and break scammer phone coercion.');
 html = html.replace(/Facilitate low-cost, instant payments for agents to autonomously execute transactions\./g, 'Triggers an instant real-time AI voice conversation (Vapi AI) to speak directly with the user and break scammer phone coercion.');
 html = html.replace(/>Tokenized deposits</g, '>Tamper-Evident SHA-256 Audit Trail<');
-html = html.replace(/Issue and settle commercial bank money natively on-chain with full regulatory compliance\./g, 'Cryptographically signs all evidence dossiers and agent reasoning traces for full regulatory compliance and auditability.');
 html = html.replace(/Move customer funds onchain for instant settlement and efficient interbank transfers\./g, 'Cryptographically signs all evidence dossiers and agent reasoning traces for full regulatory compliance and auditability.');
 
 // Static Section 4 texts
@@ -350,17 +341,6 @@ html = html.replace(/href="\/privacy-policy\/"/g, 'href="http://localhost:3000/s
 html = html.replace(/href="\/contact"/g, 'href="http://localhost:3000/soc-console"');
 
 html = html.replace(/© 2026 Tempo\. Incubated by Stripe and Paradigm\./g, '© 2026 PayKavach // Team Midnight Ciphers (KURUKSHETRA 2.0 - PS09). All rights reserved.');
-
-// Global cleanup
-html = html.replace(/Stripe and Paradigm/g, 'Team Midnight Ciphers (KURUKSHETRA 2.0)');
-html = html.replace(/payments-first Layer 1 blockchain/gi, 'autonomous AI defense platform');
-html = html.replace(/stablecoin-native settlement layer for global payments/gi, 'real-time multi-agent reasoning layer for instant payment rails');
-html = html.replace(/payment-native settlement layer for global payments/gi, 'real-time multi-agent reasoning layer for instant payment rails');
-html = html.replace(/stablecoin payments/gi, 'payment scam interception');
-html = html.replace(/stablecoins/gi, 'real-time payments');
-html = html.replace(/stablecoin/gi, 'payment');
-html = html.replace(/Tempo/g, 'PayKavach');
-html = html.replace(/Agentic Guardian/g, 'PayKavach');
 
 fs.writeFileSync('index.html', html, 'utf8');
 console.log('Clean PayKavach build completed successfully!');
