@@ -97,23 +97,20 @@ const headerPropsObj = {
 };
 
 // 3. Hero Astro Island Props
+// 3. Hero Astro Island Props — Structured typography & pill inspired by Ebury
 const heroPropsObj = {
-  headline: [0, "Intercept Before It Reaches — Autonomous AI Payment Scam Defense"],
-  description: [0, "PayKavach is an autonomous 5-domain security pipeline that evaluates real-time transactions in under 200ms. Fusing LightGBM ML hot-path scoring with parallel LangGraph multi-agent reasoning to stop Authorized Push Payment (APP) fraud before money moves."],
-  heroBannerLink: [0],
+  headline: [0, "Autonomous defense built for real-time payment networks"],
+  description: [0, "Intercept Authorized Push Payment (APP) fraud across UPI, FedNow, and core banking before money moves — with zero customer checkout friction."],
+  heroBannerLink: [0, {
+    text: [0, "See what's new: Autonomous Multi-Agent Defense ↗"],
+    url: [0, "http://localhost:3000/soc-console"],
+    isExternal: [0, false]
+  }],
   heroLinks: [1, [
     [0, { text: [0, "Try Payment Simulator"], url: [0, "http://localhost:3000/payment"], isExternal: [0, false], appearance: [0, "primary"] }],
     [0, { text: [0, "Open SOC Analyst Console"], url: [0, "http://localhost:3000/soc-console"], isExternal: [0, false], appearance: [0, "with-arrow"] }]
   ]],
-  heroCallout: [0, {
-    type: [0, "video"],
-    data: [0, {
-      caption: [0],
-      thumbnail: [0, { url: [0, "/images/homepage/video-thumbnails/tempo-case-studies-thumb-02-cash-detail.jpg"], title: [0, "PayKavach Telemetry Preview"], width: [0, 960], height: [0, 540] }],
-      previewVideoUrl: [0, "/videos/homepage/tempo-case-studies-preview.mp4"],
-      videoUrl: [0, "/videos/homepage/tempo-case-studies.mp4"]
-    }]
-  }],
+  heroCallout: [0],
   partnerLogos: [1, []],
   "data-astro-cid-lcdefpme": [0, true]
 };
@@ -320,6 +317,63 @@ if (!html.includes('paykavach-logo-styles')) {
   filter: grayscale(0) brightness(1) !important;
 }
 
+/* ─── Hero Headline & Structure (Ebury-style structured typography) ─── */
+._heroHeadline_golzh_59 {
+  font-family: var(--font-primary, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.035em !important;
+  line-height: 1.12 !important;
+  font-size: clamp(2.4rem, 4.6vw, 3.9rem) !important;
+  color: #061B31 !important;
+  max-width: 580px !important;
+  margin-top: 0 !important;
+  margin-bottom: 20px !important;
+  text-wrap: balance !important;
+}
+._heroDescription_golzh_63 {
+  font-family: var(--font-primary, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif) !important;
+  font-size: clamp(1rem, 1.2vw, 1.125rem) !important;
+  line-height: 1.65 !important;
+  color: #4b5563 !important;
+  max-width: 480px !important;
+  margin-bottom: 34px !important;
+  font-weight: 450 !important;
+}
+._heroBanner_148bq_1 {
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(6, 27, 49, 0.12) !important;
+  padding: 8px 18px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #061B31 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-bottom: 24px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+}
+._heroBanner_148bq_1:hover {
+  background: #ffffff !important;
+  border-color: #C9A227 !important;
+  box-shadow: 0 4px 14px rgba(201, 162, 39, 0.2) !important;
+  transform: translateY(-1px) !important;
+}
+._heroBannerIndicator_148bq_15 {
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 50% !important;
+  background-color: #C9A227 !important;
+  box-shadow: 0 0 6px #C9A227 !important;
+  flex-shrink: 0 !important;
+}
+._landingHeroBottom_golzh_29 {
+  display: none !important;
+}
+
 /* ─── Splash / Page-Load Animation ─── */
 #pk-splash {
   position: fixed;
@@ -473,9 +527,8 @@ if (!html.includes('paykavach-logo-styles')) {
 }
 
 // Replace static HTML texts throughout the document
-html = html.replace(/The blockchain for payments at scale/g, 'Intercept Before It Reaches — Autonomous AI Payment Scam Defense');
-html = html.replace(/Tempo is a payments-first Layer 1 blockchain incubated by Stripe and Paradigm, purpose-built for stablecoin payments at scale\. It gives businesses and developers a stablecoin-native settlement layer for global payments\./g,
-  'PayKavach is an autonomous 5-domain security pipeline that evaluates real-time payments in under 200ms. Fusing LightGBM ML hot-path scoring with parallel LangGraph multi-agent reasoning to stop Authorized Push Payment (APP) fraud before money moves.');
+html = html.replace(/<div class="_heroContent_golzh_54"><h1 class="type:h1 _heroHeadline_golzh_59 space:d72">The blockchain for payments at scale<\/h1><p class="type:b2 _heroDescription_golzh_63 space:d60">Tempo is a payments-first Layer 1 blockchain incubated by Stripe and Paradigm, purpose-built for stablecoin payments at scale\. It gives businesses and developers a stablecoin-native settlement layer for global payments\.<\/p>/,
+  `<div class="_heroContent_golzh_54"><div class="space:d24"><a href="http://localhost:3000/soc-console" class="type:button _heroBanner_148bq_1"><span class="_heroBannerIndicator_148bq_15"></span>See what's new: Autonomous Multi-Agent Defense ↗<img src="/images/icons/arrow_linkout.svg" alt="" aria-hidden="true" class="icon:24 _heroBannerArrow_148bq_22"/></a></div><h1 class="type:h1 _heroHeadline_golzh_59 space:d72">Autonomous defense built for real-time payment networks</h1><p class="type:b2 _heroDescription_golzh_63 space:d60">Intercept Authorized Push Payment (APP) fraud across UPI, FedNow, and core banking before money moves — with zero customer checkout friction.</p>`);
 html = html.replace(/>Get started</g, '>Try Payment Simulator<');
 html = html.replace(/>See how companies are using Tempo/g, '>Open SOC Analyst Console');
 
