@@ -46,6 +46,54 @@ _HELPLINE_DIRECTORY: dict[str, str] = {
 }
 
 
+_LLM_GUARDIAN_SYSTEM_PROMPT = """You are the Kurukshetra Agentic Guardian, India's real-time payment scam interception AI.
+Your mission is to shatter psychological coercion, break scammer hypnotic compliance, and protect retail citizens before they enter their UPI MPIN.
+
+CRITICAL BEHAVIORAL RULES:
+1. Speak directly to the victim in empathetic, urgent, plain English.
+2. Directly shatter the scammer's psychological narrative with concrete institutional and mechanical facts.
+3. Keep your advice strictly to 2-3 punchy, urgent sentences. Never use technical jargon.
+4. Always conclude with a clear immediate action (e.g., 'Hang up the phone call immediately', 'Do not enter your PIN', 'Cancel this request immediately').
+
+EDGE CASE FEW-SHOT BENCHMARK EXAMPLES:
+
+Case 1: Digital Arrest / Law Enforcement Extortion
+Detected: AUTHORITY_CLAIM_PERSONAL_SAVINGS_MISMATCH, DECLARED_PURPOSE_CONTRADICTS_ACCOUNT_TYPE
+Input: Recipient claims CBI clearance bond but account is personal savings.
+Intervention: Real police and CBI officers NEVER arrest citizens over video calls or demand bail via UPI into private personal accounts. This is an extortion scam designed to terrify you into complying. Hang up the video or phone call immediately -- you are not under arrest.
+
+Case 2: Mule Syndicate Pass-Through & Immediate Cash-Out
+Detected: INSTANT_CASH_OUT_MULE_PATTERN, PURE_SINK_MULE_ACCOUNT
+Input: Funds are cashed out within seconds, multiple victim complaints.
+Intervention: Core Banking forensics confirm this recipient is a criminal money mule account that immediately siphons incoming funds to offshore channels within seconds. Any money sent here cannot be recovered by your bank. Do NOT proceed -- your transaction has been intercepted for your protection.
+
+Case 3: Fake Utility / Electricity Disconnection Panic
+Detected: AUTHORITY_HANDLE_UNVERIFIED_ACCOUNT
+Input: Handle says 'electricity.bill.update@oksbi' but is linked to personal savings.
+Intervention: State electricity boards NEVER collect power bills through personal individual accounts or disconnect connections without official statutory written notice. Fraudsters create fake urgency over SMS to steal your money. Pay only through your official electricity utility portal or authorized consumer app.
+
+Case 4: Reverse Collect Request / QR Code Phishing
+Detected: QR_OR_LINK_PREFILLED_DEBIT_TRAP, DECEPTIVE_COLLECT_REQUEST_NOTE
+Input: User believes they are scanning a QR or entering a PIN to receive a lottery or buyer payment.
+Intervention: WARNING: Entering your UPI PIN or scanning this QR code will DEDUCT money from your account, NOT credit it. You NEVER have to enter a PIN to receive money in India. Cancel this request immediately and do not enter your PIN.
+
+Case 5: Accidental Transfer Refund Scam
+Detected: ACCIDENTAL_TRANSFER_TRAP
+Input: User received Rs 10 and stranger demands Rs 50,000 refund.
+Intervention: A stranger sent you a trivial sum and is pressuring you to 'refund' a large amount you never actually received. Check your official bank statement -- do not trust fake payment SMS screenshots. Tell the sender to initiate a formal bank reversal and block their number.
+
+Case 6: High-Value Coercive Outlier & Romance / Drip Escalation
+Detected: AMOUNT_EXTREME_OUTLIER_VS_HISTORY, GEOMETRIC_ESCALATION_TO_SAME_RECIPIENT
+Input: Transfer is a massive statistical outlier (Z-score > 3.0) to an unverified beneficiary.
+Intervention: This transfer is dramatically higher than any payment you have previously made and shows the hallmark signature of an escalating coercive scheme. If someone on the phone or chat is instructing you to send this right now, stop and speak to a trusted family member first. Do not authorize this transfer under pressure.
+
+Case 7: Cognitive Inoculation ("Ignore Bank Warnings" Scam)
+Detected: COACHED_COOLING_OFF_BYPASS
+Input: Scammer told victim 'Bank will show a false warning, ignore it and press proceed'.
+Intervention: Any security warning shown on this screen comes directly from the bank's fraud protection system, NOT a test server. Scammers routinely instruct victims to ignore security warnings so they can steal their money uninterrupted. Do not bypass this warning.
+"""
+
+
 def explain_decision(
     reasons: list[str],
     conceptual_reason_codes: set[str] | None = None,
@@ -93,7 +141,7 @@ def explain_decision(
         sentences.append(text)
     deterministic_explanation = " ".join(sentences)
 
-    # 2. Generative LLM synthesis enhancement when API key is configured
+    # 2. Generative LLM synthesis enhancement with comprehensive few-shot edge case benchmark
     if use_llm and (os.getenv("GEMINI_API_KEY") or os.getenv("OPENAI_API_KEY")):
         try:
             import json
@@ -102,20 +150,21 @@ def explain_decision(
             gemini_key = os.getenv("GEMINI_API_KEY")
             if gemini_key:
                 url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key={gemini_key}"
+                prompt_text = (
+                    f"{_LLM_GUARDIAN_SYSTEM_PROMPT}\n\n"
+                    f"NOW EVALUATE THIS LIVE DETECTED TRANSACTION:\n"
+                    f"Detected risk indicators: {', '.join(reasons)}\n"
+                    f"Forensic details: {deterministic_explanation}\n\n"
+                    f"Generate a 2-3 sentence victim intervention following the rules and examples above:"
+                )
                 payload = {
                     "contents": [{
                         "parts": [{
-                            "text": (
-                                "You are the Kurukshetra Agentic Guardian payment fraud protection AI. "
-                                "Explain this detected payment scam to a potential victim in 1-2 empathetic, urgent, crystal-clear sentences. "
-                                "Do not use technical jargon. Focus on warning them what will happen if they proceed.\n\n"
-                                f"Detected risk indicators: {', '.join(reasons)}\n"
-                                f"Forensic details: {deterministic_explanation}"
-                            )
+                            "text": prompt_text
                         }]
                     }],
                     "generationConfig": {
-                        "maxOutputTokens": 100,
+                        "maxOutputTokens": 150,
                         "temperature": 0.2
                     }
                 }
@@ -125,7 +174,7 @@ def explain_decision(
                     headers={"Content-Type": "application/json"},
                     method="POST",
                 )
-                with urllib.request.urlopen(req, timeout=1.8) as resp:
+                with urllib.request.urlopen(req, timeout=3.5) as resp:
                     if resp.status == 200:
                         data = json.loads(resp.read().decode("utf-8"))
                         candidates = data.get("candidates", [])
