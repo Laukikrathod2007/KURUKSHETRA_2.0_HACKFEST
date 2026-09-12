@@ -1,0 +1,51 @@
+{
+  "system": "Kurukshetra Fraud Interception Engine",
+  "version": "2.0.0",
+  "risk_spectrum": {
+    "ALLOW": {
+      "max_score": 0.30,
+      "color": "green",
+      "action": "PASS_THROUGH",
+      "friction": "None",
+      "verification_budget_ms": 15
+    },
+    "STEP_UP": {
+      "max_score": 0.65,
+      "color": "yellow",
+      "action": "STEP_UP_AND_HOLD",
+      "friction": "Reversible biometric or cooling-off check",
+      "verification_budget_ms": 25
+    },
+    "COACH": {
+      "max_score": 0.85,
+      "color": "orange",
+      "action": "COGNITIVE_INTERVENTION",
+      "friction": "Targeted anti-coercion dialog screen",
+      "verification_budget_ms": 35
+    },
+    "FREEZE": {
+      "max_score": 1.00,
+      "color": "red",
+      "action": "HARD_BLOCK",
+      "friction": "Strict isolation, zero money moved, nationwide kill-switch",
+      "verification_budget_ms": 45
+    }
+  },
+  "signal_tiers": {
+    "TIER_0": {
+      "name": "PSP Device / Local App Context",
+      "budget_ms": 10,
+      "features": [1, 2, 3, 4, 5]
+    },
+    "TIER_1": {
+      "name": "Network & Core Banking Forensics",
+      "budget_ms": 35,
+      "features": [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27]
+    },
+    "TIER_2": {
+      "name": "FastMCP Agentic Reasoning & Adaptive Intervention",
+      "budget_ms": "Out-of-band / Interactive (User Action Bound)",
+      "features": [28, 29, 30, 31, 32, 33, 34, 35, 36]
+    }
+  }
+}

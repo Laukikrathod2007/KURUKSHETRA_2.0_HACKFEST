@@ -1,0 +1,10 @@
+{
+  "name": "kurukshetra-frontend-workspace",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "build": "npm --prefix landing run build && npm --prefix gpay-app run build",
+    "dev:gpay": "npm --prefix gpay-app run dev",
+    "dev:landing": "npm --prefix landing run dev"
+  }
+}

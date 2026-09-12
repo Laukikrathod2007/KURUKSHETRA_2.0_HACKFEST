@@ -1,0 +1,167 @@
+==========================================================
+   AGENTIC GUARDIAN - FRONTEND INSTALLATION COMMANDS
+==========================================================
+
+⚡ QUICK START (Copy-Paste These Commands)
+
+-----------------------------------------------------------
+STEP 1: Navigate to Frontend Folder
+-----------------------------------------------------------
+
+cd Frontend
+
+
+-----------------------------------------------------------
+STEP 2: Install Dependencies (This will take 2-3 minutes)
+-----------------------------------------------------------
+
+npm install
+
+
+-----------------------------------------------------------
+STEP 3: Start Development Server
+-----------------------------------------------------------
+
+npm run dev
+
+
+-----------------------------------------------------------
+STEP 4: Open Browser
+-----------------------------------------------------------
+
+Open: http://localhost:3000
+
+✅ You should see the Agentic Guardian dashboard!
+
+
+==========================================================
+   PRODUCTION BUILD (For Deployment)
+==========================================================
+
+npm run build
+
+# Output will be in the 'dist/' folder
+# Deploy this folder to your hosting service
+
+
+==========================================================
+   TROUBLESHOOTING
+==========================================================
+
+❌ "npm not found"
+Solution: Install Node.js from https://nodejs.org/
+
+❌ "Port 3000 already in use"
+Solution: Kill the process or change port in vite.config.js
+
+❌ Dependencies fail to install
+Solution:
+npm cache clean --force
+del /s /q node_modules
+del package-lock.json
+npm install
+
+
+==========================================================
+   TEST SCENARIOS (After Launch)
+==========================================================
+
+✅ Safe Payment:
+   Amount: 2500
+   Recipient: merchant@paytm
+   Expected: GREEN (ALLOW)
+
+⚠️ Suspicious Payment:
+   Amount: 50000
+   Recipient: unknown@apl
+   Check all warning boxes
+   Expected: RED (PAUSE with 5-second countdown)
+
+🎤 Voice Assistant:
+   Click "Voice Guardian" button
+   Click microphone icon
+   Expected: Interactive AI conversation
+
+
+==========================================================
+   PROJECT STRUCTURE
+==========================================================
+
+Frontend/
+├── src/
+│   ├── components/     6 reusable components
+│   ├── pages/         4 complete pages
+│   ├── utils/         2 helper functions
+│   ├── App.jsx        Main router
+│   └── main.jsx       Entry point
+├── public/            (empty - no assets needed)
+├── package.json       Dependencies list
+└── README.md          Full documentation
+
+
+==========================================================
+   KEY FILES TO READ
+==========================================================
+
+1. README.md           - Complete technical docs
+2. SETUP.md            - Quick start guide
+3. ASSETS_GUIDE.md     - Design system
+4. FRONTEND_SUMMARY.md - Feature overview
+
+
+==========================================================
+   DEPLOYMENT OPTIONS
+==========================================================
+
+Vercel (Recommended):
+npm i -g vercel
+vercel deploy
+
+Netlify:
+npm i -g netlify-cli
+netlify deploy --prod
+
+GitHub Pages:
+npm run build
+# Upload 'dist' folder
+
+
+==========================================================
+   TECH STACK
+==========================================================
+
+✅ React 18.3      - UI framework
+✅ Vite 5.4        - Build tool
+✅ Tailwind CSS    - Styling
+✅ React Router    - Navigation
+✅ Recharts        - Data visualization
+✅ Lucide React    - Icon library
+
+
+==========================================================
+   SUPPORT
+==========================================================
+
+📖 Full Docs: README.md
+🎨 Design Guide: ASSETS_GUIDE.md
+🚀 Quick Start: SETUP.md
+📊 Features: FRONTEND_SUMMARY.md
+
+Team: Midnight Ciphers
+Event: KURUKSHETRA 2.0
+Problem: PS09
+
+
+==========================================================
+   READY TO GO! 🚀
+==========================================================
+
+Run these 3 commands:
+
+1. cd Frontend
+2. npm install
+3. npm run dev
+
+Then open: http://localhost:3000
+
+Happy Hacking! 🎉
