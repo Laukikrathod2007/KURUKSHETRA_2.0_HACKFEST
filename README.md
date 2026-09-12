@@ -1,6 +1,6 @@
 <div align="center">
 
-![PayKavach — MCP-powered scam defense on real-time rails](docs/assets/paykavach-banner.png)
+<img src="docs/assets/paykavach-logo.png" alt="PayKavach — Intercept. Before It Reaches." width="800" />
 
 # PayKavach
 
@@ -714,6 +714,8 @@ curl -X POST http://localhost:8000/aria/call \
 ---
 
 <div align="center">
+
+<img src="docs/assets/paykavach-icon.png" alt="PayKavach" width="120" />
 
 ### PayKavach — Intercept. Before It Reaches.
 
