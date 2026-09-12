@@ -100,269 +100,140 @@
   }
 })();
 </script><style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event("astro:load"));})();</script><script>(()=>{var g=Object.defineProperty;var w=(a,s,c)=>s in a?g(a,s,{enumerable:!0,configurable:!0,writable:!0,value:c}):a[s]=c;var l=(a,s,c)=>w(a,typeof s!="symbol"?s+"":s,c);var E=new Set(["__proto__","constructor","prototype"]);{let a={0:t=>y(t),1:t=>c(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(c(t)),5:t=>new Set(c(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>Number.POSITIVE_INFINITY*t},s=t=>{let[p,e]=t;return p in a?a[p](e):void 0},c=t=>t.map(s),y=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([p,e])=>[p,s(e)]));class f extends HTMLElement{constructor(){super(...arguments);l(this,"Component");l(this,"hydrator");l(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let r=this.querySelectorAll("astro-slot"),n={},d=this.querySelectorAll("template[data-astro-template]");for(let o of d){let i=o.closest(this.tagName);i!=null&&i.isSameNode(this)&&(n[o.getAttribute("data-astro-template")||"default"]=o.innerHTML,o.remove())}for(let o of r){let i=o.closest(this.tagName);i!=null&&i.isSameNode(this)&&(n[o.getAttribute("name")||"default"]=o.innerHTML)}let u;try{u=this.hasAttribute("props")?y(JSON.parse(this.getAttribute("props"))):{}}catch(o){let i=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(i+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${i}`,this.getAttribute("props"),o),o}let h;await this.hydrator(this)(this.Component,u,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});l(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),r.disconnect(),this.childrenConnectedCallback()},r=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});r.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}getRetryImportUrl(e){let r=new URL(e,document.baseURI);return r.searchParams.set("astro-retry",Date.now().toString()),r.toString()}async importWithRetry(e){try{return await import(e)}catch(r){return await new Promise(n=>setTimeout(n,1e3)),import(this.getRetryImportUrl(e))}}handleHydrationError(e){let r=this.getAttribute("component-url"),n=new CustomEvent("astro:hydration-error",{cancelable:!0,bubbles:!0,composed:!0,detail:{error:e,componentUrl:r}});this.dispatchEvent(n)&&console.error(`[astro-island] Error hydrating ${r}`,e)}async start(){let e=JSON.parse(this.getAttribute("opts")),r=this.getAttribute("client");if(Astro[r]===void 0){window.addEventListener(`astro:${r}`,()=>this.start(),{once:!0});return}try{await Astro[r](async()=>{let n=this.getAttribute("renderer-url");try{let[d,{default:u}]=await Promise.all([this.importWithRetry(this.getAttribute("component-url")),n?this.importWithRetry(n):Promise.resolve({default:()=>()=>{}})]),h=this.getAttribute("component-export")||"default";if(h.includes(".")){this.Component=d;for(let m of h.split(".")){if(E.has(m)||!this.Component||typeof this.Component!="object"&&typeof this.Component!="function"||!Object.hasOwn(this.Component,m))throw new Error(`Invalid component export path: ${h}`);this.Component=this.Component[m]}}else{if(E.has(h))throw new Error(`Invalid component export path: ${h}`);this.Component=d[h]}return this.hydrator=u,this.hydrate}catch(d){return this.handleHydrationError(d),()=>{}}},e,this)}catch(n){this.handleHydrationError(n)}}attributeChangedCallback(){this.hydrate()}}l(f,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",f)}})();</script><astro-island uid="Z1vXv2E" prefix="r14" component-url="/_astro/Header.BtQlY8xr.js?dpl=dpl_Ayfj3ws9uKabZjsikBKM3vVbccQC" component-export="default" renderer-url="/_astro/client.C-iRRPgs.js?dpl=dpl_Ayfj3ws9uKabZjsikBKM3vVbccQC" props="{&quot;header&quot;:[0,{&quot;name&quot;:[0,&quot;Main Header&quot;],&quot;logo&quot;:[0,{&quot;url&quot;:[0,&quot;/images/paykavach-logo.png&quot;],&quot;title&quot;:[0,&quot;PayKavach&quot;],&quot;width&quot;:[0,180],&quot;height&quot;:[0,42]}],&quot;navItems&quot;:[1,[[0,{&quot;entryName&quot;:[0,&quot;Solutions&quot;],&quot;label&quot;:[0,&quot;Solutions&quot;],&quot;topLevelLink&quot;:[0,&quot;Solutions&quot;],&quot;links&quot;:[1,[[0,{&quot;label&quot;:[0,&quot;APP Scam Interception&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/payment&quot;]}],[0,{&quot;label&quot;:[0,&quot;Multi-Agent Consensus Hub&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}],[0,{&quot;label&quot;:[0,&quot;Mule Graph Intelligence&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}],[0,{&quot;label&quot;:[0,&quot;Cognitive Dwell Gate&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/payment&quot;]}],[0,{&quot;label&quot;:[0,&quot;Voice Guardian Assistance&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/payment&quot;]}]]]}],[0,{&quot;label&quot;:[0,&quot;SOC Console&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}],[0,{&quot;label&quot;:[0,&quot;Payment Simulator&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/payment&quot;]}],[0,{&quot;entryName&quot;:[0,&quot;Developers&quot;],&quot;label&quot;:[0,&quot;Developers&quot;],&quot;links&quot;:[1,[[0,{&quot;label&quot;:[0,&quot;FastMCP Security Server&quot;],&quot;url&quot;:[0,&quot;https://github.com/Laukikrathod2007/KURUKSHETRA_2.0_HACKFEST&quot;]}],[0,{&quot;label&quot;:[0,&quot;GitHub Repository&quot;],&quot;url&quot;:[0,&quot;https://github.com/Laukikrathod2007/KURUKSHETRA_2.0_HACKFEST&quot;]}],[0,{&quot;label&quot;:[0,&quot;Architecture Specs&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}]]]}],[0,{&quot;entryName&quot;:[0,&quot;Resources&quot;],&quot;label&quot;:[0,&quot;Resources&quot;],&quot;topLevelLink&quot;:[0,&quot;Resources&quot;],&quot;links&quot;:[1,[[0,{&quot;label&quot;:[0,&quot;PS09 Research Paper&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}],[0,{&quot;label&quot;:[0,&quot;Submission PRD&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}],[0,{&quot;label&quot;:[0,&quot;Red-Team Audit&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}]]]}]]],&quot;loginText&quot;:[0,&quot;Try Simulator&quot;],&quot;loginUrl&quot;:[0,&quot;http://localhost:3000/payment&quot;]}],&quot;footer&quot;:[0,{&quot;logo&quot;:[0,{&quot;url&quot;:[0,&quot;/images/paykavach-logo.png&quot;],&quot;title&quot;:[0,&quot;PayKavach — Intercept Before It Reaches&quot;],&quot;width&quot;:[0,220],&quot;height&quot;:[0,52]}],&quot;rightNavigationItems&quot;:[1,[[0,{&quot;entryName&quot;:[0,&quot;Solutions&quot;],&quot;label&quot;:[0,&quot;Solutions&quot;],&quot;topLevelLink&quot;:[0,&quot;Solutions&quot;],&quot;links&quot;:[1,[[0,{&quot;label&quot;:[0,&quot;APP Scam Interception&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/payment&quot;]}],[0,{&quot;label&quot;:[0,&quot;Multi-Agent Consensus&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}],[0,{&quot;label&quot;:[0,&quot;Mule Graph Network&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}],[0,{&quot;label&quot;:[0,&quot;Cognitive Dwell Gate&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/payment&quot;]}],[0,{&quot;label&quot;:[0,&quot;Voice Guardian&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/payment&quot;]}]]]}],[0,{&quot;entryName&quot;:[0,&quot;Developers&quot;],&quot;label&quot;:[0,&quot;Developers&quot;],&quot;links&quot;:[1,[[0,{&quot;label&quot;:[0,&quot;SOC Console&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}],[0,{&quot;label&quot;:[0,&quot;Simulator&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/payment&quot;]}],[0,{&quot;label&quot;:[0,&quot;FastMCP Engine&quot;],&quot;url&quot;:[0,&quot;https://github.com/Laukikrathod2007/KURUKSHETRA_2.0_HACKFEST&quot;]}],[0,{&quot;label&quot;:[0,&quot;GitHub&quot;],&quot;url&quot;:[0,&quot;https://github.com/Laukikrathod2007/KURUKSHETRA_2.0_HACKFEST&quot;]}]]]}],[0,{&quot;entryName&quot;:[0,&quot;Resources&quot;],&quot;label&quot;:[0,&quot;Resources&quot;],&quot;topLevelLink&quot;:[0,&quot;Resources&quot;],&quot;links&quot;:[1,[[0,{&quot;label&quot;:[0,&quot;PS09 Research Paper&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}],[0,{&quot;label&quot;:[0,&quot;Technical PRD&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}],[0,{&quot;label&quot;:[0,&quot;Architecture Specs&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}],[0,{&quot;label&quot;:[0,&quot;Red-Team Report&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}]]]}]]],&quot;copyrightText&quot;:[0,&quot;© 2026 PayKavach // Team Midnight Ciphers (KURUKSHETRA 2.0 - PS09). All rights reserved.&quot;]}]}" ssr client="load" opts="{&quot;name&quot;:&quot;Header&quot;,&quot;value&quot;:true}" await-children><header class="_siteHeader_aukpd_1"><div class="_headerContainer_aukpd_11"><div class="_headerLogo_aukpd_20"><a href="/"><img src="/images/paykavach-logo.png" alt="PayKavach" width="40" height="40"/></a></div><nav class="_headerNav_aukpd_65 _desktopNav_aukpd_540" aria-label="Main navigation"><div class="_navSurface_aukpd_71"><ul class="_navList_aukpd_79"><li class="_navItem_aukpd_57 _navGroup_aukpd_112"><button type="button" class="_navLink_aukpd_97 _navGroupTrigger_aukpd_122 type:l1" aria-expanded="false">Solutions<img src="/images/icons/accordion_down.svg" alt="" class="_dropdownIcon_aukpd_126" width="16" height="16"/></button></li><li class="_navItem_aukpd_57"><a href="http://localhost:3000/soc-console" class="_navLink_aukpd_97 type:l1">Customer Stories</a></li><li class="_navItem_aukpd_57"><a href="http://localhost:3000/soc-console" class="_navLink_aukpd_97 type:l1">Ecosystem</a></li><li class="_navItem_aukpd_57 _navGroup_aukpd_112"><button type="button" class="_navLink_aukpd_97 _navGroupTrigger_aukpd_122 type:l1" aria-expanded="false">Developers<img src="/images/icons/accordion_down.svg" alt="" class="_dropdownIcon_aukpd_126" width="16" height="16"/></button></li><li class="_navItem_aukpd_57 _navGroup_aukpd_112"><button type="button" class="_navLink_aukpd_97 _navGroupTrigger_aukpd_122 type:l1" aria-expanded="false">Resources<img src="/images/icons/accordion_down.svg" alt="" class="_dropdownIcon_aukpd_126" width="16" height="16"/></button></li></ul></div></nav><div class="_headerActions_aukpd_32"><a href="http://localhost:3000/soc-console" class="type:button _button_1wyxw_1 _buttonPrimary_1wyxw_12 _loginLink_aukpd_53">Contact us</a></div><button class="_mobileMenuButton_aukpd_38" aria-label="Toggle menu" aria-expanded="false">Menu</button></div><nav class="_mobileNav_aukpd_133" aria-label="Mobile navigation"><div class="_mobileNavInner_aukpd_386"><ul class="_mobileNavList_aukpd_394"><li class="_mobileNavItem_aukpd_402 _mobileNavGroup_aukpd_133"><button class="_mobileNavLink_aukpd_412 _mobileNavGroupTrigger_aukpd_133 type:h3" aria-expanded="false">Solutions<img src="/images/icons/accordion_down.svg" alt="" class="_dropdownIcon_aukpd_126" width="16" height="16"/></button><ul class="_mobileDropdownMenu_aukpd_431"><li><a href="http://localhost:3000/payment" class="_mobileDropdownLink_aukpd_442 type:b3">Cross-Border Payments</a></li><li><a href="http://localhost:3000/payment" class="_mobileDropdownLink_aukpd_442 type:b3">Institutional Settlement</a></li><li><a href="http://localhost:3000/payment" class="_mobileDropdownLink_aukpd_442 type:b3">Embedded Finance</a></li><li><a href="http://localhost:3000/payment" class="_mobileDropdownLink_aukpd_442 type:b3">Earn</a></li><li><a href="http://localhost:3000/payment" class="_mobileDropdownLink_aukpd_442 type:b3">Agentic Payments</a></li></ul></li><li class="_mobileNavItem_aukpd_402"><a href="http://localhost:3000/soc-console" class="_mobileNavLink_aukpd_412 type:h3">Customer Stories</a></li><li class="_mobileNavItem_aukpd_402"><a href="http://localhost:3000/soc-console" class="_mobileNavLink_aukpd_412 type:h3">Ecosystem</a></li><li class="_mobileNavItem_aukpd_402 _mobileNavGroup_aukpd_133"><button class="_mobileNavLink_aukpd_412 _mobileNavGroupTrigger_aukpd_133 type:h3" aria-expanded="false">Developers<img src="/images/icons/accordion_down.svg" alt="" class="_dropdownIcon_aukpd_126" width="16" height="16"/></button><ul class="_mobileDropdownMenu_aukpd_431"><li><a href="http://localhost:3000/soc-console" class="_mobileDropdownLink_aukpd_442 type:b3">Docs</a></li><li><a href="http://localhost:3000/soc-console" class="_mobileDropdownLink_aukpd_442 type:b3">Explorer</a></li><li><a href="http://localhost:3000/payment" class="_mobileDropdownLink_aukpd_442 type:b3">Wallet</a></li><li><a href="http://localhost:3000/soc-console" class="_mobileDropdownLink_aukpd_442 type:b3">Status</a></li><li><a href="http://localhost:3000/soc-console" class="_mobileDropdownLink_aukpd_442 type:b3">Developer Blog</a></li><li><a href="https://github.com/Laukikrathod2007/KURUKSHETRA_2.0_HACKFEST" class="_mobileDropdownLink_aukpd_442 type:b3">Github</a></li></ul></li><li class="_mobileNavItem_aukpd_402 _mobileNavGroup_aukpd_133"><button class="_mobileNavLink_aukpd_412 _mobileNavGroupTrigger_aukpd_133 type:h3" aria-expanded="false">Resources<img src="/images/icons/accordion_down.svg" alt="" class="_dropdownIcon_aukpd_126" width="16" height="16"/></button><ul class="_mobileDropdownMenu_aukpd_431"><li><a href="http://localhost:3000/soc-console" class="_mobileDropdownLink_aukpd_442 type:b3">Blog</a></li><li><a href="http://localhost:3000/soc-console" class="_mobileDropdownLink_aukpd_442 type:b3">Reports</a></li><li><a href="http://localhost:3000/soc-console" class="_mobileDropdownLink_aukpd_442 type:b3">Learn</a></li><li><a href="http://localhost:3000/soc-console" class="_mobileDropdownLink_aukpd_442 type:b3">Stablecoin Advisory</a></li><li><a href="https://jobs.ashbyhq.com/tempo-xyz" class="_mobileDropdownLink_aukpd_442 type:b3">Careers</a></li><li><a href="http://localhost:3000/soc-console" class="_mobileDropdownLink_aukpd_442 type:b3">Privacy Policy</a></li><li><a href="https://drive.google.com/drive/u/0/folders/1AMbYL6jupt3Em8_K2_2ZBqP8Jd-FJAqE" class="_mobileDropdownLink_aukpd_442 type:b3">Brand Kit</a></li></ul></li><li class="_mobileNavItem_aukpd_402"><a href="http://localhost:3000/soc-console" class="_mobileNavLink_aukpd_412 type:h3">Contact us</a></li></ul><div class="_mobileNavBottom_aukpd_502"><a href="mailto:contact@paykavach.io" class="_mobileNavEmail_aukpd_508 type:l1">contact@paykavach.io</a><a href="/" class="_mobileNavLogo_aukpd_515"><img src="/images/paykavach-logo.png" alt="PayKavach — Intercept Before It Reaches" class="_mobileNavLogoImg_aukpd_521"/></a><span class="_mobileNavCopyright_aukpd_510 type:l1">© 2026 Tempo. Incubated by Stripe and Paradigm.</span></div></div></nav></header><!--astro:end--></astro-island><canvas id="gl" data-astro-cid-lcdefpme></canvas><main id="app" data-astro-cid-lcdefpme><div data-section="intro" class="space:d420" data-astro-cid-lcdefpme><astro-island uid="ZwYdX4" prefix="r8" component-url="/_astro/LandingHero.CoXz7vUL.js?dpl=dpl_Ayfj3ws9uKabZjsikBKM3vVbccQC" component-export="default" renderer-url="/_astro/client.C-iRRPgs.js?dpl=dpl_Ayfj3ws9uKabZjsikBKM3vVbccQC" props="{&quot;headline&quot;:[0,&quot;Intercept Before It Reaches — Autonomous AI Payment Scam Defense&quot;],&quot;description&quot;:[0,&quot;PayKavach is an autonomous 5-domain security pipeline that evaluates real-time transactions in under 200ms. Fusing LightGBM ML hot-path scoring with parallel LangGraph multi-agent reasoning to stop Authorized Push Payment (APP) fraud before money moves.&quot;],&quot;heroBannerLink&quot;:[0],&quot;heroLinks&quot;:[1,[[0,{&quot;text&quot;:[0,&quot;Try Payment Simulator&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/payment&quot;],&quot;isExternal&quot;:[0,false],&quot;appearance&quot;:[0,&quot;primary&quot;]}],[0,{&quot;text&quot;:[0,&quot;Open SOC Analyst Console&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;],&quot;isExternal&quot;:[0,false],&quot;appearance&quot;:[0,&quot;with-arrow&quot;]}]]],&quot;heroCallout&quot;:[0,{&quot;type&quot;:[0,&quot;video&quot;],&quot;data&quot;:[0,{&quot;caption&quot;:[0],&quot;thumbnail&quot;:[0,{&quot;url&quot;:[0,&quot;/images/homepage/video-thumbnails/tempo-case-studies-thumb-02-cash-detail.jpg&quot;],&quot;title&quot;:[0,&quot;PayKavach Telemetry Preview&quot;],&quot;width&quot;:[0,960],&quot;height&quot;:[0,540]}],&quot;previewVideoUrl&quot;:[0,&quot;/videos/homepage/tempo-case-studies-preview.mp4&quot;],&quot;videoUrl&quot;:[0,&quot;/videos/homepage/tempo-case-studies.mp4&quot;]}]}],&quot;partnerLogos&quot;:[1,[]],&quot;data-astro-cid-lcdefpme&quot;:[0,true]}" ssr client="load" opts="{&quot;name&quot;:&quot;LandingHero&quot;,&quot;value&quot;:true}" await-children><section class="_landingHero_golzh_1"><div class="grid-container _heroContainer_golzh_16"><div class="_landingHeroInner_golzh_22"><div class="_heroContent_golzh_54"><h1 class="type:h1 _heroHeadline_golzh_59 space:d72">Intercept Before It Reaches — Autonomous AI Payment Scam Defense</h1><p class="type:b2 _heroDescription_golzh_63 space:d60">PayKavach is an autonomous 5-domain security pipeline that evaluates real-time payments in under 200ms. Fusing LightGBM ML hot-path scoring with parallel LangGraph multi-agent reasoning to stop Authorized Push Payment (APP) fraud before money moves.</p><nav class="_heroLinks_golzh_40" aria-label="Hero actions"><a href="http://localhost:3000/payment" class="type:button _button_1wyxw_1 _buttonPrimary_1wyxw_12" data-analytics-cta="primary" data-analytics-cta-text="Get started" data-analytics-location="hero">Try Payment Simulator</a><a href="http://localhost:3000/soc-console" class="type:button _linkArrow_h5j1w_1" data-analytics-cta="with-arrow" data-analytics-cta-text="See how companies are using Tempo" data-analytics-location="hero">Open SOC Analyst Console<img src="/images/icons/arrow_right.svg" alt="" aria-hidden="true" class="icon:24 _linkArrowIcon_h5j1w_15"/></a></nav></div></div><div class="grid-layout _landingHeroBottom_golzh_29"><div class="col-6 md:col-5 lg:col-5"><div class="_calloutVideo_kgzvh_1"><div class="_videoFrame_kgzvh_10"><button class="_playButton_kgzvh_17" aria-label="Play video" type="button"><div class="_thumbnail_kgzvh_29"><picture class="_heroThumbnail_golzh_34"><source type="image/avif" srcSet="/images/homepage/video-thumbnails/responsive/tempo-case-studies-thumb-02-cash-detail-360.avif 360w, /images/homepage/video-thumbnails/responsive/tempo-case-studies-thumb-02-cash-detail-480.avif 480w, /images/homepage/video-thumbnails/responsive/tempo-case-studies-thumb-02-cash-detail-720.avif 720w, /images/homepage/video-thumbnails/responsive/tempo-case-studies-thumb-02-cash-detail-960.avif 960w" sizes="(max-width: 833px) calc(100vw - 32px), (max-width: 1023px) calc(62.5vw - 64.5px), (max-width: 1599px) calc(41.667vw - 57px), (max-width: 1720px) calc(41.667vw - 107px), 610px"/><source type="image/webp" srcSet="/images/homepage/video-thumbnails/responsive/tempo-case-studies-thumb-02-cash-detail-360.webp 360w, /images/homepage/video-thumbnails/responsive/tempo-case-studies-thumb-02-cash-detail-480.webp 480w, /images/homepage/video-thumbnails/responsive/tempo-case-studies-thumb-02-cash-detail-720.webp 720w, /images/homepage/video-thumbnails/responsive/tempo-case-studies-thumb-02-cash-detail-960.webp 960w" sizes="(max-width: 833px) calc(100vw - 32px), (max-width: 1023px) calc(62.5vw - 64.5px), (max-width: 1599px) calc(41.667vw - 57px), (max-width: 1720px) calc(41.667vw - 107px), 610px"/><img src="/images/homepage/video-thumbnails/tempo-case-studies-thumb-02-cash-detail.jpg" alt="Tempo case studies video thumbnail" width="960" height="540" loading="eager" fetchPriority="high" decoding="async"/></picture></div><video class="_previewVideo_kgzvh_41 " src="/videos/homepage/tempo-case-studies-preview.mp4" loop="" muted="" playsInline="" preload="metadata"></video><span class="_playIcon_kgzvh_64" aria-hidden="true"><img src="/images/icons/play.svg" alt="" width="24" height="24"/></span></button></div></div></div></div></div></section><!--astro:end--></astro-island></div><div class="page-sections" data-astro-cid-lcdefpme><div data-section="animation-1" class="landing-module-text" data-astro-cid-lcdefpme><section class="_moduleText_9taos_1 _vertical_9taos_29" data-layout="vertical"><div class="grid-container"><div class="grid-layout"><div class="_moduleTextCol_9taos_23 col-6 md:col-8 lg:col-8"><h2 class="type:h2 space:d64">Purpose-built for Authorized Push Payment (APP) Scams</h2><p class="type:b2 _moduleTextBody_9taos_13 space:d32">Traditional fraud engines only check stolen card credentials or account takeover. When victims are manipulated into voluntarily completing payments themselves, legacy rules are completely blind. PayKavach analyzes payment memos, NLP urgency signals, mule graph networks, and cognitive stress in under 200ms.</p><div class="_moduleTextLinks_9taos_17"><a href="http://localhost:3000/soc-console" class="type:button _button_1wyxw_1 _buttonPrimary_1wyxw_12" data-analytics-cta="primary" data-analytics-cta-text="About Tempo">Explore Architecture &rarr;</a></div></div></div></div></section></div><div data-section="animation-2" class="landing-module-logo-wall" data-astro-cid-lcdefpme><section class="_isHalf_osd0a_140"><div class="grid-container"><div class="grid-layout"><div class=" col-6 md:col-8 lg:col-6"><div class="_gridHeader_osd0a_1"><h2 class="_headerTitle_osd0a_6 type:h2 space:d64">Trusted by Next-Gen Financial Institutions</h2><p class="_headerText_osd0a_7 type:b2">Built for KURUKSHETRA 2.0 (Problem Statement PS09), PayKavach integrates directly with UPI, FedNow, FPS, and enterprise core banking systems with zero customer checkout friction.</p><nav class="_gridHeaderActions_osd0a_15" aria-label="Logo wall actions"><a href="http://localhost:3000/soc-console" class="type:button _button_1wyxw_1 _buttonPrimary_1wyxw_12" data-analytics-cta="primary" data-analytics-cta-text="See customer stories →">See customer stories →</a></nav></div><ul class="_logosGrid_osd0a_31 _logosGridHalf_osd0a_46"><li class="_logoCell_osd0a_37"><img src="/content/partners/altitude.svg" alt="altitude" width="290" height="60" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img src="/content/partners/anthropic.svg" alt="anthropic" width="1538" height="173" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img class="_logoImageCompact_osd0a_89" src="/content/partners/arq.svg" alt="arq" width="216" height="74" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img class="_logoImageCompact_osd0a_89" src="/content/partners/atob.svg" alt="atob" width="114" height="40" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img class="_logoImageCompact_osd0a_89" src="/content/partners/brex.svg" alt="brex" width="78" height="20" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img src="/content/partners/coastal.svg" alt="coastal" width="1705" height="311" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img src="/content/partners/coupang.svg" alt="coupang" width="327" height="74" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img src="/content/partners/cross-river.svg" alt="cross-river" width="210" height="35" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img class="_logoImageCompact_osd0a_89 _logoImageNarrowWordmark_osd0a_96" src="/content/partners/deel.svg" alt="deel" width="881" height="483" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img src="/content/partners/deutsche-bank.svg" alt="deutsche-bank" width="250" height="52" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img src="/content/partners/doordash.svg" alt="doordash" width="1555" height="181" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img class="_logoImageCompact_osd0a_89" src="/content/partners/el-dorado.svg" alt="el-dorado" width="156" height="40" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img src="/content/partners/faire.svg" alt="faire" width="1024" height="128" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img class="_logoImageCompact_osd0a_89" src="/content/partners/felix.svg" alt="felix" width="90" height="32" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img src="/content/partners/figure.svg" alt="figure" width="448" height="94" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img class="_logoImageCompact_osd0a_89" src="/content/partners/gusto.svg" alt="gusto" width="69" height="27" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img class="_logoImageCompact_osd0a_89" src="/content/partners/kalshi.svg" alt="kalshi" width="78" height="20" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img src="/content/partners/karta.svg" alt="karta" width="120" height="26" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img src="/content/partners/kast.svg" alt="kast" width="1020" height="214" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img class="_logoImageCompact_osd0a_89" src="/content/partners/klarna.svg" alt="klarna" width="91" height="22" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img src="/content/partners/kraken.svg" alt="kraken" width="560" height="120" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img class="_logoImageCompact_osd0a_89" src="/content/partners/lead-bank.svg" alt="lead-bank" width="318" height="101" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img class="_logoImageCompact_osd0a_89" src="/content/partners/link.svg" alt="link" width="60" height="20" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img src="/content/partners/mastercard.svg" alt="mastercard" width="548" height="96" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img src="/content/partners/meow.svg" alt="meow" width="102" height="24" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img src="/content/partners/mercury.svg" alt="mercury" width="139" height="32" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img src="/content/partners/moneygram.svg" alt="moneygram" width="795" height="168" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img class="_logoImageCompact_osd0a_89" src="/content/partners/nubank.svg" alt="nubank" width="58" height="32" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img class="_logoImageCompact_osd0a_89" src="/content/partners/okx.svg" alt="okx" width="504" height="151" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img class="_logoImageCompact_osd0a_89" src="/content/partners/onepay.svg" alt="onepay" width="581" height="145" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img class="_logoImageCompact_osd0a_89" src="/content/partners/openai.svg" alt="openai" width="90" height="24" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img src="/content/partners/payoneer.svg" alt="payoneer" width="589" height="114" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img class="_logoImageCompact_osd0a_89" src="/content/partners/persona.svg" alt="persona" width="600" height="146" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img class="_logoImageCompact_osd0a_89" src="/content/partners/ramp.svg" alt="ramp" width="282" height="75" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img src="/content/partners/revolut.svg" alt="revolut" width="145" height="32" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img class="_logoImageCompact_osd0a_89" src="/content/partners/shopify.svg" alt="shopify" width="446" height="128" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img class="_logoImageCompact_osd0a_89" src="/content/partners/standard-chartered.svg" alt="standard-chartered" width="157" height="62" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img class="_logoImageCompact_osd0a_89" src="/content/partners/stripe.svg" alt="stripe" width="360" height="151" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img class="_logoImageCompact_osd0a_89" src="/content/partners/ubs.svg" alt="ubs" width="1696" height="600" loading="lazy"/></li><li class="_logoCell_osd0a_37"><img class="_logoImageCompact_osd0a_89" src="/content/partners/visa.svg" alt="visa" width="74" height="24" loading="lazy"/></li></ul></div></div></div></section></div><div data-section="animation-3" class="landing-module-feature-list" data-astro-cid-lcdefpme><script>(()=>{var a=(s,i,o)=>{let r=async()=>{await(await s())()},t=typeof i.value=="object"?i.value:void 0,c={rootMargin:t==null?void 0:t.rootMargin},n=new IntersectionObserver(e=>{for(let l of e)if(l.isIntersecting){n.disconnect(),r();break}},c);for(let e of o.children)n.observe(e)};(self.Astro||(self.Astro={})).visible=a;window.dispatchEvent(new Event("astro:visible"));})();</script><astro-island uid="Z2rrIKX" prefix="r11" component-url="/_astro/ModuleFeatureList.Cr8FadrD.js?dpl=dpl_Ayfj3ws9uKabZjsikBKM3vVbccQC" component-export="default" renderer-url="/_astro/client.C-iRRPgs.js?dpl=dpl_Ayfj3ws9uKabZjsikBKM3vVbccQC" props="{&quot;data&quot;:[0,{&quot;entryName&quot;:[0,&quot;Performant & Explainable Multi-Agent Defense Pipeline&quot;],&quot;headline&quot;:[0,&quot;Performant & Explainable Multi-Agent Defense Pipeline&quot;],&quot;features&quot;:[1,[[0,{&quot;headline&quot;:[0,&quot;Intent NLP Parsing&quot;],&quot;text&quot;:[0,&quot;Reads payment memos and detects urgency, authority impersonation, extortion, and coercive social engineering patterns in real time.&quot;],&quot;link&quot;:[0,{&quot;text&quot;:[0,&quot;Explore Intent Agent&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;],&quot;isExternal&quot;:[0,false],&quot;appearance&quot;:[0,&quot;primary&quot;]}]}],[0,{&quot;headline&quot;:[0,&quot;Tiered Latency ML Scoring&quot;],&quot;text&quot;:[0,&quot;114-feature LightGBM GBDT hot-path model delivering sub-15ms risk scoring on payee velocity and historical behavioral baselines.&quot;],&quot;link&quot;:[0,{&quot;text&quot;:[0,&quot;View Latency Benchmarks&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;],&quot;isExternal&quot;:[0,false],&quot;appearance&quot;:[0,&quot;primary&quot;]}]}],[0,{&quot;headline&quot;:[0,&quot;Parallel Multi-Agent Consensus&quot;],&quot;text&quot;:[0,&quot;Four specialized LangGraph agents (Intent, Transaction, Recipient, Policy Gatekeeper) evaluate context concurrently.&quot;],&quot;link&quot;:[0,{&quot;text&quot;:[0,&quot;Explore Multi-Agent Hub&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;],&quot;isExternal&quot;:[0,false],&quot;appearance&quot;:[0,&quot;primary&quot;]}]}],[0,{&quot;headline&quot;:[0,&quot;Cross-Bank Mule Graph Profiling&quot;],&quot;text&quot;:[0,&quot;Continuously tracks recipient account age, rapid fan-out velocity spikes, and money mule network clusters across banks.&quot;],&quot;link&quot;:[0,{&quot;text&quot;:[0,&quot;View Mule Graph&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;],&quot;isExternal&quot;:[0,false],&quot;appearance&quot;:[0,&quot;primary&quot;]}]}],[0,{&quot;headline&quot;:[0,&quot;Cognitive Dwell Gate&quot;],&quot;text&quot;:[0,&quot;Deploys calibrated psychological friction, pausing high-risk transfers before money leaves the victim's account.&quot;],&quot;link&quot;:[0,{&quot;text&quot;:[0,&quot;Test Dwell Gate&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/payment&quot;],&quot;isExternal&quot;:[0,false],&quot;appearance&quot;:[0,&quot;primary&quot;]}]}],[0,{&quot;headline&quot;:[0,&quot;Voice Guardian Emergency Call&quot;],&quot;text&quot;:[0,&quot;Triggers an instant real-time AI voice conversation (Vapi AI) to speak directly with the user and break scammer phone coercion.&quot;],&quot;link&quot;:[0,{&quot;text&quot;:[0,&quot;Test Voice Guardian&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/payment&quot;],&quot;isExternal&quot;:[0,false],&quot;appearance&quot;:[0,&quot;primary&quot;]}]}],[0,{&quot;headline&quot;:[0,&quot;Tamper-Evident SHA-256 Audit Trail&quot;],&quot;text&quot;:[0,&quot;Cryptographically signs all evidence dossiers and agent reasoning traces for full regulatory compliance and auditability.&quot;],&quot;link&quot;:[0,{&quot;text&quot;:[0,&quot;Audit Console&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;],&quot;isExternal&quot;:[0,false],&quot;appearance&quot;:[0,&quot;primary&quot;]}]}]]]}],&quot;data-astro-cid-lcdefpme&quot;:[0,true]}" ssr client="visible" opts="{&quot;name&quot;:&quot;ModuleFeatureList&quot;,&quot;value&quot;:true}" await-children><section><div class="grid-container"><div class="grid-layout"><div class="col-6 md:col-8 lg:col-6"><h2 class="type:h2 space:d64">Performant &amp; Explainable Multi-Agent Defense Pipeline</h2></div></div><div class="grid-layout"><div class="_featuresCol_70sbr_1 col-6 md:col-4 lg:col-4"><article class="_blockFeature_phh4x_1 _isLinked_phh4x_30"><a href="http://localhost:3000/payment" class="_blockFeatureLink_phh4x_6" target="_blank" rel="noopener noreferrer"><div class="_blockFeatureContent_phh4x_14"><p class="type:3 space:d24">01</p><h3 class="type:h3 space:d24 ">Intent NLP Parsing</h3><p class="type:b2 _featureText_phh4x_20">Reads payment memos and detects urgency, authority impersonation, extortion, and coercive social engineering patterns in real time.</p></div><img src="/images/icons/arrow_linkout.svg" alt="" aria-hidden="true" class="icon:24 _featureLinkArrow_phh4x_24"/></a></article><article class="_blockFeature_phh4x_1 _isLinked_phh4x_30"><a href="http://localhost:3000/payment" class="_blockFeatureLink_phh4x_6" target="_blank" rel="noopener noreferrer"><div class="_blockFeatureContent_phh4x_14"><p class="type:3 space:d24">02</p><h3 class="type:h3 space:d24 ">Tiered Latency ML Scoring</h3><p class="type:b2 _featureText_phh4x_20">114-feature LightGBM GBDT hot-path model delivering sub-15ms risk scoring on payee velocity and historical behavioral baselines.</p></div><img src="/images/icons/arrow_linkout.svg" alt="" aria-hidden="true" class="icon:24 _featureLinkArrow_phh4x_24"/></a></article><article class="_blockFeature_phh4x_1 _isLinked_phh4x_30"><a href="http://localhost:3000/soc-console" class="_blockFeatureLink_phh4x_6" target="_blank" rel="noopener noreferrer"><div class="_blockFeatureContent_phh4x_14"><p class="type:3 space:d24">03</p><h3 class="type:h3 space:d24 ">Parallel Multi-Agent Consensus</h3><p class="type:b2 _featureText_phh4x_20">Four specialized LangGraph agents (Intent, Transaction, Recipient, Policy Gatekeeper) evaluate context concurrently.</p></div><img src="/images/icons/arrow_linkout.svg" alt="" aria-hidden="true" class="icon:24 _featureLinkArrow_phh4x_24"/></a></article><article class="_blockFeature_phh4x_1 _isLinked_phh4x_30"><a href="http://localhost:3000/payment" class="_blockFeatureLink_phh4x_6" target="_blank" rel="noopener noreferrer"><div class="_blockFeatureContent_phh4x_14"><p class="type:3 space:d24">04</p><h3 class="type:h3 space:d24 ">Cross-Bank Mule Graph Profiling</h3><p class="type:b2 _featureText_phh4x_20">Continuously tracks recipient account age, rapid fan-out velocity spikes, and money mule network clusters across banks.</p></div><img src="/images/icons/arrow_linkout.svg" alt="" aria-hidden="true" class="icon:24 _featureLinkArrow_phh4x_24"/></a></article><article class="_blockFeature_phh4x_1 _isLinked_phh4x_30"><a href="http://localhost:3000/soc-console" class="_blockFeatureLink_phh4x_6" target="_blank" rel="noopener noreferrer"><div class="_blockFeatureContent_phh4x_14"><p class="type:3 space:d24">05</p><h3 class="type:h3 space:d24 ">Cognitive Dwell Gate</h3><p class="type:b2 _featureText_phh4x_20">Deploys calibrated psychological friction, pausing high-risk transfers before money leaves the victim's account.</p></div><img src="/images/icons/arrow_linkout.svg" alt="" aria-hidden="true" class="icon:24 _featureLinkArrow_phh4x_24"/></a></article><article class="_blockFeature_phh4x_1 _isLinked_phh4x_30"><a href="http://localhost:3000/payment" class="_blockFeatureLink_phh4x_6" target="_blank" rel="noopener noreferrer"><div class="_blockFeatureContent_phh4x_14"><p class="type:3 space:d24">06</p><h3 class="type:h3 space:d24 ">Voice Guardian Emergency Call</h3><p class="type:b2 _featureText_phh4x_20">Triggers an instant real-time AI voice conversation (Vapi AI) to speak directly with the user and break scammer phone coercion.</p></div><img src="/images/icons/arrow_linkout.svg" alt="" aria-hidden="true" class="icon:24 _featureLinkArrow_phh4x_24"/></a></article><article class="_blockFeature_phh4x_1 _isLinked_phh4x_30"><a href="http://localhost:3000/payment" class="_blockFeatureLink_phh4x_6" target="_blank" rel="noopener noreferrer"><div class="_blockFeatureContent_phh4x_14"><p class="type:3 space:d24">07</p><h3 class="type:h3 space:d24 ">Tamper-Evident SHA-256 Audit Trail</h3><p class="type:b2 _featureText_phh4x_20">Cryptographically signs all evidence dossiers and agent reasoning traces for full regulatory compliance and auditability.</p></div><img src="/images/icons/arrow_linkout.svg" alt="" aria-hidden="true" class="icon:24 _featureLinkArrow_phh4x_24"/></a></article></div></div></div></section><!--astro:end--></astro-island></div><div data-section="animation-4" class="landing-module-feature-list" data-astro-cid-lcdefpme><astro-island uid="1oTe0w" prefix="r12" component-url="/_astro/ModuleFeatureList.Cr8FadrD.js?dpl=dpl_Ayfj3ws9uKabZjsikBKM3vVbccQC" component-export="default" renderer-url="/_astro/client.C-iRRPgs.js?dpl=dpl_Ayfj3ws9uKabZjsikBKM3vVbccQC" props="{&quot;data&quot;:[0,{&quot;entryName&quot;:[0,&quot;The Five Domains of Autonomous Defense&quot;],&quot;headline&quot;:[0,&quot;The Five Domains of Autonomous Defense&quot;],&quot;features&quot;:[1,[[0,{&quot;headline&quot;:[0,&quot;Domain 1 — Simulation & Ingestion&quot;],&quot;text&quot;:[0,&quot;Real-time payment canvas intercepting raw UPI/banking payloads, normalizing metadata, and initializing session state.&quot;],&quot;link&quot;:[0,{&quot;text&quot;:[0,&quot;Domain 1 Specs&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;],&quot;isExternal&quot;:[0,false],&quot;appearance&quot;:[0,&quot;primary&quot;]}]}],[0,{&quot;headline&quot;:[0,&quot;Domain 2 — ML Hot-Path Inference Engine&quot;],&quot;text&quot;:[0,&quot;Ultra-low latency LightGBM GBDT scoring (<15ms) running on 114 vectorized behavioral, temporal, and velocity features.&quot;],&quot;link&quot;:[0,{&quot;text&quot;:[0,&quot;Domain 2 Specs&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;],&quot;isExternal&quot;:[0,false],&quot;appearance&quot;:[0,&quot;primary&quot;]}]}],[0,{&quot;headline&quot;:[0,&quot;Domain 3 — LangGraph Multi-Agent Cluster&quot;],&quot;text&quot;:[0,&quot;Intent, Transaction, and Recipient agents perform deep contextual reasoning in parallel with conformal uncertainty bounds.&quot;],&quot;link&quot;:[0,{&quot;text&quot;:[0,&quot;Domain 3 Specs&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;],&quot;isExternal&quot;:[0,false],&quot;appearance&quot;:[0,&quot;primary&quot;]}]}],[0,{&quot;headline&quot;:[0,&quot;Domain 4 — Deterministic Policy Gatekeeper&quot;],&quot;text&quot;:[0,&quot;Translates probabilistic agent outputs into strict rule directives: ALLOW, ADVISE, CHALLENGE, PAUSE, or BLOCK.&quot;],&quot;link&quot;:[0,{&quot;text&quot;:[0,&quot;Domain 4 Specs&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;],&quot;isExternal&quot;:[0,false],&quot;appearance&quot;:[0,&quot;primary&quot;]}]}],[0,{&quot;headline&quot;:[0,&quot;Domain 5 — Cognitive Interventions & TruGen Video&quot;],&quot;text&quot;:[0,&quot;Deploys interactive friction, TruGen AI avatar video calls, and voice guidance before payment settlement.&quot;],&quot;link&quot;:[0,{&quot;text&quot;:[0,&quot;Domain 5 Specs&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/payment&quot;],&quot;isExternal&quot;:[0,false],&quot;appearance&quot;:[0,&quot;primary&quot;]}]}],[0,{&quot;headline&quot;:[0,&quot;Domain 6 — Immutable Compliance & SAR Engine&quot;],&quot;text&quot;:[0,&quot;Tamper-evident cryptographic ledger logging all evidence dossiers with automated Suspicious Activity Report (SAR) generation.&quot;],&quot;link&quot;:[0,{&quot;text&quot;:[0,&quot;Domain 6 Specs&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;],&quot;isExternal&quot;:[0,false],&quot;appearance&quot;:[0,&quot;primary&quot;]}]}]]]}],&quot;data-astro-cid-lcdefpme&quot;:[0,true]}" ssr client="visible" opts="{&quot;name&quot;:&quot;ModuleFeatureList&quot;,&quot;value&quot;:true}" await-children><section><div class="grid-container"><div class="grid-layout"><div class="col-6 md:col-8 lg:col-6"><h2 class="type:h2 space:d64">The Five Domains of Autonomous Defense</h2></div></div><div class="grid-layout"><div class="_featuresCol_70sbr_1 col-6 md:col-4 lg:col-4"><article class="_blockFeature_phh4x_1"><div class="_blockFeatureContent_phh4x_14"><p class="type:3 space:d24">01</p><h3 class="type:h3 space:d24 ">Domain 1 — Simulation &amp; Ingestion</h3><p class="type:b2 _featureText_phh4x_20">Real-time payment canvas intercepting raw UPI/banking payloads, normalizing metadata, and initializing session state.</p></div></article><article class="_blockFeature_phh4x_1"><div class="_blockFeatureContent_phh4x_14"><p class="type:3 space:d24">02</p><h3 class="type:h3 space:d24 ">Domain 2 — ML Hot-Path Inference Engine</h3><p class="type:b2 _featureText_phh4x_20">Ultra-low latency LightGBM GBDT scoring (<15ms) running on 114 vectorized behavioral, temporal, and velocity features.</p></div></article><article class="_blockFeature_phh4x_1"><div class="_blockFeatureContent_phh4x_14"><p class="type:3 space:d24">03</p><h3 class="type:h3 space:d24 ">Domain 3 — LangGraph Multi-Agent Cluster</h3><p class="type:b2 _featureText_phh4x_20">Intent, Transaction, and Recipient agents perform deep contextual reasoning in parallel with conformal uncertainty bounds.</p></div></article><article class="_blockFeature_phh4x_1"><div class="_blockFeatureContent_phh4x_14"><p class="type:3 space:d24">04</p><h3 class="type:h3 space:d24 ">Domain 4 — Deterministic Policy Gatekeeper</h3><p class="type:b2 _featureText_phh4x_20">Translates probabilistic agent outputs into strict rule directives: ALLOW, ADVISE, CHALLENGE, PAUSE, or BLOCK.</p></div></article><article class="_blockFeature_phh4x_1"><div class="_blockFeatureContent_phh4x_14"><p class="type:3 space:d24">05</p><h3 class="type:h3 space:d24 ">Domain 5 — Cognitive Interventions &amp; TruGen Video</h3><p class="type:b2 _featureText_phh4x_20">Deploys interactive friction, TruGen AI avatar video calls, and voice guidance before payment settlement.</p></div></article><article class="_blockFeature_phh4x_1"><div class="_blockFeatureContent_phh4x_14"><p class="type:3 space:d24">06</p><h3 class="type:h3 space:d24 ">Domain 6 — Immutable Compliance &amp; SAR Engine</h3><p class="type:b2 _featureText_phh4x_20">Tamper-evident cryptographic ledger logging all evidence dossiers with automated Suspicious Activity Report (SAR) generation.</p></div></article><article class="_blockFeature_phh4x_1 _isLinked_phh4x_30"><a href="http://localhost:3000/soc-console/" class="_blockFeatureLink_phh4x_6" target="_blank" rel="noopener noreferrer"><div class="_blockFeatureContent_phh4x_14"><p class="type:3 space:d24">07</p><h3 class="type:h3 space:d24 ">Privacy</h3><p class="type:b2 _featureText_phh4x_20">Opt-in privacy for balances and transfers, designed with regulated issuers. Confidential transactions with the auditability compliance requires.</p></div><img src="/images/icons/arrow_linkout.svg" alt="" aria-hidden="true" class="icon:24 _featureLinkArrow_phh4x_24"/></a></article></div></div></div></section><!--astro:end--></astro-island></div></div><astro-island uid="1xX1le" prefix="r13" component-url="/_astro/ImageTextOverlay.BpEwur1X.js?dpl=dpl_Ayfj3ws9uKabZjsikBKM3vVbccQC" component-export="default" renderer-url="/_astro/client.C-iRRPgs.js?dpl=dpl_Ayfj3ws9uKabZjsikBKM3vVbccQC" props="{&quot;data&quot;:[0,{&quot;headline&quot;:[0,&quot;Protect Real-Time Payments with PayKavach&quot;],&quot;text&quot;:[0,&quot;Deploy autonomous multi-agent scam interception across UPI, FedNow, and core banking systems with zero customer checkout friction.&quot;],&quot;backgroundImage&quot;:[0,{&quot;url&quot;:[0,&quot;https://images.ctfassets.net/wy06omns870e/1N7HDiIH03r2tB7VH5V03M/6b07f38770d2ac54e2e654ed086ca5d3/General_thumbnail.png&quot;],&quot;title&quot;:[0,&quot;PayKavach Ecosystem&quot;],&quot;width&quot;:[0,2880],&quot;height&quot;:[0,1440]}],&quot;actions&quot;:[1,[[0,{&quot;text&quot;:[0,&quot;Launch Payment Simulator&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/payment&quot;],&quot;isExternal&quot;:[0,false],&quot;appearance&quot;:[0,&quot;primary&quot;]}]]]}],&quot;data-astro-cid-lcdefpme&quot;:[0,true]}" ssr client="visible" opts="{&quot;name&quot;:&quot;ImageTextOverlay&quot;,&quot;value&quot;:true}" await-children><section class="_imageTextOverlay_9kfdq_1"><div class="grid-container _gridContainer_9kfdq_20"><div class="_backgroundImage_9kfdq_8"><img class="_contentfulImage_1eyz3_1 _backgroundImageAsset_9kfdq_14" src="https://images.ctfassets.net/wy06omns870e/5E129T8HayYF39jOqPI4fM/eabc8c9faff482507ce607dc06a69fc6/Stay_In_Touch.png?w=1440&amp;fm=webp&amp;q=80" srcSet="https://images.ctfassets.net/wy06omns870e/5E129T8HayYF39jOqPI4fM/eabc8c9faff482507ce607dc06a69fc6/Stay_In_Touch.png?w=1440&amp;fm=webp&amp;q=80 1x, https://images.ctfassets.net/wy06omns870e/5E129T8HayYF39jOqPI4fM/eabc8c9faff482507ce607dc06a69fc6/Stay_In_Touch.png?w=2160&amp;fm=webp&amp;q=80 1.5x, https://images.ctfassets.net/wy06omns870e/5E129T8HayYF39jOqPI4fM/eabc8c9faff482507ce607dc06a69fc6/Stay_In_Touch.png?w=2880&amp;fm=webp&amp;q=80 2x" alt="Stay in Touch" width="1440" loading="lazy" decoding="async"/></div><div class="grid-layout _gridLayout_9kfdq_25"><div class="col-6 md:col-8 lg:col-12"><div class="_content_9kfdq_30"><div><h2 class="type:h2 space:d48 _headline_9kfdq_55">Protect Real-Time Payments with PayKavach</h2></div><div class="_rightPart_9kfdq_38"><p class="type:h3 space:d16 _bodyText_9kfdq_59">Deploy autonomous multi-agent scam interception across UPI, FedNow, and core banking systems with zero customer checkout friction.</p><div><form class="_newsletterForm_9kfdq_63"><input type="email" placeholder="Enter email address" class="type:b3 _emailInput_9kfdq_70" aria-label="Email address" autoComplete="email" required="" value=""/><button type="submit" class="type:b3 _submitButton_9kfdq_101" aria-label="Subscribe"><img src="/images/icons/arrow_right.svg" alt="" aria-hidden="true" class="_submitIcon_9kfdq_120"/></button></form></div></div></div></div></div></div></section><!--astro:end--></astro-island>
-<!-- PayKavach Methodology Showcase (Oscilar-Inspired Interactive Component) -->
-<section id="paykavach-methodology" style="padding: 100px 0; background: #070a10; border-top: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 10; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-  <div class="grid-container" style="max-width: 1280px; margin: 0 auto; padding: 0 24px;">
+<!-- Oscilar Exact Methodology Component (Matching media_1789179124045.png) -->
+<section id="paykavach-oscilar-exact" style="padding: 80px 0; background: #fcfcfd; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; position: relative; z-index: 10; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #0f172a;">
+  <div style="max-width: 1240px; margin: 0 auto; padding: 0 24px;">
 
-    <!-- Section Title & Subhead -->
-    <div style="text-align: center; max-width: 720px; margin: 0 auto 56px;">
-      <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(0, 212, 255, 0.08); border: 1px solid rgba(0, 212, 255, 0.25); margin-bottom: 16px;">
-        <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: #00d4ff; letter-spacing: 0.12em; text-transform: uppercase;">
-          OUR DEFENSE METHODOLOGY
-        </span>
-      </div>
-      <h2 style="font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 900; color: #ffffff; line-height: 1.15; margin: 0 0 16px; letter-spacing: -0.02em;">
-        Autonomous Fraud Interception in Under 200ms
-      </h2>
-      <p style="font-size: 16px; color: #94a3b8; line-height: 1.6; margin: 0;">
-        From real-time UPI payload ingestion to parallel LangGraph reasoning and cognitive interventions—explore how PayKavach stops Authorized Push Payment (APP) scams before money moves.
-      </p>
-    </div>
-    
-    <!-- Top Category Tabs (4 Pipeline Stages) -->
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 48px; border-radius: 16px; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255,255,255,0.08); padding: 8px; backdrop-filter: blur(12px);">
-      <button onclick="switchPayKavachTab(0)" id="pk-tab-0" class="pk-method-tab active" style="padding: 16px 12px; text-align: center; font-weight: 700; font-size: 14px; border-radius: 12px; cursor: pointer; transition: all 0.25s ease; border: 1px solid rgba(0,212,255,0.4); background: rgba(0,212,255,0.12); color: #ffffff; outline: none;">
-        01 Ingestion & Verification
+    <!-- Top 4 Navigation Tabs Bar (Exact Oscilar Header) -->
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 32px; border-radius: 12px; overflow: hidden; background: #f1f5f9; padding: 4px;">
+      <button onclick="setOscilarTab(0)" id="osc-tab-0" style="padding: 14px; text-align: center; font-weight: 700; font-size: 15px; border-radius: 8px; cursor: pointer; border: none; background: #4a90e2; color: #ffffff; transition: all 0.2s ease;">
+        Onboarding & Ingestion
       </button>
-      <button onclick="switchPayKavachTab(1)" id="pk-tab-1" class="pk-method-tab" style="padding: 16px 12px; text-align: center; font-weight: 700; font-size: 14px; border-radius: 12px; cursor: pointer; transition: all 0.25s ease; border: 1px solid transparent; background: transparent; color: #94a3b8; outline: none;">
-        02 ML Hot-Path Engine
+      <button onclick="setOscilarTab(1)" id="osc-tab-1" style="padding: 14px; text-align: center; font-weight: 700; font-size: 15px; border-radius: 8px; cursor: pointer; border: none; background: #e8f5e9; color: #2e7d32; transition: all 0.2s ease;">
+        ML Risk Scoring
       </button>
-      <button onclick="switchPayKavachTab(2)" id="pk-tab-2" class="pk-method-tab" style="padding: 16px 12px; text-align: center; font-weight: 700; font-size: 14px; border-radius: 12px; cursor: pointer; transition: all 0.25s ease; border: 1px solid transparent; background: transparent; color: #94a3b8; outline: none;">
-        03 LangGraph Consensus
+      <button onclick="setOscilarTab(2)" id="osc-tab-2" style="padding: 14px; text-align: center; font-weight: 700; font-size: 15px; border-radius: 8px; cursor: pointer; border: none; background: #fff3e0; color: #e65100; transition: all 0.2s ease;">
+        Multi-Agent Fraud
       </button>
-      <button onclick="switchPayKavachTab(3)" id="pk-tab-3" class="pk-method-tab" style="padding: 16px 12px; text-align: center; font-weight: 700; font-size: 14px; border-radius: 12px; cursor: pointer; transition: all 0.25s ease; border: 1px solid transparent; background: transparent; color: #94a3b8; outline: none;">
-        04 Cognitive Interventions
+      <button onclick="setOscilarTab(3)" id="osc-tab-3" style="padding: 14px; text-align: center; font-weight: 700; font-size: 15px; border-radius: 8px; cursor: pointer; border: none; background: #f3e8ff; color: #7e22ce; transition: all 0.2s ease;">
+        Compliance & SAR
       </button>
     </div>
 
-    <!-- Main Content Area -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 48px; backdrop-filter: blur(16px);">
+    <!-- Main Container Frame with Right Edge Number Indicators -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr 48px; gap: 32px; align-items: stretch; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); position: relative;">
       
-      <!-- Left Column: Copy & Indicators -->
-      <div style="display: flex; gap: 32px;">
+      <!-- Left Panel: Headline, Copy, CTA, Sublinks -->
+      <div style="display: flex; flex-direction: column; justify-content: space-between;">
         
-        <!-- Vertical Step Counter Indicators -->
-        <div style="display: flex; flex-direction: column; gap: 24px; font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 800;">
-          <span id="pk-num-0" style="color: #00d4ff; transition: all 0.3s;">01</span>
-          <span id="pk-num-1" style="color: #334155; transition: all 0.3s;">02</span>
-          <span id="pk-num-2" style="color: #334155; transition: all 0.3s;">03</span>
-          <span id="pk-num-3" style="color: #334155; transition: all 0.3s;">04</span>
+        <div>
+          <!-- Step Counter 01 / 02 / 03 / 04 -->
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 24px;">
+            <span id="osc-step-num" style="font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; color: #4a90e2;">01</span>
+            <div style="width: 48px; height: 2px; background: #e2e8f0; position: relative;">
+              <div id="osc-step-bar" style="width: 100%; height: 100%; background: #4a90e2; transition: all 0.3s ease;"></div>
+            </div>
+          </div>
+
+          <!-- Dynamic Headline -->
+          <h2 id="osc-headline" style="font-size: clamp(1.8rem, 3.2vw, 2.6rem); font-weight: 800; color: #0f172a; line-height: 1.2; margin: 0 0 20px; letter-spacing: -0.02em;">
+            Make faster, smarter and safer payment onboarding decisions.
+          </h2>
+
+          <!-- Dynamic Description -->
+          <p id="osc-desc" style="font-size: 15px; color: #475569; line-height: 1.65; margin: 0 0 28px; max-width: 480px;">
+            Intercept high-risk payment payloads with confidence. Increase your detection rates while simultaneously reducing false positives, user experience friction, and APP scam fraud.
+          </p>
+
+          <!-- CTA Pill Button -->
+          <div style="margin-bottom: 36px;">
+            <a id="osc-cta-btn" href="http://localhost:3000/payment" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; background: #0f172a; color: #ffffff; font-weight: 700; font-size: 14px; border-radius: 999px; text-decoration: none; transition: background 0.2s;">
+              <span id="osc-cta-text">Try Simulator</span> &rarr;
+            </a>
+          </div>
         </div>
 
-        <!-- Dynamic Content Body -->
-        <div id="pk-content-body">
-          <div id="pk-pane-0" class="pk-pane" style="display: block; animation: fadeIn 0.4s ease-out;">
-            <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: #00d4ff; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;">
-              DOMAIN 1 & 2 — REAL-TIME INGESTION
-            </div>
-            <h3 style="font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 900; color: #ffffff; line-height: 1.2; margin: 0 0 20px;">
-              Make faster, smarter, and safer payment onboarding decisions.
-            </h3>
-            <p style="font-size: 15px; color: #94a3b8; line-height: 1.7; margin-bottom: 28px;">
-              Intercept raw UPI and banking payloads, normalize payment memos, extract device telemetry, and initialize baseline behavioral session states with zero customer checkout friction.
-            </p>
-            <div style="margin-bottom: 36px;">
-              <a href="http://localhost:3000/payment" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; background: #00d4ff; color: #070a10; font-weight: 800; border-radius: 999px; text-decoration: none; font-size: 14px; transition: transform 0.2s; box-shadow: 0 0 25px rgba(0,212,255,0.3);">
-                Try Payment Simulator &rarr;
-              </a>
-            </div>
-
-            <div style="display: flex; flex-direction: column; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 13px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px;">
-              <span style="color: #64748b; font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">EXPLORE INGESTION FOR:</span>
-              <a href="http://localhost:3000/payment" style="color: #cbd5e1; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">Real-Time UPI Rails &rarr;</a>
-              <a href="http://localhost:3000/soc-console" style="color: #cbd5e1; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">FedNow & Core Banking APIs &rarr;</a>
-              <a href="http://localhost:3000/soc-console" style="color: #cbd5e1; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">High-Velocity Mule Interception &rarr;</a>
-            </div>
+        <!-- Sub-links Footer -->
+        <div style="border-top: 1px solid #f1f5f9; padding-top: 20px;">
+          <div id="osc-sub-title" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;">
+            EXPLORE INGESTION METHODOLOGY FOR:
           </div>
-
-          <div id="pk-pane-1" class="pk-pane" style="display: none; animation: fadeIn 0.4s ease-out;">
-            <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;">
-              DOMAIN 2 — ML HOT-PATH INFERENCE ENGINE
-            </div>
-            <h3 style="font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 900; color: #ffffff; line-height: 1.2; margin: 0 0 20px;">
-              Sub-15ms risk scoring powered by 114 vectorized features.
-            </h3>
-            <p style="font-size: 15px; color: #94a3b8; line-height: 1.7; margin-bottom: 28px;">
-              Our 114-feature LightGBM GBDT model calculates instant behavioral baseline deviations, payee velocity spikes, and high-frequency risk scores before triggering deep agent reasoning.
-            </p>
-            <div style="margin-bottom: 36px;">
-              <a href="http://localhost:3000/soc-console" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; background: #10b981; color: #070a10; font-weight: 800; border-radius: 999px; text-decoration: none; font-size: 14px; box-shadow: 0 0 25px rgba(16,185,129,0.3);">
-                View ML Benchmarks &rarr;
-              </a>
-            </div>
-
-            <div style="display: flex; flex-direction: column; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 13px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px;">
-              <span style="color: #64748b; font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">EXPLORE ML INFERENCE FOR:</span>
-              <a href="http://localhost:3000/soc-console" style="color: #cbd5e1; text-decoration: none;">LightGBM GBDT Hot-Path &rarr;</a>
-              <a href="http://localhost:3000/soc-console" style="color: #cbd5e1; text-decoration: none;">Payee Account Age Profiling &rarr;</a>
-              <a href="http://localhost:3000/soc-console" style="color: #cbd5e1; text-decoration: none;">Hard Deterministic Overrides &rarr;</a>
-            </div>
-          </div>
-
-          <div id="pk-pane-2" class="pk-pane" style="display: none; animation: fadeIn 0.4s ease-out;">
-            <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: #a855f7; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;">
-              DOMAIN 3 & 4 — LANGGRAPH MULTI-AGENT CLUSTER
-            </div>
-            <h3 style="font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 900; color: #ffffff; line-height: 1.2; margin: 0 0 20px;">
-              Parallel multi-agent consensus evaluating intent & graph context.
-            </h3>
-            <p style="font-size: 15px; color: #94a3b8; line-height: 1.7; margin-bottom: 28px;">
-              Intent Agent, Transaction Agent, and Recipient Mule Graph Agent evaluate transaction context concurrently via LangGraph. The Deterministic Policy Gatekeeper enforces calibrated directives.
-            </p>
-            <div style="margin-bottom: 36px;">
-              <a href="http://localhost:3000/soc-console" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; background: #a855f7; color: #ffffff; font-weight: 800; border-radius: 999px; text-decoration: none; font-size: 14px; box-shadow: 0 0 25px rgba(168,85,247,0.3);">
-                Launch SOC Console &rarr;
-              </a>
-            </div>
-
-            <div style="display: flex; flex-direction: column; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 13px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px;">
-              <span style="color: #64748b; font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">EXPLORE CONSENSUS FOR:</span>
-              <a href="http://localhost:3000/soc-console" style="color: #cbd5e1; text-decoration: none;">Intent NLP Memo Parsing &rarr;</a>
-              <a href="http://localhost:3000/soc-console" style="color: #cbd5e1; text-decoration: none;">Cross-Bank Mule Graph Profiling &rarr;</a>
-              <a href="http://localhost:3000/soc-console" style="color: #cbd5e1; text-decoration: none;">Deterministic Policy Directives &rarr;</a>
-            </div>
-          </div>
-
-          <div id="pk-pane-3" class="pk-pane" style="display: none; animation: fadeIn 0.4s ease-out;">
-            <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: #f59e0b; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;">
-              DOMAIN 5 & 6 — COGNITIVE INTERVENTIONS & AUDIT
-            </div>
-            <h3 style="font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 900; color: #ffffff; line-height: 1.2; margin: 0 0 20px;">
-              Calibrated psychological friction & automated SAR filing.
-            </h3>
-            <p style="font-size: 15px; color: #94a3b8; line-height: 1.7; margin-bottom: 28px;">
-              Deploys interactive Dwell Gates, TruGen avatar video calls, and Vapi AI voice intervention to break scammer coercion, while cryptographically logging SHA-256 SAR audit dossiers.
-            </p>
-            <div style="margin-bottom: 36px;">
-              <a href="http://localhost:3000/payment" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; background: #f59e0b; color: #070a10; font-weight: 800; border-radius: 999px; text-decoration: none; font-size: 14px; box-shadow: 0 0 25px rgba(245,158,11,0.3);">
-                Test Dwell Gate & Voice Call &rarr;
-              </a>
-            </div>
-
-            <div style="display: flex; flex-direction: column; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 13px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px;">
-              <span style="color: #64748b; font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700;">EXPLORE INTERVENTIONS FOR:</span>
-              <a href="http://localhost:3000/payment" style="color: #cbd5e1; text-decoration: none;">Cognitive Dwell Gate &rarr;</a>
-              <a href="http://localhost:3000/payment" style="color: #cbd5e1; text-decoration: none;">Voice Guardian Emergency AI &rarr;</a>
-              <a href="http://localhost:3000/soc-console" style="color: #cbd5e1; text-decoration: none;">SHA-256 SAR Audit Ledger &rarr;</a>
-            </div>
+          <div id="osc-sub-links" style="display: flex; flex-direction: column; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600;">
+            <a href="http://localhost:3000/payment" style="color: #4a90e2; text-decoration: none;">Real-Time UPI Rails &rarr;</a>
+            <a href="http://localhost:3000/soc-console" style="color: #4a90e2; text-decoration: none;">FedNow & Core Banking APIs &rarr;</a>
+            <a href="http://localhost:3000/soc-console" style="color: #4a90e2; text-decoration: none;">High-Velocity Mule Interception &rarr;</a>
           </div>
         </div>
 
       </div>
 
-      <!-- Right Column: Interactive Workflow Visual Canvas Frame (Oscilar Workflow Graphics) -->
-      <div>
-        <div style="background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; overflow: hidden;">
+      <!-- Center Panel: Workflow Tree Graphic Frame (Matching Right Side of Screenshot media_1789179124045.png) -->
+      <div style="background: #fafafa; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; position: relative;">
+        
+        <!-- Prompt Box Header -->
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #475569;">
+            <span style="color: #ef4444;">✦</span>
+            <span id="osc-prompt-text" style="font-family: -apple-system, sans-serif; font-weight: 500;">Create a payment onboarding workflow that performs memo NLP checks, device behavior checks, and mule graph checks.</span>
+          </div>
+          <button style="background: #4a90e2; color: #ffffff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer;">
+            Submit
+          </button>
+        </div>
+
+        <!-- Node Tree Workflow Diagram (SVG Nodes matching media_1789179124045.png) -->
+        <div id="osc-node-tree" style="flex: 1; display: flex; flex-direction: column; items-center; justify-content: center; gap: 16px;">
           
-          <!-- Mock Window Titlebar -->
-          <div style="display: flex; items-center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 16px; margin-bottom: 20px;">
-            <div style="display: flex; gap: 8px;">
-              <div style="width: 10px; height: 10px; border-radius: 50%; background: #ef4444;"></div>
-              <div style="width: 10px; height: 10px; border-radius: 50%; background: #f59e0b;"></div>
-              <div style="width: 10px; height: 10px; border-radius: 50%; background: #10b981;"></div>
-            </div>
-            <div id="pk-wf-title" style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #00d4ff; font-weight: 700;">
-              PAYKAVACH // WORKFLOW_NODE_INGESTION.YAML
-            </div>
-            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #64748b;">
-              LATENCY &lt; 200MS
-            </div>
+          <!-- Top Node -->
+          <div style="width: 220px; background: #ffffff; border: 1.5px solid #f59e0b; border-radius: 8px; padding: 10px 14px; text-align: center; box-shadow: 0 4px 12px rgba(245,158,11,0.1); margin: 0 auto;">
+            <div style="font-size: 10px; color: #d97706; font-weight: 700; text-transform: uppercase;">WORKFLOW</div>
+            <div id="osc-node-top" style="font-size: 13px; font-weight: 700; color: #0f172a; margin-top: 2px;">Call Ingestion Workflow</div>
           </div>
 
-          <!-- Dynamic Interactive Visual Graphic per Tab -->
-          <div id="pk-wf-graphic" style="position: relative; min-height: 320px; display: flex; align-items: center; justify-content: center;">
-            
-            <!-- Graphic 0: Ingestion & Verification -->
-            <div id="pk-gfx-0" class="pk-gfx" style="width: 100%; display: flex; flex-direction: column; gap: 16px;">
-              <div style="background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 0 20px rgba(0,212,255,0.1);">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                  <div style="width: 12px; height: 12px; border-radius: 50%; background: #00d4ff; box-shadow: 0 0 10px #00d4ff;"></div>
-                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #ffffff; font-weight: 700;">RAW UPI PAYLOAD INGESTED</span>
-                </div>
-                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #00d4ff; background: rgba(0,212,255,0.15); padding: 4px 10px; border-radius: 999px;">PASSED &lt; 2ms</span>
-              </div>
-              <div style="display: flex; justify-content: center;"><span style="color: #00d4ff; font-size: 18px;">&darr;</span></div>
-              <div style="background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #94a3b8;">Intent Memo Extraction</span>
-                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #10b981;">"Urgent Transfer Required"</span>
-              </div>
-              <div style="display: flex; justify-content: center;"><span style="color: #00d4ff; font-size: 18px;">&darr;</span></div>
-              <div style="background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #94a3b8;">Device & Geolocation Baseline</span>
-                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #00d4ff;">Session Init OK</span>
-              </div>
+          <!-- Connector Lines -->
+          <div style="display: flex; justify-content: center; height: 16px;">
+            <div style="width: 2px; height: 100%; background: #cbd5e1;"></div>
+          </div>
+
+          <!-- Middle Branch Node -->
+          <div style="width: 260px; background: #ffffff; border: 1.5px solid #ef4444; border-radius: 8px; padding: 10px 14px; text-align: center; box-shadow: 0 4px 12px rgba(239,68,68,0.1); margin: 0 auto;">
+            <div style="font-size: 10px; color: #dc2626; font-weight: 700; text-transform: uppercase;">RULESET</div>
+            <div id="osc-node-mid" style="font-size: 13px; font-weight: 700; color: #0f172a; margin-top: 2px;">Device & Memo NLP Check</div>
+          </div>
+
+          <!-- Connector Split -->
+          <div style="display: flex; justify-content: center; height: 16px;">
+            <div style="width: 2px; height: 100%; background: #cbd5e1;"></div>
+          </div>
+
+          <!-- Bottom Decision Nodes Split -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%;">
+            <div style="background: #ffffff; border: 1.5px solid #3b82f6; border-radius: 8px; padding: 10px 14px; text-align: center;">
+              <div style="font-size: 10px; color: #2563eb; font-weight: 700; text-transform: uppercase;">DECISION</div>
+              <div id="osc-node-left" style="font-size: 13px; font-weight: 800; color: #1e3a8a; margin-top: 2px;">Deny / Pause</div>
             </div>
 
-            <!-- Graphic 1: ML Hot-Path -->
-            <div id="pk-gfx-1" class="pk-gfx" style="width: 100%; display: none; flex-direction: column; gap: 16px;">
-              <div style="background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 16px; box-shadow: 0 0 20px rgba(16,185,129,0.1);">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #ffffff; font-weight: 700;">LightGBM GBDT Model Risk Score</span>
-                  <span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #ef4444; font-weight: 900;">0.87 (CRITICAL)</span>
-                </div>
-                <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 999px; overflow: hidden;">
-                  <div style="width: 87%; height: 100%; background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444);"></div>
-                </div>
-              </div>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                <div style="background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px;">
-                  <div style="font-size: 10px; color: #64748b; font-family: 'JetBrains Mono', monospace;">LATENCY</div>
-                  <div style="font-size: 16px; color: #10b981; font-weight: 800; font-family: 'JetBrains Mono', monospace;">12.4 ms</div>
-                </div>
-                <div style="background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px;">
-                  <div style="font-size: 10px; color: #64748b; font-family: 'JetBrains Mono', monospace;">FEATURES EVALUATED</div>
-                  <div style="font-size: 16px; color: #00d4ff; font-weight: 800; font-family: 'JetBrains Mono', monospace;">114 Vectors</div>
-                </div>
-              </div>
+            <div style="background: #ffffff; border: 1.5px solid #ef4444; border-radius: 8px; padding: 10px 14px; text-align: center;">
+              <div style="font-size: 10px; color: #dc2626; font-weight: 700; text-transform: uppercase;">RULESET</div>
+              <div id="osc-node-right" style="font-size: 13px; font-weight: 700; color: #0f172a; margin-top: 2px;">Mule Graph Check</div>
             </div>
-
-            <!-- Graphic 2: LangGraph Multi-Agent -->
-            <div id="pk-gfx-2" class="pk-gfx" style="width: 100%; display: none; flex-direction: column; gap: 14px;">
-              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-                <div style="background: rgba(168,85,247,0.12); border: 1px solid rgba(168,85,247,0.4); border-radius: 10px; padding: 12px; text-align: center;">
-                  <div style="font-size: 10px; color: #a855f7; font-weight: 700; font-family: 'JetBrains Mono', monospace;">INTENT AGENT</div>
-                  <div style="font-size: 11px; color: #ffffff; font-weight: 700; margin-top: 4px;">Extortion Signal</div>
-                </div>
-                <div style="background: rgba(168,85,247,0.12); border: 1px solid rgba(168,85,247,0.4); border-radius: 10px; padding: 12px; text-align: center;">
-                  <div style="font-size: 10px; color: #a855f7; font-weight: 700; font-family: 'JetBrains Mono', monospace;">TX AGENT</div>
-                  <div style="font-size: 11px; color: #ffffff; font-weight: 700; margin-top: 4px;">Velocity Spike</div>
-                </div>
-                <div style="background: rgba(168,85,247,0.12); border: 1px solid rgba(168,85,247,0.4); border-radius: 10px; padding: 12px; text-align: center;">
-                  <div style="font-size: 10px; color: #a855f7; font-weight: 700; font-family: 'JetBrains Mono', monospace;">RECIPIENT MULE</div>
-                  <div style="font-size: 11px; color: #ffffff; font-weight: 700; margin-top: 4px;">Mule Cluster #42</div>
-                </div>
-              </div>
-              <div style="display: flex; justify-content: center;"><span style="color: #a855f7; font-size: 18px;">&darr;</span></div>
-              <div style="background: rgba(2, 6, 23, 0.9); border: 1px solid rgba(168,85,247,0.5); border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 0 25px rgba(168,85,247,0.2);">
-                <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #a855f7; font-weight: 700; text-transform: uppercase;">POLICY GATEKEEPER CONSENSUS</div>
-                <div style="font-size: 16px; color: #ffffff; font-weight: 900; margin-top: 4px; letter-spacing: 0.05em;">DIRECTIVE: PAUSE & CHALLENGE</div>
-              </div>
-            </div>
-
-            <!-- Graphic 3: Cognitive Interventions & SAR -->
-            <div id="pk-gfx-3" class="pk-gfx" style="width: 100%; display: none; flex-direction: column; gap: 14px;">
-              <div style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #f59e0b; font-weight: 700;">COGNITIVE DWELL GATE</div>
-                  <div style="font-size: 13px; color: #ffffff; font-weight: 700; margin-top: 2px;">60s Psychological Cooling Friction</div>
-                </div>
-                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #f59e0b; background: rgba(245,158,11,0.2); padding: 4px 10px; border-radius: 999px;">ACTIVE</span>
-              </div>
-              <div style="background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #00d4ff; font-weight: 700;">VOICE GUARDIAN AI</div>
-                  <div style="font-size: 13px; color: #ffffff; font-weight: 700; margin-top: 2px;">Real-Time Phone Coercion Intercept</div>
-                </div>
-                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #00d4ff; background: rgba(0,212,255,0.2); padding: 4px 10px; border-radius: 999px;">CONNECTED</span>
-              </div>
-              <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #10b981; text-align: center;">
-                SHA-256 AUDIT DOSSIER SIGNED & LOGGED TO SAR LEDGER
-              </div>
-            </div>
-
           </div>
 
         </div>
+
+      </div>
+
+      <!-- Right Edge Vertical Number Tabs 02, 03, 04 (Matching Oscilar Screenshot media_1789179124045.png) -->
+      <div style="display: flex; flex-direction: column; gap: 8px; height: 100%; justify-content: flex-start; padding-top: 8px;">
+        <button onclick="setOscilarTab(1)" id="osc-edge-1" style="flex: 1; min-height: 80px; border-radius: 8px; background: #e8f5e9; border: 1px solid #c8e6c9; color: #2e7d32; font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.2s;">
+          02
+        </button>
+        <button onclick="setOscilarTab(2)" id="osc-edge-2" style="flex: 1; min-height: 80px; border-radius: 8px; background: #fff3e0; border: 1px solid #ffe0b2; color: #e65100; font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.2s;">
+          03
+        </button>
+        <button onclick="setOscilarTab(3)" id="osc-edge-3" style="flex: 1; min-height: 80px; border-radius: 8px; background: #f3e8ff; border: 1px solid #e9d5ff; color: #7e22ce; font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.2s;">
+          04
+        </button>
       </div>
 
     </div>
@@ -370,43 +241,137 @@
   </div>
 </section>
 
-<!-- Interactive Tab Switching Script -->
+<!-- Tab Data & Interactivity Script -->
 <script>
-function switchPayKavachTab(index) {
-  const tabs = [
-    { color: '#00d4ff', bg: 'rgba(0,212,255,0.12)', title: 'PAYKAVACH // WORKFLOW_NODE_INGESTION.YAML' },
-    { color: '#10b981', bg: 'rgba(16,185,129,0.12)', title: 'PAYKAVACH // WORKFLOW_NODE_ML_ENGINE.YAML' },
-    { color: '#a855f7', bg: 'rgba(168,85,247,0.12)', title: 'PAYKAVACH // WORKFLOW_NODE_LANGGRAPH.YAML' },
-    { color: '#f59e0b', bg: 'rgba(245,158,11,0.12)', title: 'PAYKAVACH // WORKFLOW_NODE_INTERVENTION.YAML' }
-  ];
+const OSCILAR_DATA = [
+  {
+    num: '01',
+    themeColor: '#4a90e2',
+    headline: 'Make faster, smarter and safer payment onboarding decisions.',
+    desc: 'Intercept high-risk payment payloads with confidence. Increase your detection rates while simultaneously reducing false positives, user experience friction, and APP scam fraud.',
+    cta: 'Try Simulator',
+    ctaUrl: 'http://localhost:3000/payment',
+    subTitle: 'EXPLORE INGESTION METHODOLOGY FOR:',
+    subLinks: [
+      { text: 'Real-Time UPI Rails →', url: 'http://localhost:3000/payment' },
+      { text: 'FedNow & Core Banking APIs →', url: 'http://localhost:3000/soc-console' },
+      { text: 'High-Velocity Mule Interception →', url: 'http://localhost:3000/soc-console' }
+    ],
+    prompt: 'Create a payment onboarding workflow that performs memo NLP checks, device behavior checks, and mule graph checks.',
+    topNode: 'Call Ingestion Workflow',
+    midNode: 'Device & Memo NLP Check',
+    leftNode: 'Deny / Pause',
+    rightNode: 'Mule Graph Check'
+  },
+  {
+    num: '02',
+    themeColor: '#2e7d32',
+    headline: 'Sub-15ms LightGBM risk scoring across 114 vectorized features.',
+    desc: 'Evaluate behavioral baseline deviations, payee account age, and velocity spikes on hot-path payment flows with zero latency impact on legitimate customers.',
+    cta: 'View ML Benchmarks',
+    ctaUrl: 'http://localhost:3000/soc-console',
+    subTitle: 'EXPLORE ML ENGINE METHODOLOGY FOR:',
+    subLinks: [
+      { text: '114-Feature Vector Pipeline →', url: 'http://localhost:3000/soc-console' },
+      { text: 'Payee Account Velocity Spikes →', url: 'http://localhost:3000/soc-console' },
+      { text: 'Hard Rule Overrides →', url: 'http://localhost:3000/soc-console' }
+    ],
+    prompt: 'Create an ultra-low latency risk scoring workflow using LightGBM GBDT models and payee velocity features.',
+    topNode: 'Call LightGBM Engine',
+    midNode: 'Vector Feature Extraction',
+    leftNode: 'Pass (<15ms)',
+    rightNode: 'Escalate to Agents'
+  },
+  {
+    num: '03',
+    themeColor: '#e65100',
+    headline: 'Parallel multi-agent consensus evaluating intent, risk, & mule graphs.',
+    desc: 'Intent Agent, Transaction Agent, and Recipient Mule Graph Agent reason concurrently via LangGraph. The Deterministic Policy Gatekeeper enforces calibrated directives.',
+    cta: 'Launch SOC Console',
+    ctaUrl: 'http://localhost:3000/soc-console',
+    subTitle: 'EXPLORE MULTI-AGENT METHODOLOGY FOR:',
+    subLinks: [
+      { text: 'Intent NLP Memo Parsing →', url: 'http://localhost:3000/soc-console' },
+      { text: 'Cross-Bank Mule Graph Profiling →', url: 'http://localhost:3000/soc-console' },
+      { text: 'Deterministic Policy Gatekeeper →', url: 'http://localhost:3000/soc-console' }
+    ],
+    prompt: 'Create a multi-agent consensus workflow that runs Intent Agent, Transaction Agent, and Recipient Agent in parallel.',
+    topNode: 'Call LangGraph Cluster',
+    midNode: 'Parallel LLM Reasoning',
+    leftNode: 'Policy Directives',
+    rightNode: 'Consensus Decision'
+  },
+  {
+    num: '04',
+    themeColor: '#7e22ce',
+    headline: 'Calibrated psychological friction & automated SAR compliance.',
+    desc: 'Deploy interactive Dwell Gates, TruGen avatar video calls, and Vapi AI voice intervention to break scammer coercion, while cryptographically logging SHA-256 SAR dossiers.',
+    cta: 'Test Dwell Gate',
+    ctaUrl: 'http://localhost:3000/payment',
+    subTitle: 'EXPLORE COMPLIANCE METHODOLOGY FOR:',
+    subLinks: [
+      { text: 'Cognitive Dwell Gate →', url: 'http://localhost:3000/payment' },
+      { text: 'Voice Guardian Emergency AI →', url: 'http://localhost:3000/payment' },
+      { text: 'SHA-256 SAR Audit Ledger →', url: 'http://localhost:3000/soc-console' }
+    ],
+    prompt: 'Create an automated compliance workflow that triggers Dwell Gate friction and generates cryptographic SAR evidence dossiers.',
+    topNode: 'Call Intervention Engine',
+    midNode: 'Voice & Dwell Gate Check',
+    leftNode: 'User Intercepted',
+    rightNode: 'SAR Logged'
+  }
+];
 
+function setOscilarTab(idx) {
+  const d = OSCILAR_DATA[idx];
+  
+  // Update header tab active styles
+  const tabBgs = ['#4a90e2', '#e8f5e9', '#fff3e0', '#f3e8ff'];
+  const tabColors = ['#ffffff', '#2e7d32', '#e65100', '#7e22ce'];
+  
   for (let i = 0; i < 4; i++) {
-    const tabBtn = document.getElementById('pk-tab-' + i);
-    const numSpan = document.getElementById('pk-num-' + i);
-    const pane = document.getElementById('pk-pane-' + i);
-    const gfx = document.getElementById('pk-gfx-' + i);
-
-    if (i === index) {
-      tabBtn.style.background = tabs[i].bg;
-      tabBtn.style.borderColor = tabs[i].color;
-      tabBtn.style.color = '#ffffff';
-      numSpan.style.color = tabs[i].color;
-
-      pane.style.display = 'block';
-      gfx.style.display = 'flex';
+    const t = document.getElementById('osc-tab-' + i);
+    if (i === idx) {
+      t.style.background = tabBgs[i];
+      t.style.color = tabColors[i];
+      t.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
     } else {
-      tabBtn.style.background = 'transparent';
-      tabBtn.style.borderColor = 'transparent';
-      tabBtn.style.color = '#94a3b8';
-      numSpan.style.color = '#334155';
-
-      pane.style.display = 'none';
-      gfx.style.display = 'none';
+      t.style.background = 'transparent';
+      t.style.color = '#64748b';
+      t.style.boxShadow = 'none';
     }
   }
 
-  document.getElementById('pk-wf-title').innerText = tabs[index].title;
-  document.getElementById('pk-wf-title').style.color = tabs[index].color;
+  // Update Left Panel
+  document.getElementById('osc-step-num').innerText = d.num;
+  document.getElementById('osc-step-num').style.color = d.themeColor;
+  document.getElementById('osc-step-bar').style.background = d.themeColor;
+
+  document.getElementById('osc-headline').innerText = d.headline;
+  document.getElementById('osc-desc').innerText = d.desc;
+  
+  document.getElementById('osc-cta-text').innerText = d.cta;
+  document.getElementById('osc-cta-btn').href = d.ctaUrl;
+
+  document.getElementById('osc-sub-title').innerText = d.subTitle;
+  
+  const subContainer = document.getElementById('osc-sub-links');
+  subContainer.innerHTML = '';
+  d.subLinks.forEach(l => {
+    const a = document.createElement('a');
+    a.href = l.url;
+    a.style.color = d.themeColor;
+    a.style.textDecoration = 'none';
+    a.innerText = l.text;
+    subContainer.appendChild(a);
+  });
+
+  // Update Workflow Frame
+  document.getElementById('osc-prompt-text').innerText = d.prompt;
+  document.getElementById('osc-node-top').innerText = d.topNode;
+  document.getElementById('osc-node-mid').innerText = d.midNode;
+  document.getElementById('osc-node-left').innerText = d.leftNode;
+  document.getElementById('osc-node-right').innerText = d.rightNode;
 }
 </script>
 </main><script>(()=>{var l=(n,t)=>{let i=async()=>{await(await n())()},e=typeof t.value=="object"?t.value:void 0,s={timeout:e==null?void 0:e.timeout};"requestIdleCallback"in window?window.requestIdleCallback(i,s):setTimeout(i,s.timeout||200)};(self.Astro||(self.Astro={})).idle=l;window.dispatchEvent(new Event("astro:idle"));})();</script><astro-island uid="1SK0SM" prefix="r15" component-url="/_astro/Footer.CkqAWcyG.js?dpl=dpl_Ayfj3ws9uKabZjsikBKM3vVbccQC" component-export="default" renderer-url="/_astro/client.C-iRRPgs.js?dpl=dpl_Ayfj3ws9uKabZjsikBKM3vVbccQC" props="{&quot;header&quot;:[0,{&quot;name&quot;:[0,&quot;Main Header&quot;],&quot;logo&quot;:[0,{&quot;url&quot;:[0,&quot;/images/paykavach-logo.png&quot;],&quot;title&quot;:[0,&quot;PayKavach&quot;],&quot;width&quot;:[0,180],&quot;height&quot;:[0,42]}],&quot;navItems&quot;:[1,[[0,{&quot;entryName&quot;:[0,&quot;Solutions&quot;],&quot;label&quot;:[0,&quot;Solutions&quot;],&quot;topLevelLink&quot;:[0,&quot;Solutions&quot;],&quot;links&quot;:[1,[[0,{&quot;label&quot;:[0,&quot;APP Scam Interception&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/payment&quot;]}],[0,{&quot;label&quot;:[0,&quot;Multi-Agent Consensus Hub&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}],[0,{&quot;label&quot;:[0,&quot;Mule Graph Intelligence&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}],[0,{&quot;label&quot;:[0,&quot;Cognitive Dwell Gate&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/payment&quot;]}],[0,{&quot;label&quot;:[0,&quot;Voice Guardian Assistance&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/payment&quot;]}]]]}],[0,{&quot;label&quot;:[0,&quot;SOC Console&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}],[0,{&quot;label&quot;:[0,&quot;Payment Simulator&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/payment&quot;]}],[0,{&quot;entryName&quot;:[0,&quot;Developers&quot;],&quot;label&quot;:[0,&quot;Developers&quot;],&quot;links&quot;:[1,[[0,{&quot;label&quot;:[0,&quot;FastMCP Security Server&quot;],&quot;url&quot;:[0,&quot;https://github.com/Laukikrathod2007/KURUKSHETRA_2.0_HACKFEST&quot;]}],[0,{&quot;label&quot;:[0,&quot;GitHub Repository&quot;],&quot;url&quot;:[0,&quot;https://github.com/Laukikrathod2007/KURUKSHETRA_2.0_HACKFEST&quot;]}],[0,{&quot;label&quot;:[0,&quot;Architecture Specs&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}]]]}],[0,{&quot;entryName&quot;:[0,&quot;Resources&quot;],&quot;label&quot;:[0,&quot;Resources&quot;],&quot;topLevelLink&quot;:[0,&quot;Resources&quot;],&quot;links&quot;:[1,[[0,{&quot;label&quot;:[0,&quot;PS09 Research Paper&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}],[0,{&quot;label&quot;:[0,&quot;Submission PRD&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}],[0,{&quot;label&quot;:[0,&quot;Red-Team Audit&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}]]]}]]],&quot;loginText&quot;:[0,&quot;Try Simulator&quot;],&quot;loginUrl&quot;:[0,&quot;http://localhost:3000/payment&quot;]}],&quot;footer&quot;:[0,{&quot;logo&quot;:[0,{&quot;url&quot;:[0,&quot;/images/paykavach-logo.png&quot;],&quot;title&quot;:[0,&quot;PayKavach — Intercept Before It Reaches&quot;],&quot;width&quot;:[0,220],&quot;height&quot;:[0,52]}],&quot;rightNavigationItems&quot;:[1,[[0,{&quot;entryName&quot;:[0,&quot;Solutions&quot;],&quot;label&quot;:[0,&quot;Solutions&quot;],&quot;topLevelLink&quot;:[0,&quot;Solutions&quot;],&quot;links&quot;:[1,[[0,{&quot;label&quot;:[0,&quot;APP Scam Interception&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/payment&quot;]}],[0,{&quot;label&quot;:[0,&quot;Multi-Agent Consensus&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}],[0,{&quot;label&quot;:[0,&quot;Mule Graph Network&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}],[0,{&quot;label&quot;:[0,&quot;Cognitive Dwell Gate&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/payment&quot;]}],[0,{&quot;label&quot;:[0,&quot;Voice Guardian&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/payment&quot;]}]]]}],[0,{&quot;entryName&quot;:[0,&quot;Developers&quot;],&quot;label&quot;:[0,&quot;Developers&quot;],&quot;links&quot;:[1,[[0,{&quot;label&quot;:[0,&quot;SOC Console&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}],[0,{&quot;label&quot;:[0,&quot;Simulator&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/payment&quot;]}],[0,{&quot;label&quot;:[0,&quot;FastMCP Engine&quot;],&quot;url&quot;:[0,&quot;https://github.com/Laukikrathod2007/KURUKSHETRA_2.0_HACKFEST&quot;]}],[0,{&quot;label&quot;:[0,&quot;GitHub&quot;],&quot;url&quot;:[0,&quot;https://github.com/Laukikrathod2007/KURUKSHETRA_2.0_HACKFEST&quot;]}]]]}],[0,{&quot;entryName&quot;:[0,&quot;Resources&quot;],&quot;label&quot;:[0,&quot;Resources&quot;],&quot;topLevelLink&quot;:[0,&quot;Resources&quot;],&quot;links&quot;:[1,[[0,{&quot;label&quot;:[0,&quot;PS09 Research Paper&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}],[0,{&quot;label&quot;:[0,&quot;Technical PRD&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}],[0,{&quot;label&quot;:[0,&quot;Architecture Specs&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}],[0,{&quot;label&quot;:[0,&quot;Red-Team Report&quot;],&quot;url&quot;:[0,&quot;http://localhost:3000/soc-console&quot;]}]]]}]]],&quot;copyrightText&quot;:[0,&quot;© 2026 PayKavach // Team Midnight Ciphers (KURUKSHETRA 2.0 - PS09). All rights reserved.&quot;]}]}" ssr client="idle" opts="{&quot;name&quot;:&quot;Footer&quot;,&quot;value&quot;:true}" await-children><footer class="_siteFooter_cl0m3_1"><div class="grid-container"><div class="grid-layout _footerNav_cl0m3_8 space:d180"><a href="/" class="col-6 md:col-3 lg:col-3 _footerLogoLink_cl0m3_56"><img src="/images/paykavach-logo.png" alt="PayKavach — Intercept Before It Reaches" class="_footerLogoImg_cl0m3_63"/></a><div class="col-3 md:col-2 lg:col-2 _footerNavCol_cl0m3_12 lg:col-start-5"><h3 class="_footerNavHeading_cl0m3_22 type:l1">Solutions</h3><ul class="_footerNavLinks_cl0m3_37"><li><a href="http://localhost:3000/payment" class="_footerNavLink_cl0m3_37 type:l1">Cross-Border Payments</a></li><li><a href="http://localhost:3000/payment" class="_footerNavLink_cl0m3_37 type:l1">Institutional Settlement</a></li><li><a href="http://localhost:3000/payment" class="_footerNavLink_cl0m3_37 type:l1">Embedded Finance</a></li><li><a href="http://localhost:3000/payment" class="_footerNavLink_cl0m3_37 type:l1">Earn</a></li><li><a href="http://localhost:3000/payment" class="_footerNavLink_cl0m3_37 type:l1">Agentic Payments</a></li></ul></div><div class="col-3 md:col-2 lg:col-2 _footerNavCol_cl0m3_12"><h3 class="_footerNavHeading_cl0m3_22 type:l1">Developers</h3><ul class="_footerNavLinks_cl0m3_37"><li><a href="http://localhost:3000/soc-console" class="_footerNavLink_cl0m3_37 type:l1">Docs</a></li><li><a href="http://localhost:3000/soc-console" class="_footerNavLink_cl0m3_37 type:l1">Explorer</a></li><li><a href="http://localhost:3000/payment" class="_footerNavLink_cl0m3_37 type:l1">Wallet</a></li><li><a href="http://localhost:3000/soc-console" class="_footerNavLink_cl0m3_37 type:l1">Status</a></li><li><a href="http://localhost:3000/soc-console" class="_footerNavLink_cl0m3_37 type:l1">Developer Blog</a></li><li><a href="https://github.com/Laukikrathod2007/KURUKSHETRA_2.0_HACKFEST" class="_footerNavLink_cl0m3_37 type:l1">Github</a></li></ul></div><div class="col-3 md:col-2 lg:col-2 _footerNavCol_cl0m3_12"><h3 class="_footerNavHeading_cl0m3_22 type:l1">Resources</h3><ul class="_footerNavLinks_cl0m3_37"><li><a href="http://localhost:3000/soc-console" class="_footerNavLink_cl0m3_37 type:l1">About</a></li><li><a href="http://localhost:3000/soc-console" class="_footerNavLink_cl0m3_37 type:l1">FAQ</a></li><li><a href="http://localhost:3000/soc-console" class="_footerNavLink_cl0m3_37 type:l1">Ecosystem</a></li><li><a href="http://localhost:3000/soc-console" class="_footerNavLink_cl0m3_37 type:l1">Customer Stories</a></li><li><a href="http://localhost:3000/soc-console" class="_footerNavLink_cl0m3_37 type:l1">Blog</a></li><li><a href="http://localhost:3000/soc-console" class="_footerNavLink_cl0m3_37 type:l1">Reports</a></li><li><a href="http://localhost:3000/soc-console" class="_footerNavLink_cl0m3_37 type:l1">Learn</a></li><li><a href="http://localhost:3000/soc-console" class="_footerNavLink_cl0m3_37 type:l1">Stablecoin Advisory</a></li><li><a href="https://jobs.ashbyhq.com/tempo-xyz" class="_footerNavLink_cl0m3_37 type:l1">Careers</a></li><li><a href="http://localhost:3000/soc-console" class="_footerNavLink_cl0m3_37 type:l1">Privacy Policy</a></li><li><a href="https://drive.google.com/drive/u/0/folders/1AMbYL6jupt3Em8_K2_2ZBqP8Jd-FJAqE" class="_footerNavLink_cl0m3_37 type:l1">Brand Kit</a></li><li><a href="http://localhost:3000/soc-console" class="_footerNavLink_cl0m3_37 type:l1">Contact us</a></li></ul></div><div class="col-3 md:col-2 lg:col-2 _footerNavCol_cl0m3_12"><h3 class="_footerNavHeading_cl0m3_22 type:l1">Socials</h3><ul class="_footerNavLinks_cl0m3_37"><li><a href="https://x.com/tempo" class="_footerNavLink_cl0m3_37 type:l1">X</a></li><li><a href="https://www.linkedin.com/company/tempo" class="_footerNavLink_cl0m3_37 type:l1">LinkedIn</a></li></ul></div></div><div class="grid-layout _footerBottom_cl0m3_69"><span class="col-6 md:col-3 lg:col-3 _footerCopyright_cl0m3_74 type:l1">© 2026 Tempo. Incubated by Stripe and Paradigm.</span></div></div></footer><!--astro:end--></astro-island><script type="module" src="/_astro/Layout.astro_astro_type_script_index_0_lang.K6LwrloF.js?dpl=dpl_Ayfj3ws9uKabZjsikBKM3vVbccQC"></script><vercel-speed-insights data-props="{}" data-params="{}" data-pathname="/"></vercel-speed-insights><script type="module">var e=()=>{window.si||(window.si=function(...e){window.siq=window.siq||[],window.siq.push(e)})},t=`@vercel/speed-insights`,n=`2.0.0`;function r(){return typeof window<`u`}function i(){return`production`}function a(){return i()===`development`}function o(e,t){if(!e||!t)return e;let n=e;try{let e=Object.entries(t);for(let[t,r]of e)if(!Array.isArray(r)){let e=s(r);e.test(n)&&(n=n.replace(e,`/[${t}]`))}for(let[t,r]of e)if(Array.isArray(r)){let e=s(r.join(`/`));e.test(n)&&(n=n.replace(e,`/[...${t}]`))}return n}catch{return e}}function s(e){return RegExp(`/${c(e)}(?=[/?#]|$)`)}function c(e){return e.replace(/[.*+?^${}()|[\]\\]/g,`\\$&`)}function l(e){return e.scriptSrc?d(e.scriptSrc):a()?`https://va.vercel-scripts.com/v1/speed-insights/script.debug.js`:e.dsn?`https://va.vercel-scripts.com/v1/speed-insights/script.js`:e.basePath?d(`${e.basePath}/speed-insights/script.js`):`/_vercel/speed-insights/script.js`}function u(e,r){let i=e;if(r)try{i={...JSON.parse(r)?.speedInsights,...e}}catch{}let o={sdkn:t+(i.framework?`/${i.framework}`:``),sdkv:n};return i.sampleRate&&(o.sampleRate=i.sampleRate.toString()),i.route&&(o.route=i.route),a()&&i.debug===!1&&(o.debug=`false`),i.dsn&&(o.dsn=i.dsn),i.endpoint?o.endpoint=d(i.endpoint):i.basePath&&(o.endpoint=d(`${i.basePath}/speed-insights/vitals`)),{src:l(i),beforeSend:i.beforeSend,dataset:o}}function d(e){return e.startsWith(`http://`)||e.startsWith(`https://`)||e.startsWith(`/`)?e:`/${e}`}function f(t={},n){var i;if(!r()||t.route===null)return null;e();let{beforeSend:a,src:o,dataset:s}=u(t,n);if(document.head.querySelector(`script[src*="${o}"]`))return null;a&&((i=window.si)==null||i.call(window,`beforeSend`,a));let c=document.createElement(`script`);c.src=o,c.defer=!0;for(let[e,t]of Object.entries(s))c.dataset[e]=t;return c.onerror=()=>{console.log(`[Vercel Speed Insights] Failed to load script from ${o}. Please check if any content blockers are enabled and try again.`)},document.head.appendChild(c),{setRoute:e=>{c.dataset.route=e??void 0}}}function p(){try{return}catch{}}function m(){try{return`{"analytics":{"scriptSrc":"8a8358f410d24048/script.js","viewEndpoint":"8a8358f410d24048/view","eventEndpoint":"8a8358f410d24048/event","sessionEndpoint":"8a8358f410d24048/session"},"speedInsights":{"scriptSrc":"705c409a238d6cfe/script.js","endpoint":"705c409a238d6cfe/vitals"}}`}catch{return}}customElements.define(`vercel-speed-insights`,class extends HTMLElement{constructor(){super();try{let e=JSON.parse(this.dataset.props??`{}`),t=JSON.parse(this.dataset.params??`{}`);f({route:o(this.dataset.pathname??``,t),...e,framework:`astro`,basePath:p(),beforeSend:window.speedInsightsBeforeSend},m())}catch(e){throw Error(`Failed to parse SpeedInsights properties: ${e}`)}}});</script><!-- Claydar --><script>

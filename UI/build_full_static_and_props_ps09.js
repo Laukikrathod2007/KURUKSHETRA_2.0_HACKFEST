@@ -340,14 +340,15 @@ html = html.replace(/href="\/advisory"/g, 'href="http://localhost:3000/soc-conso
 html = html.replace(/href="\/privacy-policy\/"/g, 'href="http://localhost:3000/soc-console"');
 html = html.replace(/href="\/contact"/g, 'href="http://localhost:3000/soc-console"');
 
-// Read Oscilar Methodology Showcase component
-const methodologyHTML = fs.readFileSync('C:/Users/LAUKIK/.gemini/antigravity/brain/988ba458-3ecc-4c12-a616-04b83c88d640/scratch/oscilar_methodology_component.html', 'utf8');
+// Read Exact Oscilar Methodology Component (matching media_1789179124045.png)
+const methodologyHTML = fs.readFileSync('C:/Users/LAUKIK/.gemini/antigravity/brain/988ba458-3ecc-4c12-a616-04b83c88d640/scratch/oscilar_exact_component.html', 'utf8');
 
 // Insert methodology component right after ImageTextOverlay island ("Protect Real-Time Payments with PayKavach")
 html = html.replace(/(<astro-island[^>]*component-url="[^"]*ImageTextOverlay[^"]*"[\s\S]*?<\/astro-island>)/i, (match) => match + '\n' + methodologyHTML);
 
 fs.writeFileSync('index.html', html, 'utf8');
-console.log('Clean PayKavach build with Oscilar Methodology completed successfully!');
+console.log('Clean PayKavach build with Exact Oscilar Methodology completed successfully!');
+
 
 
 
