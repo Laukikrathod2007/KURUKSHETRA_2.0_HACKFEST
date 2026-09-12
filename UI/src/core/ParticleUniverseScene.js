@@ -291,6 +291,7 @@ export class ParticleUniverseScene {
   searchEntity(name = 'Rahul Sharma') {
     // 1. Set entity dataset
     this.entityNetwork.setEntity(name);
+    const entity = this.entityNetwork.currentEntity;
 
     // If already in 3D graph mode, smooth transition without full camera replay -
     // UI can update immediately since there's no big camera dive happening.
@@ -298,6 +299,8 @@ export class ParticleUniverseScene {
       this.onGraphSettled();
       return;
     }
+
+    const targetPos = entity?.globePosition || null;
 
     // 2. Seamless cinematic hyperspace glide directly into 3D network view
     this.cinematicCamera.startGlideToGraph(
@@ -310,8 +313,42 @@ export class ParticleUniverseScene {
         // Glide finished - camera is now in interactive 3D orbit mode.
         // Only now does the dossier UI appear, so it doesn't compete with the dive.
         this.onGraphSettled();
-      }
+      },
+      targetPos
     );
+  }
+
+  setLensMode(mode) {
+    if (this.entityNetwork) {
+      this.entityNetwork.setLensMode(mode);
+    }
+  }
+
+  setDegreeLevel(degree) {
+    if (this.entityNetwork) {
+      this.entityNetwork.setDegreeLevel(degree);
+    }
+    if (this.cinematicCamera) {
+      this.cinematicCamera.setDegreeLevel(degree);
+    }
+  }
+
+  setSelectedEdge(edgeId) {
+    if (this.entityNetwork) {
+      this.entityNetwork.setSelectedEdge(edgeId);
+    }
+  }
+
+  setSelectedEvidence(evidenceType) {
+    if (this.entityNetwork) {
+      this.entityNetwork.setSelectedEvidence(evidenceType);
+    }
+  }
+
+  spotlightEntities(entityIds) {
+    if (this.entityNetwork) {
+      this.entityNetwork.spotlightEntities(entityIds);
+    }
   }
 
   resetToGlobe() {

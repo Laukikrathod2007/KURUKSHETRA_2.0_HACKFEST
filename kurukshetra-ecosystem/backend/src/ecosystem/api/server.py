@@ -7,15 +7,29 @@ import uuid
 from typing import Any, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from ecosystem import events
 from ecosystem.banks import cbs, netbanking
 from ecosystem.cards.acs import handle_card_checkout
 from ecosystem.config import format_inr, to_paise, to_rupees
 from ecosystem.db import SessionLocal
-from ecosystem.models import Account, Bank, Customer, ReputationScore, SavedBeneficiary, ScamReport
+from ecosystem.models import (
+    Account,
+    Bank,
+    Customer,
+    LedgerEntry,
+    RegistryFlag,
+    ReputationScore,
+    SavedBeneficiary,
+    ScamReport,
+    SwitchMetric,
+    Transaction,
+    VpaMapping,
+)
 from ecosystem.npci import switch
 from ecosystem.risk import audit, reputation
 from ecosystem.scenarios import runner, seed
@@ -109,6 +123,7 @@ def login(req: LoginRequest, session: Session = Depends(get_db)):
             "success": True,
             "token": "sess_android1_verified_jwt",
             "user": {
+                "role": "CITIZEN",
                 "customer_id": "cust_aarav",
                 "name": cust.name if cust else "Aarav Sharma",
                 "phone": cust.phone if cust else "+919820011223",
@@ -121,7 +136,28 @@ def login(req: LoginRequest, session: Session = Depends(get_db)):
                 "vpa": "aarav@oksbi",
             },
         }
-    raise HTTPException(status_code=401, detail="Invalid credentials. Use android1 / 1234.")
+    if req.username == "analyst" and req.password == "soc123":
+        return {
+            "success": True,
+            "token": "sess_analyst_verified_jwt",
+            "user": {
+                "role": "ANALYST",
+                "customer_id": None,
+                "name": "SOC Analyst",
+                "phone": None,
+                "account_id": None,
+                "account_number": None,
+                "bank_id": "NPCI_CENTRAL_OPS_01",
+                "bank_name": "NPCI Central Ops",
+                "balance_paise": None,
+                "balance_formatted": None,
+                "vpa": None,
+            },
+        }
+    raise HTTPException(
+        status_code=401,
+        detail="Invalid credentials. Use android1 / 1234 (citizen) or analyst / soc123 (SOC).",
+    )
 
 
 @router.post("/upi/check-balance")
@@ -317,6 +353,75 @@ def verify_audit_chain(session: Session = Depends(get_db)):
     return {"valid": valid, "broken_txn_id": broken_id}
 
 
+@router.get("/payer/{customer_id}/known-beneficiary/{beneficiary_ref}")
+def check_known_beneficiary(customer_id: str, beneficiary_ref: str, session: Session = Depends(get_db)):
+    """Payer-aware 'have I paid this recipient before?' check, exposed for the
+    citizen app's pay-flow warning. Thin read wrapper around the same
+    is_known_beneficiary() gate the deterministic engine already uses
+    internally to floor unknown-recipient transactions at STEP_UP.
+    """
+    from ecosystem.risk.tier0 import is_known_beneficiary
+
+    known = is_known_beneficiary(session, customer_id, beneficiary_ref)
+    return {"customer_id": customer_id, "beneficiary_ref": beneficiary_ref, "known": known}
+
+
+# --- Live Registry Stream (external node/edge visualization sync) --------
+
+
+@router.get("/stream/events")
+async def stream_events():
+    """Server-Sent Events feed of live risk-engine decisions and registry
+    mutations (kill-switch, campaigns). Consumed by the standalone node-based
+    registry visualization app. Each event carries the real DetectionSignal
+    payload produced by the deterministic engine -- never a scripted replay.
+    """
+    return StreamingResponse(events.stream(), media_type="text/event-stream")
+
+
+@router.get("/registry/graph")
+def get_registry_graph(session: Session = Depends(get_db)):
+    """Real registry snapshot (nodes + edges) for the external visualization's
+    initial load, computed from actual accounts/mappings/ledger rows -- the
+    same tables the risk engine itself reads, not a parallel dataset.
+    """
+    accounts = list(session.scalars(select(Account)).all())
+    nodes = []
+    for acc in accounts:
+        cust = session.get(Customer, acc.customer_id)
+        mapping = session.scalar(select(VpaMapping).where(VpaMapping.account_id == acc.account_id))
+        metric = session.get(SwitchMetric, mapping.vpa) if mapping else None
+        rep = session.get(ReputationScore, mapping.vpa) if mapping else None
+        flags = list(session.scalars(select(RegistryFlag).where(RegistryFlag.target_ref == (mapping.vpa if mapping else acc.account_id))).all())
+
+        risk_zone = "FREEZE" if (acc.status.value == "FROZEN" or flags) else (
+            "COACH" if rep and rep.community_risk_score >= 0.4 else "ALLOW"
+        )
+        nodes.append({
+            "id": acc.account_id,
+            "vpa": mapping.vpa if mapping else None,
+            "type": "MERCHANT" if acc.account_type.value == "MERCHANT" else "ACCOUNT",
+            "label": cust.name if cust else "Unknown",
+            "bank_id": acc.bank_id,
+            "mcc": acc.mcc,
+            "risk_zone": risk_zone,
+            "risk_score": rep.community_risk_score if rep else 0.0,
+            "is_active": mapping.is_active if mapping else True,
+        })
+
+    edges = []
+    ledger_stmt = select(LedgerEntry).where(LedgerEntry.counterparty_account_id.is_not(None)).limit(2000)
+    for entry in session.scalars(ledger_stmt).all():
+        edges.append({
+            "from": entry.account_id if entry.direction.value == "DEBIT" else entry.counterparty_account_id,
+            "to": entry.counterparty_account_id if entry.direction.value == "DEBIT" else entry.account_id,
+            "amount_paise": entry.amount_paise,
+            "narration": entry.narration,
+        })
+
+    return {"nodes": nodes, "edges": edges, "recent_events": events.recent(20)}
+
+
 # --- Master Feature Extensions --------------------------------------------
 
 
@@ -347,6 +452,7 @@ def public_lookup(ref: str, session: Session = Depends(get_db)):
     import datetime as dt
     from ecosystem.models import RegistryFlag, VpaMapping, Account, Customer, LedgerEntry
     from ecosystem.risk.reputation import check_community_reports
+    from ecosystem.risk.tier0 import AUTHORITY_KEYWORDS, CORPORATE_IMPERSONATION_KEYWORDS
     from ecosystem.risk.tier1_cbs import check_rapid_drainage, check_one_way_account
 
     mapping = session.get(VpaMapping, ref)
@@ -370,13 +476,10 @@ def public_lookup(ref: str, session: Session = Depends(get_db)):
     drainage_signal = check_rapid_drainage(session, acc.account_id) if acc else None
     one_way_signal = check_one_way_account(session, acc.account_id) if acc else None
 
-    # 4. Authority & Impersonation Mismatch Analysis
-    authority_keywords = ["cbi", "police", "customs", "rbi", "incometax", "court", "narcotics", "officer", "cybercrime", "fine", "penalty", "tax", "challan"]
-    corporate_keywords = ["refund", "kyc", "support", "helpdesk", "lottery", "amazon", "flipkart", "airtel", "telecom"]
-
+    # 4. Authority & Impersonation Mismatch Analysis (canonical keyword lists from tier0.py)
     ref_lower = ref.lower()
-    matched_auth = [kw for kw in authority_keywords if kw in ref_lower]
-    matched_corp = [kw for kw in corporate_keywords if kw in ref_lower]
+    matched_auth = [kw for kw in AUTHORITY_KEYWORDS if kw in ref_lower]
+    matched_corp = [kw for kw in CORPORATE_IMPERSONATION_KEYWORDS if kw in ref_lower]
 
     mismatch_warning = None
     mule_warning = None
@@ -575,4 +678,120 @@ def get_trusted_notifications(customer_id: str = "cust_aarav", session: Session 
         }
         for n in notifs
     ]
+
+
+# --- Compatibility Aliases for Frontend Surfaces ----------------------------
+
+
+class InitiateTxnRequest(BaseModel):
+    payer_vpa: Optional[str] = "aarav@oksbi"
+    payee_vpa: str
+    amount: float = 450.0
+    payment_rail: Optional[str] = "GPAY"
+    note: Optional[str] = None
+    purpose: Optional[str] = None
+    payer_id: Optional[str] = "cust_aarav"
+    payer_account_id: Optional[str] = "acc_aarav_sbi"
+    trace_id: Optional[str] = None
+    raw_uri: Optional[str] = None
+
+
+@router.post("/transactions/initiate")
+def transactions_initiate_compat(req: InitiateTxnRequest, session: Session = Depends(get_db)):
+    psp_id = "phonepe" if req.payment_rail and req.payment_rail.upper() == "PHONEPE" else "gpay"
+    val_req = ValAddRequest(
+        psp_id=psp_id,
+        payer_id=req.payer_id or "cust_aarav",
+        payer_account_id=req.payer_account_id or "acc_aarav_sbi",
+        payee_vpa=req.payee_vpa,
+        declared_purpose=req.purpose or req.note,
+        raw_uri=req.raw_uri,
+        trace_id=req.trace_id,
+    )
+    return upi_val_add(val_req, session)
+
+
+class ExecuteTxnRequest(BaseModel):
+    txn_id: str
+    trace_id: str
+    pin: str = "1234"
+    amount: Optional[float] = None
+    user_acknowledged: bool = False
+
+
+@router.post("/transactions/execute")
+def transactions_execute_compat(req: ExecuteTxnRequest, session: Session = Depends(get_db)):
+    amount_rupees = req.amount or 0.0
+    if amount_rupees == 0.0:
+        txn = session.get(Transaction, req.txn_id)
+        if txn and txn.amount_paise:
+            amount_rupees = to_rupees(txn.amount_paise)
+    pay_req = PayRequest(
+        trace_id=req.trace_id,
+        txn_id=req.txn_id,
+        amount_rupees=amount_rupees,
+        user_acknowledged=req.user_acknowledged,
+        pin=req.pin,
+    )
+    return upi_pay(pay_req, session)
+
+
+@router.post("/cbs/balance")
+def cbs_balance_compat(req: CheckBalanceRequest, session: Session = Depends(get_db)):
+    return check_balance_api(req, session)
+
+
+@router.get("/cbs/history/{account_id}")
+def cbs_history_compat(account_id: str, session: Session = Depends(get_db)):
+    return get_statement(account_id, session)
+
+
+@router.post("/system/reset")
+def system_reset_compat():
+    return reset_and_seed()
+
+
+@router.get("/campaigns")
+def campaigns_compat(session: Session = Depends(get_db)):
+    return get_campaigns(session)
+
+
+@router.post("/kill-switch")
+def kill_switch_compat(req: KillSwitchRequest, session: Session = Depends(get_db)):
+    return post_kill_switch(req, session)
+
+
+@router.get("/citizen/lookup")
+def citizen_lookup_compat(q: str = "", session: Session = Depends(get_db)):
+    return public_lookup(ref=q, session=session)
+
+
+class CitizenReportRequest(BaseModel):
+    target_ref: str
+    reason: Optional[str] = None
+    reason_code: Optional[str] = None
+    reporter_identity_hash: Optional[str] = "hash_aarav_sharma_device"
+
+
+@router.post("/citizen/report")
+def citizen_report_compat(req: CitizenReportRequest, session: Session = Depends(get_db)):
+    r_code = req.reason_code or req.reason or "COMMUNITY_FRAUD_REPORT"
+    report_req = ReportRequest(
+        target_ref=req.target_ref,
+        reporter_identity_hash=req.reporter_identity_hash or "hash_aarav_sharma_device",
+        reason_code=r_code,
+    )
+    return community_report(report_req, session)
+
+
+@router.get("/netbanking/overview")
+def netbanking_overview_compat(customer_id: str = "cust_aarav", session: Session = Depends(get_db)):
+    payees = get_netbanking_payees(customer_id, session)
+    acc = session.get(Account, "acc_aarav_sbi")
+    return {
+        "balance_paise": acc.balance_paise if acc else 150_000_00,
+        "balance_formatted": format_inr(acc.balance_paise) if acc else "Rs 150,000.00",
+        "payees": payees,
+    }
+
 

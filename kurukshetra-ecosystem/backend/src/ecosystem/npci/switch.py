@@ -17,6 +17,7 @@ from typing import Any, Optional
 
 from sqlalchemy.orm import Session
 
+from ecosystem import events
 from ecosystem.banks import cbs
 from ecosystem.config import format_inr
 from ecosystem.models import (
@@ -511,6 +512,22 @@ def execute_nationwide_kill_switch(
         },
     )
     session.flush()
+
+    events.publish({
+        "trace_id": None,
+        "txn_id": audit_entry.txn_id,
+        "node": {
+            "id": account_id or target_ref,
+            "type": "CAMPAIGN",
+            "label": target_ref,
+            "risk_zone": "FREEZE",
+            "risk_score": 1.0,
+        },
+        "edges": [],
+        "signals": [],
+        "source": "NATIONWIDE_KILL_SWITCH",
+        "detail": {"reason": reason, "operator_id": operator_id},
+    })
 
     return {
         "success": True,

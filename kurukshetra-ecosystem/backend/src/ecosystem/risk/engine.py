@@ -16,6 +16,8 @@ import time
 
 from sqlalchemy.orm import Session
 
+from ecosystem import events
+from ecosystem.config import TIER0_BUDGET_MS, TIER1_BUDGET_MS
 from ecosystem.mcp.host import build_intervention
 from ecosystem.risk.audit import write_entry
 from ecosystem.risk.contracts import (
@@ -140,6 +142,10 @@ def evaluate(session: Session, req: TransactionAnalysisRequest) -> RiskDecision:
         data_completeness=data_completeness,
     )
 
+    elapsed_ms = (time.perf_counter() - started) * 1000
+    budget_ms = TIER1_BUDGET_MS if tier_reached >= 1 else TIER0_BUDGET_MS
+    latency_budget_exceeded = elapsed_ms > budget_ms
+
     # Record append-only immutable audit entry
     audit_entry = write_entry(
         session,
@@ -152,6 +158,8 @@ def evaluate(session: Session, req: TransactionAnalysisRequest) -> RiskDecision:
             "event": req.event.value,
             "known": known,
             "completeness": data_completeness.value,
+            "elapsed_ms": round(elapsed_ms, 2),
+            "degraded_mode": "LATENCY_BUDGET_EXCEEDED" if latency_budget_exceeded else None,
         },
     )
     decision.audit_ref = str(audit_entry.sequence_no)
@@ -165,7 +173,28 @@ def evaluate(session: Session, req: TransactionAnalysisRequest) -> RiskDecision:
     )
     decision.intervention_screen = intervention_screen
 
-    elapsed_ms = (time.perf_counter() - started) * 1000
+    events.publish({
+        "trace_id": req.trace_id,
+        "txn_id": req.transaction_id,
+        "node": {
+            "id": req.recipient_context.beneficiary_account_id or beneficiary_ref,
+            "type": "VPA",
+            "label": req.recipient_context.resolved_name or beneficiary_ref,
+            "risk_zone": decision.risk_zone.value,
+            "risk_score": decision.risk_score,
+        },
+        "edges": [
+            {
+                "from": req.payer_context.payer_account_id or customer_id,
+                "to": req.recipient_context.beneficiary_account_id or beneficiary_ref,
+                "amount_paise": req.transaction.amount_paise,
+                "direction": "OUTFLOW",
+            }
+        ],
+        "signals": [s.model_dump() for s in decision.signals if s.triggered],
+        "source": "DETERMINISTIC_ENGINE",
+    })
+
     log.info(
         "Kurukshetra evaluate txn=%s event=%s known=%s tier=%s zone=%s elapsed_ms=%.2f",
         req.transaction_id,

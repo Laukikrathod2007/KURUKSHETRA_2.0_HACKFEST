@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { getNetworkForEntity } from '../data/syntheticDataset.js';
+import { getNetworkForEntity } from '../data/liveRegistry.js';
 
 // Matches CinematicCamera's glide easing so the node constellation unfurls
 // in lockstep with the camera dive instead of drifting independently.
@@ -24,27 +24,64 @@ export class EntityNetworkSystem {
     this.morphDuration = 1.9; // seconds - matches CinematicCamera's glide duration
     this.currentEntity = null;
 
+    this.currentDegree = 1; // 1 = Direct, 2 = Extended, 3 = Ecosystem
+    this.lensMode = 'TRANSACTIONS'; // 'TRANSACTIONS' | 'HISTORY'
+    this.selectedEdgeId = null;
+    this.selectedEvidenceType = null;
+    this.spotlightedEntityIds = new Set();
+
     this.nodeMeshes = [];
     this.filamentObjects = [];
     this.beadStreams = [];
 
-    // Initialize with Kabir Singhania or default primary
-    this.setEntity('kabir-singhania');
+    // Default entity is resolved lazily via getNetworkForEntity(undefined)
+    this.setEntity(undefined);
+  }
+
+  setLensMode(mode) {
+    if (this.lensMode === mode) return;
+    this.lensMode = mode;
+    if (this.currentEntity) {
+      this.rebuildNetwork(this.currentEntity);
+    }
+  }
+
+  setDegreeLevel(degree) {
+    if (this.currentDegree === degree) return;
+    this.currentDegree = degree;
+    if (this.currentEntity && this.lensMode === 'TRANSACTIONS') {
+      this.rebuildNetwork(this.currentEntity);
+    }
+  }
+
+  setSelectedEdge(edgeId) {
+    this.selectedEdgeId = edgeId;
+  }
+
+  setSelectedEvidence(evidenceType) {
+    this.selectedEvidenceType = evidenceType;
+  }
+
+  spotlightEntities(entityIds = []) {
+    this.spotlightedEntityIds = new Set(entityIds);
   }
 
   setEntity(queryOrId) {
-    const entityData = typeof queryOrId === 'string' ? getNetworkForEntity(queryOrId) : queryOrId;
+    const entityData =
+      typeof queryOrId === 'string' || queryOrId === undefined
+        ? getNetworkForEntity(queryOrId)
+        : queryOrId;
+    if (!entityData) return;
     this.currentEntity = entityData;
     this.rebuildNetwork(entityData);
   }
 
   rebuildNetwork(entityData) {
     this.clearObjects();
-
     this.nodes = [];
 
     // 1. Central Target Node at 3D Origin
-    this.nodes.push({
+    const centerNode = {
       id: 'center',
       entityId: entityData.id,
       name: entityData.name,
@@ -57,56 +94,181 @@ export class EntityNetworkSystem {
       totalOutflow: entityData.totalOutflow,
       color: '#ffffff',
       accent: entityData.accent || '#fb7185',
-      size: 0.088,
-      globePos: new THREE.Vector3(0, 0, 1.35),
+      size: 0.092,
+      globePos: entityData.globePosition ? entityData.globePosition.clone() : new THREE.Vector3(0, 0, 1.35),
       graphPos: new THREE.Vector3(0, 0, 0),
-      currentPos: new THREE.Vector3(0, 0, 1.35),
+      currentPos: entityData.globePosition ? entityData.globePosition.clone() : new THREE.Vector3(0, 0, 1.35),
       isCenter: true,
       data: entityData,
-    });
+    };
+    this.nodes.push(centerNode);
 
-    // 2. Connected Counterparties in Volumetric 3D Space
-    const connections = entityData.connections || [];
-    const count = connections.length;
+    if (this.lensMode === 'HISTORY') {
+      // -------------------------------------------------------------
+      // HISTORY LENS: 3D IDENTITY & EVIDENCE CONSTELLATION
+      // -------------------------------------------------------------
+      const hData = entityData.historyIntelligence || {};
 
-    // Golden spiral / spherical distribution for rich 3D constellation depth
-    const phiRatio = (1 + Math.sqrt(5)) / 2;
+      const evidenceDefinitions = [
+        {
+          id: 'evidence-aadhaar',
+          entityId: 'evidence-aadhaar',
+          name: 'Aadhaar Linkage',
+          role: hData.aadhaar?.status || 'VERIFIED',
+          type: 'Identity Anchor',
+          category: `Linked SIMs: ${hData.aadhaar?.linkedMobilesCount || 4} • Accounts: ${hData.aadhaar?.linkedAccountsCount || 3}`,
+          riskLevel: hData.aadhaar?.identityConflicts > 0 ? 'HIGH' : 'LOW',
+          riskScore: hData.aadhaar?.identityConflicts > 0 ? 68 : 12,
+          color: hData.aadhaar?.identityConflicts > 0 ? '#fdba74' : '#38bdf8',
+          accent: '#38bdf8',
+          size: 0.068,
+          evidenceType: 'AADHAAR',
+          graphPos: new THREE.Vector3(-1.75, 1.15, 0.45),
+          evidenceData: hData.aadhaar,
+        },
+        {
+          id: 'evidence-phone',
+          entityId: 'evidence-phone',
+          name: 'Mobile Identifiers',
+          role: `${(hData.mobiles || []).length} SIMs Detected`,
+          type: 'Telecom Cluster',
+          category: 'Shared association observed on 2 SIMs',
+          riskLevel: 'HIGH',
+          riskScore: 74,
+          color: '#fb7185',
+          accent: '#fb7185',
+          size: 0.072,
+          evidenceType: 'PHONE',
+          graphPos: new THREE.Vector3(0.0, 1.85, -0.35),
+          evidenceData: hData.mobiles,
+        },
+        {
+          id: 'evidence-accounts',
+          entityId: 'evidence-accounts',
+          name: 'Banking Identifiers',
+          role: `${(hData.accounts || []).length} Bank Accounts`,
+          type: 'Core Banking',
+          category: 'Velocity surge 4.2× baseline',
+          riskLevel: 'HIGH',
+          riskScore: 72,
+          color: '#fdba74',
+          accent: '#fdba74',
+          size: 0.070,
+          evidenceType: 'ACCOUNTS',
+          graphPos: new THREE.Vector3(1.85, 1.05, 0.35),
+          evidenceData: hData.accounts,
+        },
+        {
+          id: 'evidence-devices',
+          entityId: 'evidence-devices',
+          name: 'Hardware Telemetry',
+          role: 'DEVICE-9B42 (4 Accounts)',
+          type: 'Device Cluster',
+          category: 'Unusual multi-banking reuse',
+          riskLevel: 'CRITICAL',
+          riskScore: 88,
+          color: '#fb7185',
+          accent: '#fb7185',
+          size: 0.076,
+          evidenceType: 'DEVICES',
+          graphPos: new THREE.Vector3(-1.80, -1.10, -0.40),
+          evidenceData: hData.devices,
+        },
+        {
+          id: 'evidence-pan',
+          entityId: 'evidence-pan',
+          name: 'PAN & Tax Registry',
+          role: hData.pan?.nameConsistency || '98% Consistency',
+          type: 'Directorship Record',
+          category: hData.pan?.flags?.[0] || 'Tier-2 Comprehensive',
+          riskLevel: (hData.pan?.flags || []).length > 0 ? 'HIGH' : 'LOW',
+          riskScore: 62,
+          color: '#fed7aa',
+          accent: '#fed7aa',
+          size: 0.064,
+          evidenceType: 'PAN',
+          graphPos: new THREE.Vector3(0.0, -1.65, 0.40),
+          evidenceData: hData.pan,
+        },
+        {
+          id: 'evidence-reputation',
+          entityId: 'evidence-reputation',
+          name: 'Reputation Signals',
+          role: `${hData.reputation?.communityReportsCount || 6} 1930 Reports`,
+          type: 'External Intelligence',
+          category: 'CFCFRMS Cybercrime Match',
+          riskLevel: 'CRITICAL',
+          riskScore: hData.reputation?.riskScore || 78,
+          color: '#fb7185',
+          accent: '#fb7185',
+          size: 0.074,
+          evidenceType: 'REPUTATION',
+          graphPos: new THREE.Vector3(1.75, -1.15, -0.25),
+          evidenceData: hData.reputation,
+        },
+      ];
 
-    connections.forEach((conn, index) => {
-      // 3D Spherical angles
-      const theta = 2 * Math.PI * index / phiRatio;
-      const yNorm = 1 - (index / (count - 1 || 1)) * 2; // -1 to +1
-      const radiusAtY = Math.sqrt(Math.max(0.18, 1 - yNorm * yNorm));
-
-      // Expand into true volumetric 3D coordinates
-      // Varied radii create depth layers: some foreground, some mid, some background
-      const tierDistance = 1.65 + ((index * 2) % 4) * 0.26;
-      const gx = Math.cos(theta) * radiusAtY * (tierDistance * 1.02);
-      const gy = yNorm * (tierDistance * 0.70);
-      // Dramatic Z depth ranging from -1.8 (deep background) to +1.7 (foreground)
-      const gz = Math.sin(theta) * radiusAtY * (tierDistance * 0.92);
-
-      // Spherical seed position on the globe before morph
-      const globeSeed = new THREE.Vector3(gx, gy, gz).normalize().multiplyScalar(1.35);
-
-      this.nodes.push({
-        id: conn.targetId,
-        entityId: conn.targetId,
-        name: conn.targetName,
-        role: conn.targetRole,
-        type: conn.targetType,
-        riskLevel: conn.riskLevel,
-        riskScore: conn.riskScore,
-        color: conn.accent,
-        accent: conn.accent,
-        size: 0.056,
-        globePos: globeSeed,
-        graphPos: new THREE.Vector3(gx, gy, gz),
-        currentPos: globeSeed.clone(),
-        isCenter: false,
-        connection: conn,
+      evidenceDefinitions.forEach((ev) => {
+        const globeSeed = ev.graphPos.clone().normalize().multiplyScalar(1.35);
+        this.nodes.push({
+          ...ev,
+          globePos: globeSeed,
+          currentPos: globeSeed.clone(),
+          isCenter: false,
+          isEvidence: true,
+        });
       });
-    });
+
+    } else {
+      // -------------------------------------------------------------
+      // TRANSACTIONS LENS: PROGRESSIVE MULTI-DEGREE SUSPICIOUS GRAPH
+      // -------------------------------------------------------------
+      const allConnections = entityData.connections || [];
+      // Filter by active degree level (Degree 1, 2, or 3)
+      const connections = allConnections.filter((c) => (c.degree || 1) <= this.currentDegree);
+      const count = connections.length;
+      const phiRatio = (1 + Math.sqrt(5)) / 2;
+
+      connections.forEach((conn, index) => {
+        const deg = conn.degree || 1;
+        const theta = (2 * Math.PI * index) / phiRatio;
+        const yNorm = 1 - (index / (count - 1 || 1)) * 2;
+        const radiusAtY = Math.sqrt(Math.max(0.18, 1 - yNorm * yNorm));
+
+        // Spatial scaling per degree:
+        // Degree 1: ~1.5 - 1.8
+        // Degree 2: ~2.4 - 2.8
+        // Degree 3: ~3.3 - 3.8
+        const baseTier = deg === 1 ? 1.60 : deg === 2 ? 2.55 : 3.45;
+        const tierDistance = baseTier + ((index * 3) % 4) * 0.18;
+
+        const gx = Math.cos(theta) * radiusAtY * (tierDistance * 1.04);
+        const gy = yNorm * (tierDistance * 0.72);
+        const gz = Math.sin(theta) * radiusAtY * (tierDistance * 0.94);
+
+        const globeSeed = new THREE.Vector3(gx, gy, gz).normalize().multiplyScalar(1.35);
+
+        this.nodes.push({
+          id: conn.targetId,
+          entityId: conn.targetId,
+          name: conn.targetName,
+          role: conn.targetRole,
+          type: conn.targetType,
+          riskLevel: conn.riskLevel,
+          riskScore: conn.riskScore,
+          color: conn.accent,
+          accent: conn.accent,
+          size: deg === 1 ? 0.060 : deg === 2 ? 0.052 : 0.046,
+          globePos: globeSeed,
+          graphPos: new THREE.Vector3(gx, gy, gz),
+          currentPos: globeSeed.clone(),
+          isCenter: false,
+          degree: deg,
+          parentEntityId: conn.parentEntityId || null,
+          connection: conn,
+        });
+      });
+    }
 
     // 3. Build Meshes, 3D Filaments, and Fiber-Optic Pulses
     this.initMeshes();
@@ -174,11 +336,16 @@ export class EntityNetworkSystem {
   }
 
   initFilaments() {
+    const nodeMap = new Map();
+    this.nodes.forEach((n) => nodeMap.set(n.id, n));
     const centerNode = this.nodes[0];
 
     for (let i = 1; i < this.nodes.length; i++) {
       const targetNode = this.nodes[i];
-      const curve = this.createVolumetricBezier(centerNode.currentPos, targetNode.currentPos, i);
+      const parentNode = targetNode.parentEntityId ? nodeMap.get(targetNode.parentEntityId) : null;
+      const sourceNode = parentNode || centerNode;
+
+      const curve = this.createVolumetricBezier(sourceNode.currentPos, targetNode.currentPos, i);
       const points = curve.getPoints(50);
       const geo = new THREE.BufferGeometry().setFromPoints(points);
 
@@ -196,11 +363,49 @@ export class EntityNetworkSystem {
         line,
         geo,
         mat,
-        source: centerNode,
+        source: sourceNode,
         target: targetNode,
         index: i,
         curve,
         connection: targetNode.connection,
+        edgeId: targetNode.connection?.recentTxn?.id || targetNode.id,
+      });
+    }
+
+    // In HISTORY mode: also connect cross-evidence filaments
+    if (this.lensMode === 'HISTORY') {
+      const crossLinks = [
+        ['evidence-devices', 'evidence-accounts'],
+        ['evidence-aadhaar', 'evidence-phone'],
+        ['evidence-phone', 'evidence-accounts'],
+        ['evidence-aadhaar', 'evidence-pan'],
+      ];
+      crossLinks.forEach(([srcId, tgtId], idx) => {
+        const src = nodeMap.get(srcId);
+        const tgt = nodeMap.get(tgtId);
+        if (src && tgt) {
+          const curve = this.createVolumetricBezier(src.currentPos, tgt.currentPos, 50 + idx);
+          const points = curve.getPoints(50);
+          const geo = new THREE.BufferGeometry().setFromPoints(points);
+          const mat = new THREE.LineBasicMaterial({
+            color: new THREE.Color('#38bdf8'),
+            transparent: true,
+            opacity: 0.0,
+            blending: THREE.AdditiveBlending,
+          });
+          const line = new THREE.Line(geo, mat);
+          this.group.add(line);
+          this.filamentObjects.push({
+            line,
+            geo,
+            mat,
+            source: src,
+            target: tgt,
+            index: 50 + idx,
+            curve,
+            isCrossLink: true,
+          });
+        }
       });
     }
   }
@@ -222,7 +427,6 @@ export class EntityNetworkSystem {
 
     this.filamentObjects.forEach((fil) => {
       const conn = fil.connection || {};
-      // Elegant number of light packets: 4 to 6 beads per filament
       const beadsPerFilament = 5;
       const beadPositions = new Float32Array(beadsPerFilament * 3);
       const beadGeo = new THREE.BufferGeometry();
@@ -230,7 +434,6 @@ export class EntityNetworkSystem {
 
       const beadColor = conn.accent || '#fed7aa';
 
-      // Refined fiber-optic shader: constant smooth light beads without blinding strobe
       const beadMat = new THREE.ShaderMaterial({
         transparent: true,
         depthWrite: false,
@@ -244,7 +447,6 @@ export class EntityNetworkSystem {
           varying float v_alpha;
           void main() {
             vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-            // Steady 3D perspective sizing
             float dist = max(0.5, -mvPosition.z);
             gl_PointSize = 11.0 * (1.0 / (dist * 0.32));
             gl_PointSize = clamp(gl_PointSize, 3.5, 18.0);
@@ -259,7 +461,6 @@ export class EntityNetworkSystem {
             vec2 uv = gl_PointCoord - vec2(0.5);
             float d = length(uv);
             if (d > 0.5) discard;
-            // Smooth Gaussian profile without harsh core glare
             float shape = exp(-d * 6.5);
             gl_FragColor = vec4(u_color, shape * v_alpha * 0.85);
           }
@@ -328,14 +529,18 @@ export class EntityNetworkSystem {
 
       // Gentle scale transition, tracking the full glide instead of finishing early
       const morphScale = THREE.MathUtils.smoothstep(t, 0.0, 1.0);
-      mesh.scale.setScalar(Math.max(0.0001, node.size * morphScale));
+      const isSpotlighted = this.spotlightedEntityIds.size > 0 && (this.spotlightedEntityIds.has(node.entityId) || node.isCenter);
+      const spotlightScale = isSpotlighted ? 1.25 : 1.0;
+      mesh.scale.setScalar(Math.max(0.0001, node.size * morphScale * spotlightScale));
 
       // Core opacity without harsh strobe
       if (mat) {
-        mat.opacity = THREE.MathUtils.clamp(morphScale * 0.98, 0.0, 0.98);
+        const targetOpacity = isSpotlighted || this.spotlightedEntityIds.size === 0 ? 0.98 : 0.35;
+        mat.opacity = THREE.MathUtils.clamp(morphScale * targetOpacity, 0.0, 0.98);
       }
       if (ringMat) {
-        ringMat.opacity = THREE.MathUtils.clamp(morphScale * 0.70, 0.0, 0.70);
+        const targetRingOpacity = isSpotlighted || this.spotlightedEntityIds.size === 0 ? 0.70 : 0.20;
+        ringMat.opacity = THREE.MathUtils.clamp(morphScale * targetRingOpacity, 0.0, 0.70);
       }
     });
 
@@ -345,18 +550,22 @@ export class EntityNetworkSystem {
       const points = curve.getPoints(50);
       fil.geo.setFromPoints(points);
 
-      fil.mat.opacity = THREE.MathUtils.clamp((t - 0.05) * 1.25, 0.0, 0.60);
+      const isSelected = this.selectedEdgeId && (fil.edgeId === this.selectedEdgeId || fil.target.id === this.selectedEdgeId);
+      const baseOpacity = isSelected ? 0.95 : this.selectedEdgeId ? 0.12 : 0.60;
+
+      fil.mat.opacity = THREE.MathUtils.clamp((t - 0.05) * (baseOpacity / 0.60 * 1.25), 0.0, baseOpacity);
       fil.curve = curve;
     });
 
     // 3. Update Steady Fiber-Optic Photon Streams
     this.beadStreams.forEach((bs) => {
-      bs.beadMat.uniforms.u_opacity.value = THREE.MathUtils.clamp((t - 0.1) * 1.3, 0.0, 0.88);
+      const isSelected = this.selectedEdgeId && (bs.fil.edgeId === this.selectedEdgeId || bs.fil.target.id === this.selectedEdgeId);
+      const streamOpacity = isSelected ? 0.98 : this.selectedEdgeId ? 0.15 : 0.88;
+      bs.beadMat.uniforms.u_opacity.value = THREE.MathUtils.clamp((t - 0.1) * 1.3, 0.0, streamOpacity);
 
       if (t > 0.1 && bs.fil.curve) {
         const posAttr = bs.beadGeo.attributes.position;
-        // Smooth, dignified constant speed: 0.22/sec
-        const speed = 0.22;
+        const speed = isSelected ? 0.35 : 0.22;
 
         for (let b = 0; b < bs.beadsPerFilament; b++) {
           let u;
@@ -411,6 +620,10 @@ export class EntityNetworkSystem {
         totalOutflow: node.totalOutflow,
         color: node.accent,
         isCenter: node.isCenter,
+        degree: node.degree || 1,
+        isEvidence: node.isEvidence || false,
+        evidenceType: node.evidenceType || null,
+        evidenceData: node.evidenceData || null,
         x,
         y,
         depthScale,
