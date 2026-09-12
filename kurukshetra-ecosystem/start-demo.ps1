@@ -17,7 +17,7 @@ Write-Host "   PS09 Hackathon Monorepo Demonstration Launcher" -ForegroundColor 
 Write-Host "=========================================================================" -ForegroundColor Cyan
 Write-Host ""
 
-$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
+$ScriptDir = if ($PSScriptRoot) { $PSScriptRoot } elseif ($MyInvocation.MyCommand.Definition) { Split-Path -Parent $MyInvocation.MyCommand.Definition } else { Get-Location }
 Set-Location $ScriptDir
 
 # 1. Locate Python executable (.venv preferred)
@@ -34,11 +34,24 @@ $DistIndex = Join-Path $ScriptDir "frontend\dist\index.html"
 $DistApp = Join-Path $ScriptDir "frontend\dist\app\index.html"
 
 if (-not (Test-Path $DistIndex) -or -not (Test-Path $DistApp)) {
-    Write-Host "[*] Pre-compiled frontend bundle missing. Building Vite applications..." -ForegroundColor Yellow
+    Write-Host "[*] Pre-compiled frontend bundle missing. Checking dependencies and building Vite applications..." -ForegroundColor Yellow
+    
+    # Landing Page
     Set-Location (Join-Path $ScriptDir "frontend\landing")
+    if (-not (Test-Path "node_modules")) {
+        Write-Host "[*] Installing npm dependencies for landing page..." -ForegroundColor Gray
+        npm install
+    }
     npm run build
+
+    # Citizen GPay App
     Set-Location (Join-Path $ScriptDir "frontend\gpay-app")
+    if (-not (Test-Path "node_modules")) {
+        Write-Host "[*] Installing npm dependencies for citizen payment app..." -ForegroundColor Gray
+        npm install
+    }
     npm run build
+
     Set-Location $ScriptDir
     Write-Host "[✓] Frontend applications compiled to frontend/dist/" -ForegroundColor Green
 } else {
