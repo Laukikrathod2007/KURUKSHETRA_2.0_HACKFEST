@@ -1,0 +1,23 @@
+GUARDIAN FRAUD PREVENTION PLAYBOOK & VERIFICATION POLICIES
+
+1. DIGITAL ARREST & LAW ENFORCEMENT PROTOCOL
+- Official agencies (Police, CBI, ED, Cyber Crime Cell, Customs) NEVER conduct court proceedings, investigations, or interrogations via Skype, WhatsApp video, or Zoom.
+- Legitimate agencies NEVER demand security deposits, bail money, or asset verification fees via personal UPI, IMPS, RTGS, or cryptocurrency.
+- Immediate action Advise customer to hang up and report to 1930 (National Cyber Crime Helpline) or official portal cybercrime.gov.in.
+
+2. UTILITY BILL  ELECTRICITY DISCONNECTION PROTOCOL
+- State electricity boards never send disconnection notices via personal WhatsApp or 10-digit mobile numbers threatening immediate night power cuts.
+- State boards never ask customers to download APK files (like QuickSupport, AnyDesk, TeamViewer).
+- Immediate action Verify pending dues only on the official state electricity utility website or consumer portal.
+
+3. WORK-FROM-HOME  TELEGRAM TASK SCAMS
+- Legitimate recruiters NEVER ask job candidates to deposit money, recharge an account, or buy crypto to unlock commissions for liking videos or rating products.
+- Sunk-cost trap warning Any money already sent cannot be recovered by sending more funds.
+- Immediate action Freeze account, stop sending money, file cyber complaint.
+
+4. CEO  EXECUTIVE GIFT CARD FRAUD
+- Company executives never instruct staff to purchase Apple, Google Play, Amazon, or Steam gift cards urgently for client meetings.
+- Immediate action Call the managercolleague directly on their known personal phone number.
+
+5. VERIFICATION NUMBERS
+- Customers must only call the official customer care number printed on the back of their physical debitcredit card or inside their official banking app. Never call numbers provided in SMS or WhatsApp warnings.

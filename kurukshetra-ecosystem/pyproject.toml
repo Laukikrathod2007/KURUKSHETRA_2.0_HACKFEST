@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kurukshetra-ecosystem"
+version = "2.0.0"
+description = "Simulated Payment Ecosystem with Kurukshetra Fraud Interception Engine"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn>=0.32.0",
+    "sqlalchemy>=2.0.35",
+    "pydantic>=2.9.2",
+    "fastmcp>=1.0",
+    "pytest>=8.3.3",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["backend/src"]
+testpaths = ["backend/tests"]
+

@@ -1,0 +1,171 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6472"/>
+    </marker>
+    <marker id="arrowRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#b3261e"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1e7a4a"/>
+    </marker>
+    <filter id="cardShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="2.5" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="1280" height="720" fill="#ffffff"/>
+
+  <!-- Header -->
+  <rect x="0" y="0" width="1280" height="74" fill="#12213f"/>
+  <text x="48" y="32" font-size="22" font-weight="700" fill="#ffffff">Kurukshetra — System Architecture (HLD)</text>
+  <text x="48" y="54" font-size="13" fill="#aebbd6">Anti-scam intelligence layer between the payment app, the payment switch, and the banks</text>
+  <text x="1232" y="43" font-size="12" fill="#7f8fae" text-anchor="end">Deterministic risk engine · no ML model in the decision loop</text>
+
+  <!-- ================= Layer 1 : Client App ================= -->
+  <g filter="url(#cardShadow)">
+    <rect x="48" y="112" width="220" height="90" rx="10" fill="#eef2fb" stroke="#c3cfe6" stroke-width="1.5"/>
+  </g>
+  <text x="158" y="136" font-size="11" font-weight="700" fill="#4a5a80" text-anchor="middle" letter-spacing="0.5">LAYER 1 — CLIENT APP</text>
+  <text x="158" y="162" font-size="14.5" font-weight="600" fill="#12213f" text-anchor="middle">Payment App</text>
+  <text x="158" y="182" font-size="11.5" fill="#5b6472" text-anchor="middle">User picks a recipient,</text>
+  <text x="158" y="196" font-size="11.5" fill="#5b6472" text-anchor="middle">enters an amount</text>
+
+  <!-- ================= Layer 2 : Switch ================= -->
+  <g filter="url(#cardShadow)">
+    <rect x="330" y="112" width="240" height="90" rx="10" fill="#eaf1fb" stroke="#b9d0ec" stroke-width="1.5"/>
+  </g>
+  <text x="450" y="136" font-size="11" font-weight="700" fill="#3a638f" text-anchor="middle" letter-spacing="0.5">LAYER 2 — PAYMENT SWITCH</text>
+  <text x="450" y="162" font-size="14.5" font-weight="600" fill="#12213f" text-anchor="middle">Switch / Router</text>
+  <text x="450" y="182" font-size="11.5" fill="#5b6472" text-anchor="middle">Looks up recipients,</text>
+  <text x="450" y="196" font-size="11.5" fill="#5b6472" text-anchor="middle">coordinates money movement</text>
+
+  <!-- Arrow App -> Switch -->
+  <line x1="268" y1="157" x2="322" y2="157" stroke="#5b6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="295" y="147" font-size="9.5" fill="#5b6472" text-anchor="middle">who / how much</text>
+
+  <!-- Arrow Switch -> App (result) -->
+  <path d="M 570 157 L 610 157 L 610 246 L 158 246 L 158 210" fill="none" stroke="#5b6472" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+  <text x="384" y="240" font-size="9.5" fill="#5b6472" text-anchor="middle">result shown to user</text>
+
+  <!-- Arrow Switch -> Intelligence -->
+  <line x1="450" y1="202" x2="450" y2="260" stroke="#3a638f" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <text x="465" y="230" font-size="9.5" fill="#3a638f">ask for a</text>
+  <text x="465" y="242" font-size="9.5" fill="#3a638f">risk opinion</text>
+
+  <!-- ================= Layer 3 : Intelligence Layer ================= -->
+  <g filter="url(#cardShadow)">
+    <rect x="330" y="260" width="600" height="270" rx="12" fill="#fbfbfd" stroke="#c7ccd6" stroke-width="1.6"/>
+  </g>
+  <text x="630" y="286" font-size="12" font-weight="700" fill="#3d3d3d" text-anchor="middle" letter-spacing="0.5">LAYER 3 — INTELLIGENCE LAYER (THE BRAIN)</text>
+  <line x1="352" y1="298" x2="908" y2="298" stroke="#dcdfe6" stroke-width="1"/>
+
+  <!-- Stage 1 -->
+  <rect x="352" y="314" width="176" height="82" rx="8" fill="#eafbf1" stroke="#a9dfc0" stroke-width="1.3"/>
+  <text x="440" y="334" font-size="11" font-weight="700" fill="#1e7a4a" text-anchor="middle">STAGE ONE</text>
+  <text x="440" y="351" font-size="11.5" font-weight="600" fill="#12213f" text-anchor="middle">Instant Checks</text>
+  <text x="440" y="368" font-size="10" fill="#4a5a5a" text-anchor="middle">Identity mismatch,</text>
+  <text x="440" y="381" font-size="10" fill="#4a5a5a" text-anchor="middle">suspicious QR / link</text>
+
+  <!-- Stage 2 -->
+  <rect x="546" y="314" width="200" height="82" rx="8" fill="#fff6e8" stroke="#f0d59a" stroke-width="1.3"/>
+  <text x="646" y="334" font-size="11" font-weight="700" fill="#a86a00" text-anchor="middle">STAGE TWO</text>
+  <text x="646" y="351" font-size="11.5" font-weight="600" fill="#12213f" text-anchor="middle">Deep Investigation</text>
+  <text x="646" y="368" font-size="10" fill="#4a5a5a" text-anchor="middle">Network patterns, recipient</text>
+  <text x="646" y="381" font-size="10" fill="#4a5a5a" text-anchor="middle">history, sender history</text>
+
+  <!-- Stage 3 -->
+  <rect x="764" y="314" width="144" height="82" rx="8" fill="#f1f1f4" stroke="#d3d3da" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <text x="836" y="334" font-size="11" font-weight="700" fill="#6b6b76" text-anchor="middle">STAGE THREE</text>
+  <text x="836" y="351" font-size="11.5" font-weight="600" fill="#3d3d3d" text-anchor="middle">External</text>
+  <text x="836" y="365" font-size="11.5" font-weight="600" fill="#3d3d3d" text-anchor="middle">Registries</text>
+  <text x="836" y="382" font-size="9.5" fill="#7a7a84" text-anchor="middle">(illustrative)</text>
+
+  <line x1="528" y1="355" x2="544" y2="355" stroke="#8a8a90" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <line x1="746" y1="355" x2="762" y2="355" stroke="#8a8a90" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+  <!-- Score bar -->
+  <rect x="352" y="412" width="556" height="42" rx="8" fill="#eef2fb" stroke="#c3cfe6" stroke-width="1.3"/>
+  <text x="630" y="438" font-size="12.5" font-weight="600" fill="#12213f" text-anchor="middle">Combine every triggered signal into one risk score (0 – 1)</text>
+  <line x1="630" y1="396" x2="630" y2="410" stroke="#8a8a90" stroke-width="1.4" marker-end="url(#arrow)"/>
+
+  <!-- Zones -->
+  <line x1="630" y1="454" x2="630" y2="470" stroke="#8a8a90" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <g>
+    <rect x="352" y="472" width="128" height="46" rx="7" fill="#eafbf1" stroke="#8fd6ac"/>
+    <text x="416" y="491" font-size="11" font-weight="700" fill="#1e7a4a" text-anchor="middle">ALLOW</text>
+    <text x="416" y="507" font-size="9" fill="#4a5a5a" text-anchor="middle">proceed, no friction</text>
+
+    <rect x="490" y="472" width="128" height="46" rx="7" fill="#fff6e8" stroke="#f0d59a"/>
+    <text x="554" y="491" font-size="11" font-weight="700" fill="#a86a00" text-anchor="middle">STEP-UP</text>
+    <text x="554" y="507" font-size="9" fill="#4a5a5a" text-anchor="middle">confirm to proceed</text>
+
+    <rect x="628" y="472" width="128" height="46" rx="7" fill="#fdece7" stroke="#f0a98f"/>
+    <text x="692" y="491" font-size="11" font-weight="700" fill="#c0501f" text-anchor="middle">COACH</text>
+    <text x="692" y="507" font-size="9" fill="#4a5a5a" text-anchor="middle">must acknowledge warning</text>
+
+    <rect x="766" y="472" width="142" height="46" rx="7" fill="#fbeaea" stroke="#e6a5a1"/>
+    <text x="837" y="491" font-size="11" font-weight="700" fill="#b3261e" text-anchor="middle">FREEZE</text>
+    <text x="837" y="507" font-size="9" fill="#4a5a5a" text-anchor="middle">hard block, zero money moves</text>
+  </g>
+
+  <!-- ================= Layer 4 : Intervention ================= -->
+  <g filter="url(#cardShadow)">
+    <rect x="972" y="314" width="260" height="140" rx="10" fill="#fdece7" stroke="#f0a98f" stroke-width="1.5"/>
+  </g>
+  <text x="1102" y="338" font-size="11" font-weight="700" fill="#c0501f" text-anchor="middle" letter-spacing="0.5">LAYER 4 — INTERVENTION</text>
+  <text x="1102" y="360" font-size="11.5" fill="#3d3d3d" text-anchor="middle">Pick a warning style · explain</text>
+  <text x="1102" y="376" font-size="11.5" fill="#3d3d3d" text-anchor="middle">in plain language · notify a</text>
+  <text x="1102" y="392" font-size="11.5" fill="#3d3d3d" text-anchor="middle">trusted contact if severe ·</text>
+  <text x="1102" y="408" font-size="11.5" fill="#3d3d3d" text-anchor="middle">show the right bank helpline</text>
+  <line x1="992" y1="420" x2="1212" y2="420" stroke="#e6bfae" stroke-width="1"/>
+  <text x="1102" y="438" font-size="10" font-style="italic" fill="#8a5a44" text-anchor="middle">optional language model rewrites</text>
+  <text x="1102" y="450" font-size="10" font-style="italic" fill="#8a5a44" text-anchor="middle">the explanation — never the decision</text>
+
+  <!-- Arrow zones -> intervention -->
+  <path d="M 908 495 L 970 495 L 970 384" fill="none" stroke="#c0501f" stroke-width="1.6" marker-end="url(#arrowRed)"/>
+  <text x="940" y="486" font-size="9.5" fill="#c0501f">STEP-UP / COACH / FREEZE</text>
+
+  <!-- Arrow Allow -> Switch bypass -->
+  <path d="M 380 472 L 380 218 L 440 218 L 440 204" fill="none" stroke="#1e7a4a" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#arrowGreen)"/>
+  <text x="380" y="211" font-size="9.5" fill="#1e7a4a" text-anchor="middle">ALLOW → straight through</text>
+
+  <!-- Arrow Intervention -> Switch -->
+  <path d="M 972 384 L 940 384 L 940 218 L 620 218 L 620 204" fill="none" stroke="#c0501f" stroke-width="1.6" marker-end="url(#arrowRed)"/>
+  <text x="880" y="211" font-size="9.5" fill="#c0501f" text-anchor="middle">confirmed / blocked</text>
+
+  <!-- ================= Layer 5 : Ledger & Audit ================= -->
+  <g filter="url(#cardShadow)">
+    <rect x="330" y="572" width="290" height="98" rx="10" fill="#f1f1f4" stroke="#d3d3da" stroke-width="1.5"/>
+  </g>
+  <text x="475" y="596" font-size="11" font-weight="700" fill="#3d3d3d" text-anchor="middle" letter-spacing="0.5">LAYER 5 — LEDGER</text>
+  <text x="475" y="620" font-size="13" font-weight="600" fill="#12213f" text-anchor="middle">Account Balances</text>
+  <text x="475" y="640" font-size="11" fill="#5b6472" text-anchor="middle">Records every credit and</text>
+  <text x="475" y="655" font-size="11" fill="#5b6472" text-anchor="middle">debit; money moves only</text>
+  <text x="475" y="670" font-size="11" fill="#5b6472" text-anchor="middle">if not frozen</text>
+
+  <g filter="url(#cardShadow)">
+    <rect x="660" y="572" width="290" height="98" rx="10" fill="#f1f1f4" stroke="#d3d3da" stroke-width="1.5"/>
+  </g>
+  <text x="805" y="596" font-size="11" font-weight="700" fill="#3d3d3d" text-anchor="middle" letter-spacing="0.5">LAYER 5 — AUDIT</text>
+  <text x="805" y="620" font-size="13" font-weight="600" fill="#12213f" text-anchor="middle">Tamper-Evident Record</text>
+  <text x="805" y="640" font-size="11" fill="#5b6472" text-anchor="middle">Every decision — Allow,</text>
+  <text x="805" y="655" font-size="11" fill="#5b6472" text-anchor="middle">Step-Up, Coach or Freeze —</text>
+  <text x="805" y="670" font-size="11" fill="#5b6472" text-anchor="middle">is permanently logged</text>
+
+  <!-- Switch -> Ledger -->
+  <path d="M 450 202 L 450 560" fill="none" stroke="#5b6472" stroke-width="1.5" opacity="0"/>
+  <path d="M 400 530 L 400 560" fill="none" stroke="#5b6472" stroke-width="0" opacity="0"/>
+  <path d="M 500 530 L 475 570" fill="none" stroke="#5b6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="500" y="552" font-size="9.5" fill="#5b6472" text-anchor="middle">move money</text>
+  <text x="500" y="564" font-size="9.5" fill="#5b6472" text-anchor="middle">(if not frozen)</text>
+
+  <!-- Intelligence -> Audit -->
+  <path d="M 630 530 L 805 570" fill="none" stroke="#7a7a84" stroke-width="1.4" stroke-dasharray="3 3" marker-end="url(#arrow)"/>
+  <text x="740" y="558" font-size="9.5" fill="#7a7a84" text-anchor="middle">every decision logged</text>
+
+  <!-- Bottom note -->
+  <rect x="0" y="700" width="1280" height="20" fill="#f7f7f9"/>
+  <text x="640" y="714" font-size="10.5" fill="#8a8a90" text-anchor="middle">Read left to right, top to bottom: a request enters at the app, the switch asks the intelligence layer for an opinion, and only flagged transactions reach the intervention layer before any money moves.</text>
+</svg>
